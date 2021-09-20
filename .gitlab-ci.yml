@@ -16,9 +16,7 @@ build :
     - ohtu-build-1
   script:
     - curl -fsSLO --compressed http://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
-    - tar -zxvf apache-maven-3.5.4-bin.tar.gz
-    - rm apache-maven-3.5.4-bin.tar.gz
-    - mv apache-maven-3.5.4 /usr/lib/mvn
+    - tar xvzf apache-maven-3.5.4-bin.tar.gz -C /usr/local/bin
     - mvn install
   artifacts:
     name: orgrek-db-build-$CI_BUILD_ID-$CI_BUILD_REF
