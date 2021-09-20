@@ -1,4 +1,4 @@
-package fi.helsinki.ohtu.organisaatiorekisteri.orkregdb.dao;
+package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

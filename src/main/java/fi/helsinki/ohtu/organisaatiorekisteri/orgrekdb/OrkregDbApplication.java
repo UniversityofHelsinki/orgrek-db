@@ -1,4 +1,4 @@
-package fi.helsinki.ohtu.organisaatiorekisteri.orkregdb;
+package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

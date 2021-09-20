@@ -1,6 +1,6 @@
-package fi.helsinki.ohtu.organisaatiorekisteri.orkregdb.controller;
+package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orkregdb.dao.TextsDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
