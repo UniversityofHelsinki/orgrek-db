@@ -15,6 +15,7 @@ build :
   tags:
     - ohtu-build-1
   script:
+    - java -version
     - curl -fsSLO --compressed http://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
     - tar xvzf apache-maven-3.5.4-bin.tar.gz -C /usr/lib/mvn
     - mvn install
