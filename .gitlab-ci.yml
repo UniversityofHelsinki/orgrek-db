@@ -6,13 +6,23 @@ before_script:
 
 # Define the stages
 stages:
-  - setup
+  - build
   - deploy
 
 # Define the process for each stage
 
+build :
+  stage: build
+  tags:
+    - ohtu-build-1
+  script:
+    - mvn install
+  artifacts:
+    name: orgrek-db-build-$CI_BUILD_ID-$CI_BUILD_REF
+    paths:
+      - target/*.war
 
-# Define the process for deploy stage to development environment
+  # Define the process for deploy stage to development environment
 deploy_dev:
   stage: deploy
   tags:
