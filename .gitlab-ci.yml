@@ -3,6 +3,7 @@ image: frolvlad/alpine-glibc
 before_script:
   - apk update && apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python3 curl tar
   - apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+  - apk add maven
 
 # Define the stages
 stages:
@@ -17,8 +18,6 @@ build :
     - ohtu-build-1
   script:
     - java -version
-    - curl -fsSLO --compressed http://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
-    - tar xvzf apache-maven-3.5.4-bin.tar.gz -C /usr/lib/mvn
     - mvn install
   artifacts:
     name: orgrek-db-build-$CI_BUILD_ID-$CI_BUILD_REF
