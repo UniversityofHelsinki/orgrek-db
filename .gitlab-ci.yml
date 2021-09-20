@@ -2,6 +2,7 @@ image: frolvlad/alpine-glibc
 
 before_script:
   - apk update && apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python3 curl tar
+  - apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # Define the stages
 stages:
