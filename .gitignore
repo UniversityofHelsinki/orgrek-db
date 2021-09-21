@@ -1,5 +1,4 @@
 .idea/
 .gradle/
-.mvn/
 *.iml
 target/
