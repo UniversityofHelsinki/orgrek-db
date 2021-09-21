@@ -49,14 +49,12 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-        List<Map<String, String>> query = jdbcTemplate.query(SQL_GET_ALL_TEXTS, new RowMapper<Map<String, String>>() {
-            public Map<String, String> mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Map<String, String> textKey = new HashMap<String, String>();
-                textKey.put(KEY_FIELD, rs.getString(KEY_FIELD));
-                textKey.put(LANGUAGE_FIELD, rs.getString(LANGUAGE_FIELD));
-                textKey.put(VALUE_FIELD, rs.getString(VALUE_FIELD));
-                return textKey;
-            }
+        List<Map<String, String>> query = jdbcTemplate.query(SQL_GET_ALL_TEXTS, (rs, rowNum) -> {
+            Map<String, String> textKey = new HashMap<>();
+            textKey.put(KEY_FIELD, rs.getString(KEY_FIELD));
+            textKey.put(LANGUAGE_FIELD, rs.getString(LANGUAGE_FIELD));
+            textKey.put(VALUE_FIELD, rs.getString(VALUE_FIELD));
+            return textKey;
         });
 
         return query;
