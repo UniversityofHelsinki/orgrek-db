@@ -1,7 +1,6 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util;
-
-import org.springframework.util.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.util.StringUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;

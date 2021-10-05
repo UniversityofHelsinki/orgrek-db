@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/node")
 public class NodeAttributeController {
 
     @Autowired
