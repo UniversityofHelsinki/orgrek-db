@@ -21,7 +21,7 @@ public class NodeAttributeController {
     @Autowired
     private OrgUnitDao orgUnitDao;
 
-    @RequestMapping("/{id}")
+    @RequestMapping("/{id}/attributes")
     public  Map<String, List<Attribute>> getOrgUnit(@PathVariable("id") String id) {
         return orgUnitDao.getAllAttributesMap(id);
     }
