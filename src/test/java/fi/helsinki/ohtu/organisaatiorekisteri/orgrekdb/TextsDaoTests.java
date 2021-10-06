@@ -27,18 +27,21 @@ public class TextsDaoTests {
     public void testGetAllFinnishTexts() {
         Map<String, String> allTexts = textsDao.getTextsByLang("fi");
         assertEquals(10, allTexts.size());
+        assertEquals("julkinen", allTexts.get("public"));
     }
 
     @Test
     public void testGetAllEnglishTexts() {
         Map<String, String> allTexts = textsDao.getTextsByLang("en");
         assertEquals(6, allTexts.size());
+        assertEquals("Public", allTexts.get("public"));
     }
 
     @Test
     public void testGetAllSwedishTexts() {
         Map<String, String> allTexts = textsDao.getTextsByLang("sv");
         assertEquals(3, allTexts.size());
+        assertEquals("offentlig", allTexts.get("public"));
     }
 
 }
