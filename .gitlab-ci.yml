@@ -23,11 +23,13 @@ test :
     - ohtu-build-1
   script:
     - mvn test
-    - cat target/site/jacoco/index.html
+    - cd target/site/jacoco
+    - cat target/site/jacoco/index.html | grep -o 'Total[^%]*%'
   coverage: "/Total.*?([0-9]{1,3})%/"
   artifacts:
     paths:
-      - target/site/jacoco/
+      - target/site/jacoco/jacoco.xml
+    expire_in: 1 mos
 
 build :
   stage: build
