@@ -27,7 +27,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public Map<String, List<Attribute>> getAllAttributesMap(String id) {
-        String sql = "SELECT * FROM node_attr WHERE node_id = :id";
+        String sql = "SELECT * FROM NODE_ATTR WHERE NODE_ID = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
@@ -42,9 +42,9 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public Map<String, List<Attribute>> getCurrentAttributeMap(String id, Date date) {
-        String sql = "SELECT * FROM node_attr WHERE node_id = :id AND " +
-                "(node_attr.end_date IS NULL OR " +
-                "(node_attr.end_date >= trunc(:date)))";
+        String sql = "SELECT * FROM NODE_ATTR WHERE NODE_ID = :id AND " +
+                "(NODE_ATTR.END_DATE IS NULL OR " +
+                "(NODE_ATTR.END_DATE >= trunc(:date)))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         params.addValue("date", date);
