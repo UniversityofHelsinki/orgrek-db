@@ -1,5 +1,6 @@
 drop table if exists NODE_ATTR;
 drop table if exists NODE;
+drop table if exists TEXTS;
 
 create table NODE
 (
@@ -25,3 +26,12 @@ create table NODE_ATTR
     START_DATE TIMESTAMP(6),
     END_DATE   TIMESTAMP(6)
 );
+
+create table TEXT
+(
+    KEY       VARCHAR2(255 char),
+    LANGUAGE  VARCHAR2(3 char),
+    VALUE     VARCHAR2(255 char),
+    USER_NAME VARCHAR2(20 char),
+    TIMESTAMP TIMESTAMP(6)
+)
