@@ -17,6 +17,19 @@ stages:
 
 # Define the process for each stage
 
+build :
+  stage: build
+  tags:
+    - ohtu-build-1
+  script:
+    - java -version
+    - mvn install
+  artifacts:
+    name: orgrek-db-build-$CI_BUILD_ID-$CI_BUILD_REF
+    paths:
+      - target/*.jar
+
+
 test :
   stage: test
   tags:
@@ -30,18 +43,6 @@ test :
     paths:
       - target/site/jacoco/jacoco.xml
     expire_in: 1 mos
-
-build :
-  stage: build
-  tags:
-    - ohtu-build-1
-  script:
-    - java -version
-    - mvn install
-  artifacts:
-    name: orgrek-db-build-$CI_BUILD_ID-$CI_BUILD_REF
-    paths:
-      - target/*.jar
 
   # Define the process for deploy stage to development environment
 deploy_dev:
