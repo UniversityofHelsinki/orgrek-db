@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,8 @@ public class NodeAttributeController {
 
     @RequestMapping(method = GET, value = "/{id}/{date}/attributes")
     public Map<String, List<Attribute>> getAttributes(@PathVariable("id") String id, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
-        return orgUnitDao.getCurrentAttributeMap(id, dateObj);
+        return orgUnitDao.getCurrentAttributeMap(node.getId(), dateObj);
     }
 }

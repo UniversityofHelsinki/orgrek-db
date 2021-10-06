@@ -1,6 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -31,6 +32,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue("id", id);
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return OrgUtil.getAttributeListAsMap(attributes);
+    }
+
+    public Node getNodeByUniqueId(String id) {
+        String sql = "SELECT * FROM NODE WHERE UNIQUE_ID = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        return getNamedParameterJdbcTemplate().queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
     public Map<String, List<Attribute>> getCurrentAttributeMap(String id, Date date) {
