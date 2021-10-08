@@ -2,14 +2,12 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +43,7 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
     private static final String LANGUAGE_FIELD = "language";
 
     public List<Map<String, String>> getAllTexts() {
-        final String SQL_GET_ALL_TEXTS = "SELECT KEY, LANGUAGE, VALUE FROM text";
+        final String SQL_GET_ALL_TEXTS = "SELECT KEY, LANGUAGE, VALUE FROM TEXT";
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
@@ -58,6 +56,31 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
         });
 
         return query;
+    }
+
+    /**
+     * Return texts by language. OR-579
+     * <p>
+     * Key value pairs are returned in a map
+     * <p>
+     * {
+     * "opetus": "undervisning",
+     * "tutkimus": "forskning"
+     * }
+     *
+     * @return text entries in a map
+     */
+    public Map<String, String> getTextsByLang(String lang) {
+        String sqlGetTextsByLang = "SELECT KEY, VALUE FROM TEXT where LANGUAGE= ? ";
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        Map<String, String> textKey = new HashMap<>();
+        jdbcTemplate.query(sqlGetTextsByLang, (ResultSet rs) -> {
+            while (rs.next()) {
+                textKey.put(rs.getString(KEY_FIELD), rs.getString(VALUE_FIELD));
+            }
+            return textKey;
+        }, lang);
+        return textKey;
     }
 
 
