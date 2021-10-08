@@ -28,7 +28,7 @@ public class NodeAttributeController {
     }
 
     @RequestMapping(method = GET, value = "/{id}/{date}/attributes")
-    public Map<String, List<Attribute>> getAttributes(@PathVariable("id") String id, @PathVariable("date") String date) {
+    public Map<String, List<Attribute>> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
         return orgUnitDao.getCurrentAttributeMap(node.getId(), dateObj);

@@ -43,7 +43,7 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
     private static final String LANGUAGE_FIELD = "language";
 
     public List<Map<String, String>> getAllTexts() {
-        final String SQL_GET_ALL_TEXTS = "SELECT KEY, LANGUAGE, VALUE FROM text";
+        final String SQL_GET_ALL_TEXTS = "SELECT KEY, LANGUAGE, VALUE FROM TEXT";
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
@@ -71,7 +71,7 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
      * @return text entries in a map
      */
     public Map<String, String> getTextsByLang(String lang) {
-        String sqlGetTextsByLang = "SELECT KEY, VALUE FROM text where language= ? ";
+        String sqlGetTextsByLang = "SELECT KEY, VALUE FROM TEXT where LANGUAGE= ? ";
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         Map<String, String> textKey = new HashMap<>();
         jdbcTemplate.query(sqlGetTextsByLang, (ResultSet rs) -> {
