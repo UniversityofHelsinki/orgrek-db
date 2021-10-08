@@ -26,14 +26,6 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         setDataSource(dataSource);
     }
 
-    public Map<String, List<Attribute>> getAllAttributesMap(String id) {
-        String sql = "SELECT * FROM NODE_ATTR WHERE NODE_ID = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
-        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
-        return OrgUtil.getAttributeListAsMap(attributes);
-    }
-
     public Node getNodeByUniqueId(int id) {
         String sql = "SELECT * FROM NODE WHERE UNIQUE_ID = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
