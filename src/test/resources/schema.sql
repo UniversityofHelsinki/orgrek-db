@@ -1,6 +1,7 @@
 drop table if exists NODE_ATTR;
 drop table if exists NODE;
 drop table if exists TEXTS;
+drop table if exists EDGE;
 
 create table NODE
 (
@@ -34,4 +35,17 @@ create table TEXT
     VALUE     VARCHAR2(255 char),
     USER_NAME VARCHAR2(20 char),
     TIMESTAMP TIMESTAMP(6)
-)
+);
+
+create table EDGE
+(
+    ID             NUMBER not null
+        primary key,
+    CHILD_NODE_ID  VARCHAR2(255 char)
+        references NODE,
+    PARENT_NODE_ID VARCHAR2(255 char)
+        references NODE,
+    START_DATE     TIMESTAMP(6),
+    END_DATE       TIMESTAMP(6),
+    TYPE           VARCHAR2(255 char)
+);
