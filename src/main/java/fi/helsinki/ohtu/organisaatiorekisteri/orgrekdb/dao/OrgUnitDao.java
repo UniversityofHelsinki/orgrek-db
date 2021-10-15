@@ -33,7 +33,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
-    public Map<String, List<Attribute>> getCurrentAttributeMap(String id, Date date) {
+    public List<Attribute> getCurrentAttributeList(String id, Date date) {
         String sql = "SELECT * FROM NODE_ATTR WHERE NODE_ID = :id AND " +
                 "(NODE_ATTR.END_DATE IS NULL OR " +
                 "(NODE_ATTR.END_DATE >= trunc(:date)))";
@@ -41,7 +41,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue("id", id);
         params.addValue("date", date);
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
-        return OrgUtil.getAttributeListAsMap(attributes);
+        return attributes;
     }
 }
 

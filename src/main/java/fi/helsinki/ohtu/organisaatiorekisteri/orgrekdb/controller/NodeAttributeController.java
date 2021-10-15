@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -23,9 +22,10 @@ public class NodeAttributeController {
     private OrgUnitDao orgUnitDao;
 
     @RequestMapping(method = GET, value = "/{id}/{date}/attributes")
-    public Map<String, List<Attribute>> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+    public List<Attribute> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
-        return orgUnitDao.getCurrentAttributeMap(node.getId(), dateObj);
+        return orgUnitDao.getCurrentAttributeList(node.getId(), dateObj);
+
     }
 }
