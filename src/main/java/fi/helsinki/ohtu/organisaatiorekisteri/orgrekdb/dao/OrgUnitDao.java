@@ -2,7 +2,6 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,7 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Repository(value = "orgUnitDao")
 public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
