@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -42,6 +43,16 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue("date", date);
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return OrgUtil.getAttributeListAsMap(attributes);
+    }
+
+
+    public List<Node> getCurrentParentsByChildNodeId(int nodeId, String date) {
+        String sql = "SELECT * FROM node WHERE id IN (SELECT parent_node_id FROM edge WHERE child_node_id = :nodeId and (type is null or type != :edgeType))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 }
 
