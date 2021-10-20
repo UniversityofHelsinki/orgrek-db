@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +47,27 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
 
-    public List<Node> getCurrentParentsByChildNodeId(int nodeId, String date) {
-        String sql = "SELECT * FROM node WHERE id IN (SELECT parent_node_id FROM edge WHERE child_node_id = :nodeId and (type is null or type != :edgeType))";
+    public List<Node> getCurrentParentsByChildNodeId(String nodeId, String date) {
+        String sql = "SELECT * FROM node WHERE id IN " +
+                "(SELECT parent_node_id FROM edge WHERE child_node_id = :nodeId and " +
+                "(type is null or type != :edgeType) and " +
+                "(end_date is null or trunc(end_date) >= to_date(:dt,'DD.MM.YYYY')))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
-        params.addValue("date", date);
+        params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
+    }
+
+    public List<NodeWrapper> getCurrentTypesByChildNodeId(String nodeId, String date) {
+        String sql = "SELECT parent_node_id, type FROM edge WHERE child_node_id = :nodeId and " +
+                "(type is null or type != :edgeType) and " +
+                "(end_date is null or trunc(end_date) >= to_date(:dt,'DD.MM.YYYY'))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("dt", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
 }
 
