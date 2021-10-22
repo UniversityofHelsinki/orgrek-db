@@ -28,4 +28,15 @@ public class HierarchyController {
     public List<NodeWrapper> getParentNodeTypesByIdAndDate(@PathVariable("id") String nodeId, @PathVariable("date") String date) {
         return orgUnitDao.getCurrentTypesByChildNodeId(nodeId, date);
     }
+
+    @RequestMapping(method = GET, value = "/children/{id}/{date}")
+    public List<Node> getChildNodesByIdAndDate(@PathVariable("id") String nodeId, @PathVariable("date") String date) {
+        return orgUnitDao.getCurrentChildrenByParentNodeId(nodeId, date);
+    }
+
+    @RequestMapping(method = GET, value = "/children/types/{id}/{date}")
+    public List<NodeWrapper> getChildNodeTypesByIdAndDate(@PathVariable("id") String nodeId, @PathVariable("date") String date) {
+        return orgUnitDao.getCurrentTypesByParentNodeId(nodeId, date);
+    }
+
 }
