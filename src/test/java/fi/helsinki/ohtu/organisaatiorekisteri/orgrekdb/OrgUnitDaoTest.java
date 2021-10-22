@@ -105,7 +105,7 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("5935", "01.01.2021");
         assertEquals(1, wrapperList.size());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getType());
-        assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, wrapperList.get(0).getParentNodeId());
+        assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, wrapperList.get(0).getNodeId());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class OrgUnitDaoTest {
         assertEquals(0, wrapperList.size());
         wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("3201", "01.01.2015");
         assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(0).getType());
-        assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, wrapperList.get(0).getParentNodeId());
+        assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, wrapperList.get(0).getNodeId());
     }
 
     @Test
@@ -146,9 +146,9 @@ public class OrgUnitDaoTest {
     public void testGetCurrentTypesByParentNodeIdShouldNotReturnAnythingWithHistoryType() {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2021");
         assertEquals(2, wrapperList.size());
-        assertEquals("6777", wrapperList.get(0).getChildNodeId());
+        assertEquals("6777", wrapperList.get(0).getNodeId());
         assertEquals("toiminnanohjaus", wrapperList.get(0).getType());
-        assertEquals("5935", wrapperList.get(1).getChildNodeId());
+        assertEquals("5935", wrapperList.get(1).getNodeId());
         assertEquals("opetus", wrapperList.get(1).getType());
     }
 
@@ -157,17 +157,17 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2015");
         assertEquals(6, wrapperList.size());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(0).getType());
-        assertEquals("3368", wrapperList.get(0).getChildNodeId());
+        assertEquals("3368", wrapperList.get(0).getNodeId());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getType());
-        assertEquals("3459", wrapperList.get(1).getChildNodeId());
+        assertEquals("3459", wrapperList.get(1).getNodeId());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(2).getType());
-        assertEquals("3201", wrapperList.get(2).getChildNodeId());
+        assertEquals("3201", wrapperList.get(2).getNodeId());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(3).getType());
-        assertEquals("6777", wrapperList.get(3).getChildNodeId());
+        assertEquals("6777", wrapperList.get(3).getNodeId());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(4).getType());
-        assertEquals("5935", wrapperList.get(4).getChildNodeId());
+        assertEquals("5935", wrapperList.get(4).getNodeId());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS, wrapperList.get(5).getType());
-        assertEquals("3288", wrapperList.get(5).getChildNodeId());
+        assertEquals("3288", wrapperList.get(5).getNodeId());
     }
 
 }

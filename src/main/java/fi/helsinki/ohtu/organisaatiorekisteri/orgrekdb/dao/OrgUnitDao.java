@@ -60,7 +60,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeWrapper> getCurrentTypesByChildNodeId(String nodeId, String date) {
-        String sql = "SELECT PARENT_NODE_ID, TYPE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+        String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
                 "(TYPE is null or TYPE != :edgeType) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -83,7 +83,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeWrapper> getCurrentTypesByParentNodeId(String nodeId, String date) {
-        String sql = "SELECT CHILD_NODE_ID, TYPE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+        String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
                 "(TYPE is null or TYPE != :edgeType) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
