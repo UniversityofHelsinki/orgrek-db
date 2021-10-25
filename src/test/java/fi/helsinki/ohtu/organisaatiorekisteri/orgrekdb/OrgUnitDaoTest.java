@@ -147,9 +147,9 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2021");
         assertEquals(2, wrapperList.size());
         assertEquals("6777", wrapperList.get(0).getNodeId());
-        assertEquals("toiminnanohjaus", wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(0).getType());
         assertEquals("5935", wrapperList.get(1).getNodeId());
-        assertEquals("opetus", wrapperList.get(1).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(1).getType());
     }
 
     @Test
