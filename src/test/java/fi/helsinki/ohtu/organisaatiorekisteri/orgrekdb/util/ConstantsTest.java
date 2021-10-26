@@ -6,4 +6,12 @@ public class ConstantsTest {
     public static String ROOT_UNIT_NAME_FI = "Helsingin yliopisto";
     public static String ROOT_UNIT_NAME_SV = "Helsingfors universitet";
     public static String ROOT_UNIT_NAME_EN = "University of Helsinki";
+
+    public static String HIERARCHY_TYPE_TALOUS = "talous";
+    public static String HIERARCHY_TYPE_TUTKIMUS = "tutkimus";
+    public static String HIERARCHY_TYPE_OPETUS = "opetus";
+    public static String HIERARCHY_TYPE_TOIMINNANOHJAUS = "toiminnanohjaus";
+    public static String HIERARCHY_TYPE_HISTORY = "history";
+    public static String HIERARCHY_TYPE_HENKILOSTO = "henkilosto";
+
 }
