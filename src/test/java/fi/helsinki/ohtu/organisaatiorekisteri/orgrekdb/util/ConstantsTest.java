@@ -13,4 +13,5 @@ public class ConstantsTest {
     public static String HIERARCHY_TYPE_TOIMINNANOHJAUS = "toiminnanohjaus";
     public static String HIERARCHY_TYPE_HISTORY = "history";
     public static String HIERARCHY_TYPE_HENKILOSTO = "henkilosto";
+
 }
