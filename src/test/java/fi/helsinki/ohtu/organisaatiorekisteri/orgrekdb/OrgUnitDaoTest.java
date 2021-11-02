@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations="classpath:application.properties")
@@ -34,11 +35,11 @@ public class OrgUnitDaoTest {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.1.2021");
-        Map<String, List<Attribute>> attributeMap =  orgUnitDao.getCurrentAttributeMap(node.getId(), dateObj);
-        assertEquals(10, attributeMap.size());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_FI, attributeMap.get("name_fi").get(0).getValue());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_EN, attributeMap.get("name_en").get(0).getValue());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_SV, attributeMap.get("name_sv").get(0).getValue());
+        List<Attribute> attributeList =  orgUnitDao.getCurrentAttributeList(node.getId(), dateObj);
+        assertEquals(10, attributeList.size());
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_fi") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_FI)));
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_sv") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_SV)));
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_en") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_EN)));
     }
 
     @Test
@@ -46,11 +47,11 @@ public class OrgUnitDaoTest {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.1.2018");
-        Map<String, List<Attribute>> attributeMap =  orgUnitDao.getCurrentAttributeMap(node.getId(), dateObj);
-        assertEquals(18, attributeMap.size());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_FI, attributeMap.get("name_fi").get(0).getValue());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_EN, attributeMap.get("name_en").get(0).getValue());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_SV, attributeMap.get("name_sv").get(0).getValue());
+        List<Attribute> attributeList =  orgUnitDao.getCurrentAttributeList(node.getId(), dateObj);
+        assertEquals(18, attributeList.size());
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_fi") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_FI)));
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_sv") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_SV)));
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_en") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_EN)));
     }
 
     @Test
@@ -58,11 +59,11 @@ public class OrgUnitDaoTest {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.8.2018");
-        Map<String, List<Attribute>> attributeMap =  orgUnitDao.getCurrentAttributeMap(node.getId(), dateObj);
-        assertEquals(14, attributeMap.size());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_FI, attributeMap.get("name_fi").get(0).getValue());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_EN, attributeMap.get("name_en").get(0).getValue());
-        assertEquals(ConstantsTest.ROOT_UNIT_NAME_SV, attributeMap.get("name_sv").get(0).getValue());
+        List<Attribute> attributeList =  orgUnitDao.getCurrentAttributeList(node.getId(), dateObj);
+        assertEquals(14, attributeList.size());
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_fi") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_FI)));
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_sv") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_SV)));
+        assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_en") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_EN)));
     }
 
     @Test
