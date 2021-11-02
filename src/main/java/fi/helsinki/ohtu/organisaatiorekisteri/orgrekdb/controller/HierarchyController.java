@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import java.util.List;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
@@ -20,23 +22,27 @@ public class HierarchyController {
     private OrgUnitDao orgUnitDao;
 
     @RequestMapping(method = GET, value = "/parents/{id}/{date}")
-    public List<Node> getParentNodesByIdAndDate(@PathVariable("id") String nodeId, @PathVariable("date") String date) {
-        return orgUnitDao.getCurrentParentsByChildNodeId(nodeId, date);
+    public List<Node> getParentNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getCurrentParentsByChildNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/parents/types/{id}/{date}")
-    public List<NodeWrapper> getParentNodeTypesByIdAndDate(@PathVariable("id") String nodeId, @PathVariable("date") String date) {
-        return orgUnitDao.getCurrentTypesByChildNodeId(nodeId, date);
+    public List<NodeWrapper> getParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getCurrentTypesByChildNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/children/{id}/{date}")
-    public List<Node> getChildNodesByIdAndDate(@PathVariable("id") String nodeId, @PathVariable("date") String date) {
-        return orgUnitDao.getCurrentChildrenByParentNodeId(nodeId, date);
+    public List<Node> getChildNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getCurrentChildrenByParentNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/children/types/{id}/{date}")
-    public List<NodeWrapper> getChildNodeTypesByIdAndDate(@PathVariable("id") String nodeId, @PathVariable("date") String date) {
-        return orgUnitDao.getCurrentTypesByParentNodeId(nodeId, date);
+    public List<NodeWrapper> getChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getCurrentTypesByParentNodeId(node.getId(), date);
     }
 
 }
