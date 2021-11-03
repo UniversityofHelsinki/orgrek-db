@@ -101,7 +101,6 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "INNER JOIN NODE " +
                 "ON EDGE.CHILD_NODE_ID = NODE.ID " +
                 "WHERE PARENT_NODE_ID = :startId AND TYPE = :edgeType";
-        //String sql = "SELECT CHILD_NODE_ID AS NODE_ID, START_DATE AS EDGE_START_DATE, END_DATE AS EDGE_END_DATE FROM edge WHERE parent_node_id = :startId AND type = :edgeType";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.START_ID_FIELD, startId);
         params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
@@ -114,7 +113,6 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "INNER JOIN NODE " +
                 "ON EDGE.PARENT_NODE_ID = NODE.ID " +
                 "WHERE CHILD_NODE_ID = :endId AND TYPE = :edgeType";
-        //String sql = "SELECT parent_node_id FROM edge WHERE child_node_id = :endId AND type = :edgeType";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.END_ID_FIELD, endId);
         params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
