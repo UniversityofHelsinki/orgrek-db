@@ -47,7 +47,7 @@ public class HierarchyController {
         return orgUnitDao.getCurrentTypesByParentNodeId(node.getId(), date);
     }
 
-    @RequestMapping(method = GET, value = "/predecessors/{id}/")
+    @RequestMapping(method = GET, value = "/predecessors/{id}")
     public List<NodeEdgeHistoryWrapper> getPredecessorsById(@PathVariable("id") int uniqueId) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getPredecessors(node.getId(), Constants.HISTORY_UNIT_TYPE);
