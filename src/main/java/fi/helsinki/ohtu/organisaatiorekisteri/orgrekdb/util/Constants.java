@@ -6,6 +6,9 @@ public class Constants {
 
     public static final String HISTORY_UNIT_TYPE = "history";
 
+    public static final String START_ID_FIELD = "startId";
+    public static final String END_ID_FIELD = "endId";
     public static final String EDGE_TYPE_FIELD = "edgeType";
     public static final String NODE_ID_FIELD = "nodeId";
+
 }

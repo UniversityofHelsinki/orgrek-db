@@ -3,6 +3,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeEdgeHistoryWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ConstantsTest;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
@@ -171,4 +172,20 @@ public class OrgUnitDaoTest {
         assertEquals("3288", wrapperList.get(5).getNodeId());
     }
 
+    @Test
+    public void testGetPredecessorsOfNode(){
+        List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getPredecessors(ConstantsTest.ROOT_UNIT_NODE_ID, ConstantsTest.HIERARCHY_TYPE_HISTORY);
+        assertEquals(2, wrapperList.size());
+        assertEquals("3337", wrapperList.get(0).getNodeId());
+        assertEquals("3471", wrapperList.get(1).getNodeId());
+    }
+
+    @Test
+    public void testGetSuccessorsOfNode(){
+        List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getSuccessors(ConstantsTest.ROOT_UNIT_NODE_ID, ConstantsTest.HIERARCHY_TYPE_HISTORY);
+        assertEquals(1, wrapperList.size());
+        assertEquals("9999", wrapperList.get(0).getNodeId());
+        System.out.println(wrapperList.get(0).getEdgeStartDate());
+        System.out.println(wrapperList.get(0).getEdgeEndDate());
+    }
 }
