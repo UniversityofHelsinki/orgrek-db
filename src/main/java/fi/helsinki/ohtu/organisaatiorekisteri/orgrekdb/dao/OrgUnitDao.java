@@ -96,7 +96,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeEdgeHistoryWrapper> getPredecessors(String startId, String edgeType) {
-        String sql = "SELECT EDGE.CHILD_NODE_ID AS NODE_ID, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, EDGE.END_DATE AS EDGE_END_DATE " +
+        String sql = "SELECT EDGE.CHILD_NODE_ID AS NODE_ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, EDGE.END_DATE AS EDGE_END_DATE " +
                 "FROM EDGE " +
                 "INNER JOIN NODE " +
                 "ON EDGE.CHILD_NODE_ID = NODE.ID " +
@@ -108,7 +108,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeEdgeHistoryWrapper> getSuccessors(String endId, String edgeType) {
-        String sql = "SELECT EDGE.PARENT_NODE_ID AS NODE_ID, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, EDGE.END_DATE AS EDGE_END_DATE " +
+        String sql = "SELECT EDGE.PARENT_NODE_ID AS NODE_ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, EDGE.END_DATE AS EDGE_END_DATE " +
                 "FROM EDGE " +
                 "INNER JOIN NODE " +
                 "ON EDGE.PARENT_NODE_ID = NODE.ID " +

@@ -3,6 +3,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 public class NodeEdgeHistoryWrapper {
 
     private String nodeId;
+    private String name;
     private String startDate;
     private String endDate;
     private String edgeStartDate;
@@ -14,6 +15,14 @@ public class NodeEdgeHistoryWrapper {
 
     public void setNodeId(String nodeId) {
         this.nodeId = nodeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getStartDate() {
