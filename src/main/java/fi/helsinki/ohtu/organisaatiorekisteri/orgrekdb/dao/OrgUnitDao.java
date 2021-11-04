@@ -19,9 +19,6 @@ import java.util.List;
 @Repository(value = "orgUnitDao")
 public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
-    private static final String edgeTypeField = "edgeType";
-    private static final String startIdField = "startId";
-
     @Autowired
     private DataSource dataSource;
 
