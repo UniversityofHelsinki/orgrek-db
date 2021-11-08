@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeEdgeHistoryWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,5 +91,30 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
+
+    public List<NodeEdgeHistoryWrapper> getPredecessors(String startId, String edgeType) {
+        String sql = "SELECT EDGE.CHILD_NODE_ID AS NODE_ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, EDGE.END_DATE AS EDGE_END_DATE " +
+                "FROM EDGE " +
+                "INNER JOIN NODE " +
+                "ON EDGE.CHILD_NODE_ID = NODE.ID " +
+                "WHERE PARENT_NODE_ID = :startId AND TYPE = :edgeType";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.START_ID_FIELD, startId);
+        params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
+    }
+
+    public List<NodeEdgeHistoryWrapper> getSuccessors(String endId, String edgeType) {
+        String sql = "SELECT EDGE.PARENT_NODE_ID AS NODE_ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, EDGE.END_DATE AS EDGE_END_DATE " +
+                "FROM EDGE " +
+                "INNER JOIN NODE " +
+                "ON EDGE.PARENT_NODE_ID = NODE.ID " +
+                "WHERE CHILD_NODE_ID = :endId AND TYPE = :edgeType";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.END_ID_FIELD, endId);
+        params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
+    }
+
 }
 

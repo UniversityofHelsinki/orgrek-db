@@ -2,7 +2,9 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeEdgeHistoryWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +45,18 @@ public class HierarchyController {
     public List<NodeWrapper> getChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getCurrentTypesByParentNodeId(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/predecessors/{id}")
+    public List<NodeEdgeHistoryWrapper> getPredecessorsById(@PathVariable("id") int uniqueId) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getPredecessors(node.getId(), Constants.HISTORY_UNIT_TYPE);
+    }
+
+    @RequestMapping(method = GET, value = "/successors/{id}")
+    public List<NodeEdgeHistoryWrapper> getSuccessors(@PathVariable("id") int uniqueId) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getSuccessors(node.getId(), Constants.HISTORY_UNIT_TYPE);
     }
 
 }
