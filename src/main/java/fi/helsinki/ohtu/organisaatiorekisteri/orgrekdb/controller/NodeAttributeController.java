@@ -25,7 +25,7 @@ public class NodeAttributeController {
     public List<Attribute> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
-        return orgUnitDao.getCurrentAttributeList(node.getId(), dateObj);
+        return orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
 
     }
 }

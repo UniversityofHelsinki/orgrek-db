@@ -34,13 +34,18 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
-    public List<Attribute> getCurrentAttributeList(String id, Date date) {
+    public List<Attribute> getAttributeListByDate(String id, Date date) {
+        Date attrstart = date;
+        Date attrend = date;
         String sql = "SELECT * FROM NODE_ATTR WHERE NODE_ID = :id AND " +
                 "(NODE_ATTR.END_DATE IS NULL OR " +
-                "(NODE_ATTR.END_DATE >= trunc(:date)))";
+                "(NODE_ATTR.END_DATE >= trunc(:attrend))) AND " +
+                "(NODE_ATTR.START_DATE IS NULL OR " +
+                "(NODE_ATTR.START_DATE <= trunc(:attrstart)))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        params.addValue("date", date);
+        params.addValue("attrend", attrend);
+        params.addValue("attrstart", attrstart);
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
     }
