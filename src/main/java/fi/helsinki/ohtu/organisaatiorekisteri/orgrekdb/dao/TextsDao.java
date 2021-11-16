@@ -41,6 +41,7 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
     private static final String VALUE_FIELD = "value";
     private static final String KEY_FIELD = "key";
     private static final String LANGUAGE_FIELD = "language";
+    private static final String NODE_ID = "node_id";
 
     public List<Map<String, String>> getAllTexts() {
         final String SQL_GET_ALL_TEXTS = "SELECT KEY, LANGUAGE, VALUE FROM TEXT";
@@ -83,5 +84,32 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
         return textKey;
     }
 
+    /**
+     * Return node attribute texts by language. OR-632
+     * <p>
+     * Key value pairs are returned in a map
+     * <p>
+     * {
+     * "3142": "Hjelt-instituutti",
+     * }
+     *
+     * @return text entries in a map
+     */
 
+    public Map<String, String> getAttributeNamesByLang(String language) {
+        String lang;
+        if (language.equals("sv")) lang = "name_sv";
+        else if (language.equals("en")) lang = "name_en";
+        else lang = "name_fi";
+        String sql = "SELECT NODE_ID, VALUE FROM NODE_ATTR WHERE KEY = ?";
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        Map<String, String> textKey = new HashMap<>();
+        jdbcTemplate.query(sql, (ResultSet rs) -> {
+            while (rs.next()) {
+                textKey.put(rs.getString(NODE_ID), rs.getString(VALUE_FIELD));
+            }
+            return textKey;
+        }, lang);
+        return textKey;
+    }
 }
