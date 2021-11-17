@@ -106,12 +106,16 @@ dependency scanning:
   only:
     - schedules
   script:
-    # Run npm audit and npm outdated commands and write outputs to a txt file.
-    - echo "Running npm diagnostics, audit and outdated..."
+    # Run OWASP audit and write outputs to a txt file.
+    - echo "=== Running OWASP diagnostics ==="
     - export RESULT_FILE="./target/dependency-check-junit.xml"
     - mvn clean install -Powasp-dependency-check
     - ls -la
-    - echo "Done with npm diagnostics."
+    - echo "Done with OWASP diagnostics."
+    - echo " === Scanning maven dependencies with newer versions ===" >> $RESULT_FILE
+    - echo "" >> $RESULT_FILE
+    - mvn versions:display-dependency-updates >> $RESULT_FILE
+    - echo "" >> $RESULT_FILE
     - echo "Sending results to Slack..."
     # Send result file to "audit-logs" channel in Ohtu's Slack space (see https://api.slack.com/methods/files.upload).
     - "curl -F file=@${CI_PROJECT_DIR}/$RESULT_FILE -F 'initial_comment=Orgrek-db audit scan report' -F channels=${AUDIT_RESULT_SLACK_CHANNEL_ID} -F filename=$RESULT_FILE -F filetype=text -H 'Authorization: Bearer '${SLACK_FILE_UPLOAD_TOKEN} https://slack.com/api/files.upload"

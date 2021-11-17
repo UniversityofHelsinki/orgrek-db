@@ -79,6 +79,17 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<allowAnyUpdates>false</allowAnyUpdates>
+					<allowMajorUpdates>false</allowMajorUpdates>
+					<allowMinorUpdates>false</allowMinorUpdates>
+					<processDependencyManagement>false</processDependencyManagement>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<profiles>
