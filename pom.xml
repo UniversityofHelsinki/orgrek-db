@@ -90,6 +90,31 @@
 					<processDependencyManagement>false</processDependencyManagement>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>enforce-versions</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>3.6</version>
+									<message>Invalid Maven version. It should, at least, be 3.6</message>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>11</version>
+									<message>Invalid Java version. It should, at least, be 11.0</message>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<profiles>
