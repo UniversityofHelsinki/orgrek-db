@@ -120,6 +120,9 @@ dependency scanning:
     - echo "" >> $RESULT_NEW_VERSIONS_FILE
     - mvn versions:display-dependency-updates >> $RESULT_NEW_VERSIONS_FILE
     - echo "" >> $RESULT_NEW_VERSIONS_FILE
+    - echo " === Scanning maven dependencies with plugin updates ===" >> $RESULT_NEW_VERSIONS_FILE
+    - echo "" >> $RESULT_NEW_VERSIONS_FILE
+    - mvn versions:display-plugin-updates >> $RESULT_NEW_VERSIONS_FILE
     # Send result file to "audit-logs" channel in Ohtu's Slack space (see https://api.slack.com/methods/files.upload).
     - "curl -F file=@${CI_PROJECT_DIR}/$RESULT_NEW_VERSIONS_FILE -F 'initial_comment=Orgrek-db new versions report' -F channels=${AUDIT_RESULT_SLACK_CHANNEL_ID} -F filename=$RESULT_NEW_VERSIONS_FILE -F filetype=text -H 'Authorization: Bearer '${SLACK_FILE_UPLOAD_TOKEN} https://slack.com/api/files.upload"
     - echo "Done with sending results to Slack."
