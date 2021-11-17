@@ -109,7 +109,7 @@ dependency scanning:
     # Run OWASP audit and write outputs to a txt file.
     - echo "=== Running OWASP diagnostics ==="
     - export RESULT_FILE="./target/dependency-check-junit.xml"
-    - export RESULT_NEW_VERSIONS_FILE = "./new-versions.txt"
+    - export RESULT_NEW_VERSIONS_FILE="./new-versions.txt"
     - mvn clean install -Powasp-dependency-check
     - echo "Done with OWASP diagnostics."
     - echo "Sending results to Slack..."
