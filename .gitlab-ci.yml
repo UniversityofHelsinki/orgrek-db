@@ -13,6 +13,7 @@ cache:
 stages:
   - test
   - build
+  - audit_scan
   - deploy
 
 # Define the process for each stage
@@ -51,6 +52,8 @@ deploy_dev:
     name: development
   only:
     - main
+  except:
+    - schedules
   script:
     - curl -fsSLO --compressed "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz";
     - tar xvzf openshift-client-linux.tar.gz -C /usr/local/bin
@@ -93,4 +96,24 @@ deploy_prod:
     - oc login https://$OPENSHIFT_ADDR_PROD:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_PROD --insecure-skip-tls-verify
     - oc project organisaatiorekisteri
     - oc start-build organisaatiorekisteri-db-prod --from-dir=. --follow
+
+# Rules for the scheduled npm audit and outdated scans
+dependency scanning:
+  stage: audit_scan
+  tags:
+    - ohtu-build-1
+  allow_failure: true
+  only:
+    - schedules
+  script:
+    # Run npm audit and npm outdated commands and write outputs to a txt file.
+    - echo "Running npm diagnostics, audit and outdated..."
+    - export RESULT_FILE="./target/dependency-check-junit.xml"
+    - mvn clean install -Powasp-dependency-check
+    - ls -la
+    - echo "Done with npm diagnostics."
+    - echo "Sending results to Slack..."
+    # Send result file to "audit-logs" channel in Ohtu's Slack space (see https://api.slack.com/methods/files.upload).
+    - "curl -F file=@${CI_PROJECT_DIR}/$RESULT_FILE -F 'initial_comment=Orgrek-db audit scan report' -F channels=${AUDIT_RESULT_SLACK_CHANNEL_ID} -F filename=$RESULT_FILE -F filetype=text -H 'Authorization: Bearer '${SLACK_FILE_UPLOAD_TOKEN} https://slack.com/api/files.upload"
+    - echo "Done with sending results to Slack."
 
