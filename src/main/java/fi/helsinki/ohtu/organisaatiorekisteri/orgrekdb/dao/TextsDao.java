@@ -113,7 +113,7 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
             textKey.put(resultSet.getString(NODE_ID), resultSet.getString(VALUE_FIELD));
             return textKey;
         });
-        return textKey;
+            return textKey;
     }
 }
 
