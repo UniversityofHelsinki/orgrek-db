@@ -103,8 +103,8 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
         else if (language.equals("en")) lang = "name_en";
         else lang = "name_fi";
         String sql = "SELECT NODE_ID, VALUE FROM NODE_ATTR WHERE KEY = :lang " +
-                "AND (END_DATE is null or trunc(END_DATE) >= to_date(:currentDate,'YYYY-MM-DD')) and " +
-                "(START_DATE is null or trunc(START_DATE) <= to_date(:currentDate, 'YYYY-MM-DD'))";
+                "AND (END_DATE is null or :currentDate is null or trunc(END_DATE) >= to_date(:currentDate,'YYYY-MM-DD')) and " +
+                "(START_DATE is null or  :currentDate is null or trunc(START_DATE) <= to_date(:currentDate, 'YYYY-MM-DD'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("lang", lang);
         params.addValue("currentDate", currentDate);

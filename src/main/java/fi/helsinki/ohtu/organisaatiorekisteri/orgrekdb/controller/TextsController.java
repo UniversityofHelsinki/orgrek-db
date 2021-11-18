@@ -40,9 +40,6 @@ public class TextsController {
         }
         else if (namespace.contains("nodeattr")) {
             String currentDate = namespace.substring("nodeattr".length());
-            if(currentDate.isEmpty()) {
-                currentDate = LocalDate.now().toString();
-            }
             return textsDao.getAttributeNamesByLang(language, currentDate);
         }
         else return Collections.emptyMap();
