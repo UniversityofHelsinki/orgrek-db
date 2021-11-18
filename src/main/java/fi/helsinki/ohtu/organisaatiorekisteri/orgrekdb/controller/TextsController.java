@@ -27,21 +27,15 @@ public class TextsController {
         return textsDao.getAllTexts();
     }
 
-    /*
-    @CrossOrigin
-    @RequestMapping("/api/texts/{language}")
-    public Map<String, String> getTextsByLang(@PathVariable("language") String language) {
-        return textsDao.getTextsByLang(language);
-    }
-*/
     @CrossOrigin
     @RequestMapping("/api/texts/{language}/{ns}")
     public Map<String, String> getTextsByLang(@PathVariable("language") String language, @PathVariable("ns") String namespace) {
         if (namespace.equals("texts")) {
             return textsDao.getTextsByLang(language);
         }
-        else if (namespace.equals("nodeattr")) {
-            return textsDao.getAttributeNamesByLang(language);
+        else if (namespace.contains("nodeattr")) {
+            String currentDate = namespace.substring("nodeattr".length());
+            return textsDao.getAttributeNamesByLang(language, currentDate);
         }
         else return Collections.emptyMap();
     }
