@@ -108,7 +108,7 @@ dependency scanning:
   script:
     # Run OWASP audit and write outputs to a txt file.
     - echo "=== Running OWASP diagnostics ==="
-    - export RESULT_FILE="./target/dependency-check-junit.xml"
+    - export RESULT_FILE="./target/dependency-check-report.html"
     - mvn clean install -Powasp-dependency-check
     - echo "Done with OWASP diagnostics."
     - echo "Sending results to Slack..."
