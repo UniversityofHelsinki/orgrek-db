@@ -62,10 +62,10 @@ deploy_dev:
     - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST --insecure-skip-tls-verify
     - oc project organisaatiorekisteri
     # add secrets here
+    - oc delete secret generic db-dev-password --ignore-not-found
     - oc create secret generic db-dev-password --from-literal=password=$DB_DEV_PASSWORD
     # list environment variables here
     - oc set env --from=secret/db-dev-password dc/organisaatiorekisteri-db-dev
-    - oc set env dc/organisaatiorekisteri-db-dev PASSWORD=$DB_DEV_PASSWORD
     - oc set env dc/organisaatiorekisteri-db-dev URL=$DB_DEV_URL
     - oc set env dc/organisaatiorekisteri-db-dev PORT=$DB_PORT
     - oc set env dc/organisaatiorekisteri-db-dev USERNAME=$DB_DEV_USERNAME
