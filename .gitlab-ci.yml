@@ -61,6 +61,14 @@ deploy_dev:
     # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
     - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST --insecure-skip-tls-verify
     - oc project organisaatiorekisteri
+    # add secrets here
+    - oc delete secret generic db-dev-password --ignore-not-found
+    - oc create secret generic db-dev-password --from-literal=password=$DB_DEV_PASSWORD
+    # list environment variables here
+    - oc set env --from=secret/db-dev-password dc/organisaatiorekisteri-db-dev
+    - oc set env dc/organisaatiorekisteri-db-dev URL=$DB_DEV_URL
+    - oc set env dc/organisaatiorekisteri-db-dev PORT=$DB_PORT
+    - oc set env dc/organisaatiorekisteri-db-dev USERNAME=$DB_DEV_USERNAME
     - oc start-build organisaatiorekisteri-db-dev --from-dir=. --follow
 
 deploy_test:
@@ -78,6 +86,11 @@ deploy_test:
     # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
     - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST --insecure-skip-tls-verify
     - oc project organisaatiorekisteri
+    # list environment variables here
+    - oc set env dc/organisaatiorekisteri-db-test PASSWORD=$DB_TEST_PASSWORD
+    - oc set env dc/organisaatiorekisteri-db-test URL=$DB_TEST_URL
+    - oc set env dc/organisaatiorekisteri-db-test PORT=$DB_PORT
+    - oc set env dc/organisaatiorekisteri-db-test USERNAME=$DB_TEST_USERNAME
     - oc start-build organisaatiorekisteri-db-test --from-dir=. --follow
 
 deploy_prod:
@@ -88,6 +101,7 @@ deploy_prod:
     name: prod
   only:
     - prod
+  when: manual
   script:
     - curl -fsSLO --compressed "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz";
     - tar xvzf openshift-client-linux.tar.gz -C /usr/local/bin
@@ -95,6 +109,11 @@ deploy_prod:
     # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
     - oc login https://$OPENSHIFT_ADDR_PROD:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_PROD --insecure-skip-tls-verify
     - oc project organisaatiorekisteri
+    # list environment variables here
+    - oc set env dc/organisaatiorekisteri-db-prod PASSWORD=$DB_PROD_PASSWORD
+    - oc set env dc/organisaatiorekisteri-db-prod URL=$DB_PROD_URL
+    - oc set env dc/organisaatiorekisteri-db-prod PORT=$DB_PORT
+    - oc set env dc/organisaatiorekisteri-db-prod USERNAME=$DB_PROD_USERNAME
     - oc start-build organisaatiorekisteri-db-prod --from-dir=. --follow
 
 # Rules for the scheduled npm audit and outdated scans
