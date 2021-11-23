@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +42,7 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
     private static final String VALUE_FIELD = "value";
     private static final String KEY_FIELD = "key";
     private static final String LANGUAGE_FIELD = "language";
+    private static final String NODE_ID = "node_id";
 
     public List<Map<String, String>> getAllTexts() {
         final String SQL_GET_ALL_TEXTS = "SELECT KEY, LANGUAGE, VALUE FROM TEXT";
@@ -83,5 +85,37 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
         return textKey;
     }
 
+    /**
+     * Return node attribute texts by language. OR-632
+     * <p>
+     * Key value pairs are returned in a map
+     * <p>
+     * {
+     * "3142": "Hjelt-instituutti",
+     * }
+     *
+     * @return text entries in a map
+     */
 
+    public Map<String, String> getAttributeNamesByLang(String language, String currentDate) {
+        String lang;
+        if (language.equals("sv")) lang = "name_sv";
+        else if (language.equals("en")) lang = "name_en";
+        else lang = "name_fi";
+        String sql = "SELECT NODE_ID, VALUE FROM NODE_ATTR WHERE KEY = :lang " +
+                "AND (END_DATE is null or :currentDate is null or trunc(END_DATE) >= to_date(:currentDate,'YYYY-MM-DD')) and " +
+                "(START_DATE is null or  :currentDate is null or trunc(START_DATE) <= to_date(:currentDate, 'YYYY-MM-DD'))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("lang", lang);
+        params.addValue("currentDate", currentDate);
+        Map<String, String> textKey = new HashMap<>();
+        getNamedParameterJdbcTemplate().query(sql, params, (resultSet, i) -> {
+            textKey.put(resultSet.getString(NODE_ID), resultSet.getString(VALUE_FIELD));
+            return textKey;
+        });
+            return textKey;
+    }
 }
+
+
+
