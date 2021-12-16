@@ -52,17 +52,22 @@ public class HierarchyController {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getCurrentChildrenByParentNodeId(node.getId(), date);
     }
+
     @RequestMapping(method = GET, value = "/children/history/{id}/{date}")
     public List<Node> getAllChildNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getAllChildrenByParentNodeId(node.getId(), date);
     }
 
-
     @RequestMapping(method = GET, value = "/children/types/{id}/{date}")
     public List<NodeWrapper> getChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getCurrentTypesByParentNodeId(node.getId(), date);
+    }
+    @RequestMapping(method = GET, value = "/children/history/types/{id}/{date}")
+    public List<NodeWrapper> getAllChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getAllTypesByParentNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/predecessors/{id}")
