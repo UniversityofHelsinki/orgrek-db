@@ -29,10 +29,22 @@ public class HierarchyController {
         return orgUnitDao.getCurrentParentsByChildNodeId(node.getId(), date);
     }
 
+    @RequestMapping(method = GET, value = "/parents/history/{id}/{date}")
+    public List<Node> getAllParentNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getAllParentsByChildNodeId(node.getId(), date);
+    }
+
     @RequestMapping(method = GET, value = "/parents/types/{id}/{date}")
     public List<NodeWrapper> getParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getCurrentTypesByChildNodeId(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/parents/history/types/{id}/{date}")
+    public List<NodeWrapper> getAllParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getAllTypesByChildNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/children/{id}/{date}")
@@ -40,6 +52,12 @@ public class HierarchyController {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getCurrentChildrenByParentNodeId(node.getId(), date);
     }
+    @RequestMapping(method = GET, value = "/children/history/{id}/{date}")
+    public List<Node> getAllChildNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getAllChildrenByParentNodeId(node.getId(), date);
+    }
+
 
     @RequestMapping(method = GET, value = "/children/types/{id}/{date}")
     public List<NodeWrapper> getChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
