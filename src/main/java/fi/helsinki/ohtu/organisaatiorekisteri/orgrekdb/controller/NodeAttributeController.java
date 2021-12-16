@@ -28,4 +28,13 @@ public class NodeAttributeController {
         return orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
 
     }
+    @RequestMapping(method = GET, value = "/history/{id}/{date}/attributes")
+    public List<Attribute> getHistoryAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(id);
+        Date dateObj = DateUtil.parseDate(date);
+        return orgUnitDao.getHistoryAttributeListByDate(node.getId(), dateObj);
+
+    }
+
+
 }
