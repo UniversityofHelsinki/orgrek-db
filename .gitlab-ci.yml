@@ -69,7 +69,11 @@ deploy_dev:
     - oc set env dc/organisaatiorekisteri-db-dev URL=$DB_DEV_URL
     - oc set env dc/organisaatiorekisteri-db-dev PORT=$DB_PORT
     - oc set env dc/organisaatiorekisteri-db-dev USERNAME=$DB_DEV_USERNAME
+    # Start build process
     - oc start-build organisaatiorekisteri-db-dev --from-dir=. --follow
+    # patch openshift buildConfig file
+    - oc patch bc/organisaatiorekisteri-db-dev --patch '{"spec":{"successfulBuildsHistoryLimit":1}}'
+    - oc patch bc/organisaatiorekisteri-db-dev --patch '{"spec":{"failedBuildsHistoryLimit":1}}'
 
 deploy_test:
   stage: deploy
@@ -94,7 +98,11 @@ deploy_test:
     - oc set env dc/organisaatiorekisteri-db-test URL=$DB_TEST_URL
     - oc set env dc/organisaatiorekisteri-db-test PORT=$DB_PORT
     - oc set env dc/organisaatiorekisteri-db-test USERNAME=$DB_TEST_USERNAME
+    # start build process
     - oc start-build organisaatiorekisteri-db-test --from-dir=. --follow
+    # patch openshift buildConfig file
+    - oc patch bc/organisaatiorekisteri-db-test --patch '{"spec":{"successfulBuildsHistoryLimit":1}}'
+    - oc patch bc/organisaatiorekisteri-db-test --patch '{"spec":{"failedBuildsHistoryLimit":1}}'
 
 deploy_prod:
   stage: deploy
@@ -120,7 +128,11 @@ deploy_prod:
     - oc set env dc/organisaatiorekisteri-db-prod URL=$DB_PROD_URL
     - oc set env dc/organisaatiorekisteri-db-prod PORT=$DB_PORT
     - oc set env dc/organisaatiorekisteri-db-prod USERNAME=$DB_PROD_USERNAME
+    # start build process
     - oc start-build organisaatiorekisteri-db-prod --from-dir=. --follow
+    # patch openshift buildConfig file
+    - oc patch bc/organisaatiorekisteri-db-prod --patch '{"spec":{"successfulBuildsHistoryLimit":1}}'
+    - oc patch bc/organisaatiorekisteri-db-prod --patch '{"spec":{"failedBuildsHistoryLimit":1}}'
 
 # Rules for the scheduled npm audit and outdated scans
 dependency scanning:

@@ -8,6 +8,15 @@ public class NodeEdgeHistoryWrapper {
     private String endDate;
     private String edgeStartDate;
     private String edgeEndDate;
+    private String uniqueId;
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
     public String getNodeId() {
         return nodeId;
