@@ -28,13 +28,17 @@ public class NodeAttributeController {
         return orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
 
     }
-    @RequestMapping(method = GET, value = "/history/{id}/{date}/attributes")
-    public List<Attribute> getHistoryAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+    @RequestMapping(method = GET, value = "/historyandcurrent/{id}/{date}/attributes")
+    public List<Attribute> getHistoryAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
-        return orgUnitDao.getHistoryAttributeListByDate(node.getId(), dateObj);
-
+        return orgUnitDao.getHistoryAndCurrentAttributeListByDate(node.getId(), dateObj);
     }
 
-
+    @RequestMapping(method = GET, value = "/futureandcurrent/{id}/{date}/attributes")
+    public List<Attribute> getFutureAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(id);
+        Date dateObj = DateUtil.parseDate(date);
+        return orgUnitDao.getFutureAndCurrentAttributeListByDate(node.getId(), dateObj);
+    }
 }

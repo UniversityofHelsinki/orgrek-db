@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import java.util.List;
-
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
@@ -29,10 +27,16 @@ public class HierarchyController {
         return orgUnitDao.getCurrentParentsByChildNodeId(node.getId(), date);
     }
 
-    @RequestMapping(method = GET, value = "/parents/history/{id}/{date}")
-    public List<Node> getAllParentNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+    @RequestMapping(method = GET, value = "/parents/historyandcurrent/{id}/{date}")
+    public List<Node> getHistoryAndCurrentParentNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getAllParentsByChildNodeId(node.getId(), date);
+        return orgUnitDao.getHistoryAndCurrentParentsByChildNodeId(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/parents/futureandcurrent/{id}/{date}")
+    public List<Node> getFutureAndCurrentParentNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getFutureAndCurrentParentsByChildNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/parents/types/{id}/{date}")
@@ -41,10 +45,16 @@ public class HierarchyController {
         return orgUnitDao.getCurrentTypesByChildNodeId(node.getId(), date);
     }
 
-    @RequestMapping(method = GET, value = "/parents/history/types/{id}/{date}")
-    public List<NodeWrapper> getAllParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+    @RequestMapping(method = GET, value = "/parents/historyandcurrent/types/{id}/{date}")
+    public List<NodeWrapper> getHistoryAndCurrentParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getAllTypesByChildNodeId(node.getId(), date);
+        return orgUnitDao.getHistoryAndCurrentTypesByChildNodeId(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/parents/futureandcurrent/types/{id}/{date}")
+    public List<NodeWrapper> getFutureAndCurrentParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getFutureAndCurrentTypesByChildNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/children/{id}/{date}")
@@ -53,10 +63,16 @@ public class HierarchyController {
         return orgUnitDao.getCurrentChildrenByParentNodeId(node.getId(), date);
     }
 
-    @RequestMapping(method = GET, value = "/children/history/{id}/{date}")
-    public List<Node> getAllChildNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+    @RequestMapping(method = GET, value = "/children/historyandcurrent/{id}/{date}")
+    public List<Node> getHistoryAndCurrentChildNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getAllChildrenByParentNodeId(node.getId(), date);
+        return orgUnitDao.getHistoryAndCurrentChildrenByParentNodeId(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/children/futureandcurrent/{id}/{date}")
+    public List<Node> getFutureAndCurrentChildNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getFutureAndCurrentChildrenByParentNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/children/types/{id}/{date}")
@@ -64,10 +80,16 @@ public class HierarchyController {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getCurrentTypesByParentNodeId(node.getId(), date);
     }
-    @RequestMapping(method = GET, value = "/children/history/types/{id}/{date}")
-    public List<NodeWrapper> getAllChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+    @RequestMapping(method = GET, value = "/children/historyandcurrent/types/{id}/{date}")
+    public List<NodeWrapper> getHistoryAndCurrentChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getAllTypesByParentNodeId(node.getId(), date);
+        return orgUnitDao.getHistoryAndCurrentTypesByParentNodeId(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/children/futureandcurrent/types/{id}/{date}")
+    public List<NodeWrapper> getFutureAndCurrentChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getFutureAndCurrentTypesByParentNodeId(node.getId(), date);
     }
 
     @RequestMapping(method = GET, value = "/predecessors/{id}")

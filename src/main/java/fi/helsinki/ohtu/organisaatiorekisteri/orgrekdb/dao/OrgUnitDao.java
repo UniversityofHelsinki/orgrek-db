@@ -66,13 +66,10 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
-    public List<Node> getAllParentsByChildNodeId(String nodeId, String date) {
+    public List<Node> getHistoryAndCurrentParentsByChildNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT PARENT_NODE_ID FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) and " +
-                "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))) and " +
-                "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY')) and " +
-                "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
+                "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY')))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
@@ -80,7 +77,16 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
-
+    public List<Node> getFutureAndCurrentParentsByChildNodeId(String nodeId, String date) {
+        String sql = "SELECT * FROM NODE WHERE ID IN " +
+                "(SELECT PARENT_NODE_ID FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY')))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("dt", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
+    }
 
     public List<NodeWrapper> getCurrentTypesByChildNodeId(String nodeId, String date) {
         String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
@@ -94,9 +100,18 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
 
-    public List<NodeWrapper> getAllTypesByChildNodeId(String nodeId, String date) {
+    public List<NodeWrapper> getHistoryAndCurrentTypesByChildNodeId(String nodeId, String date) {
         String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("dt", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
+    }
+
+    public List<NodeWrapper> getFutureAndCurrentTypesByChildNodeId(String nodeId, String date) {
+        String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
         params.addValue("dt", date);
@@ -117,7 +132,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
-    public List<Node> getAllChildrenByParentNodeId(String nodeId, String date) {
+
+    public List<Node> getHistoryAndCurrentChildrenByParentNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT CHILD_NODE_ID FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY')))";
@@ -127,7 +143,15 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
-
+    public List<Node> getFutureAndCurrentChildrenByParentNodeId(String nodeId, String date) {
+        String sql = "SELECT * FROM NODE WHERE ID IN " +
+                "(SELECT CHILD_NODE_ID FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY')))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("dt", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
+    }
 
     public List<NodeWrapper> getCurrentTypesByParentNodeId(String nodeId, String date) {
         String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
@@ -141,9 +165,18 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
 
-    public List<NodeWrapper> getAllTypesByParentNodeId(String nodeId, String date) {
+    public List<NodeWrapper> getHistoryAndCurrentTypesByParentNodeId(String nodeId, String date) {
         String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("dt", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
+    }
+
+    public List<NodeWrapper> getFutureAndCurrentTypesByParentNodeId(String nodeId, String date) {
+        String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
         params.addValue("dt", date);
@@ -176,11 +209,23 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
     }
 
-    public List<Attribute> getHistoryAttributeListByDate(String id, Date date) {
+    public List<Attribute> getHistoryAndCurrentAttributeListByDate(String id, Date date) {
         Date attrstart = date;
         String sql = "SELECT * FROM NODE_ATTR WHERE NODE_ID = :id AND " +
                 "(NODE_ATTR.START_DATE IS NULL OR " +
                 "(NODE_ATTR.START_DATE <= trunc(:attrstart)))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        params.addValue("attrstart", attrstart);
+        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return attributes;
+    }
+
+    public List<Attribute> getFutureAndCurrentAttributeListByDate(String id, Date date) {
+        Date attrstart = date;
+        String sql = "SELECT * FROM NODE_ATTR WHERE NODE_ID = :id AND " +
+                "(NODE_ATTR.END_DATE IS NULL OR " +
+                "(NODE_ATTR.END_DATE >= trunc(:attrstart)))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         params.addValue("attrstart", attrstart);
