@@ -69,6 +69,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getHistoryAndCurrentParentsByChildNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT PARENT_NODE_ID FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(TYPE is null or TYPE != :edgeType) AND " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY')))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
@@ -80,6 +81,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getFutureAndCurrentParentsByChildNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT PARENT_NODE_ID FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(TYPE is null or TYPE != :edgeType) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY')))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
@@ -102,8 +104,10 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<NodeWrapper> getHistoryAndCurrentTypesByChildNodeId(String nodeId, String date) {
         String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(TYPE is null or TYPE != :edgeType) AND " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
         params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
@@ -111,9 +115,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<NodeWrapper> getFutureAndCurrentTypesByChildNodeId(String nodeId, String date) {
         String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(TYPE is null or TYPE != :edgeType) AND " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
         params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
@@ -136,9 +142,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getHistoryAndCurrentChildrenByParentNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT CHILD_NODE_ID FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(TYPE is null or TYPE != :edgeType) AND " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY')))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
         params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
@@ -146,9 +154,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getFutureAndCurrentChildrenByParentNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT CHILD_NODE_ID FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(TYPE is null or TYPE != :edgeType) AND " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY')))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
         params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
@@ -167,18 +177,22 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<NodeWrapper> getHistoryAndCurrentTypesByParentNodeId(String nodeId, String date) {
         String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(TYPE is null or TYPE != :edgeType) AND " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
         params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
 
     public List<NodeWrapper> getFutureAndCurrentTypesByParentNodeId(String nodeId, String date) {
         String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(TYPE is null or TYPE != :edgeType) AND " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
         params.addValue("dt", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
