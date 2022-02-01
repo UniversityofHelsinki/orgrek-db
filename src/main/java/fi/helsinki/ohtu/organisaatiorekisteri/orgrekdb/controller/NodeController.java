@@ -22,5 +22,10 @@ public class NodeController {
         return orgUnitDao.getNodeByUniqueId(uniqueId);
     }
 
+    @RequestMapping(method = GET, value = "/id/{id}")
+    public Node getNodeByNodeId(@PathVariable("id") String nodeId) {
+        return orgUnitDao.getNodeByNodeId(nodeId);
+    }
+
 }
 
