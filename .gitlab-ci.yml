@@ -58,8 +58,7 @@ deploy_dev:
     # set home path for openshift 1001 user
     - export HOME=/home/1001
     # before any action, I connect to the OpenShift server with the appropriate credentials
-    # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
-    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST --insecure-skip-tls-verify
+    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST
     - oc project organisaatiorekisteri
     # add secrets here
     - oc delete secret generic db-dev-password --ignore-not-found
@@ -87,8 +86,7 @@ deploy_test:
     # set home path for openshift 1001 user
     - export HOME=/home/1001
     # before any action, I connect to the OpenShift server with the appropriate credentials
-    # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
-    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST --insecure-skip-tls-verify
+    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST
     - oc project organisaatiorekisteri
     # add secrets here
     - oc delete secret generic db-test-password --ignore-not-found
@@ -117,8 +115,7 @@ deploy_prod:
     # set home path for openshift 1001 user
     - export HOME=/home/1001
     # before any action, I connect to the OpenShift server with the appropriate credentials
-    # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
-    - oc login https://$OPENSHIFT_ADDR_PROD:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_PROD --insecure-skip-tls-verify
+    - oc login https://$OPENSHIFT_ADDR_PROD:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_PROD
     - oc project organisaatiorekisteri
     # add secrets here
     - oc delete secret generic db-prod-password --ignore-not-found
