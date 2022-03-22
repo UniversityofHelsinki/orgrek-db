@@ -1,27 +1,39 @@
-image: frolvlad/alpine-glibc
+image: quay.io/tike/alpine-oc-java-11
 
-before_script:
-  - apk update && apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python3 curl tar
-  - apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
-  - apk add maven
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
 cache:
   paths:
-    - .m2/repository/
+    - .m2/repository
+
 
 # Define the stages
 stages:
-  - test
   - build
+  - test
   - audit_scan
   - deploy
 
 # Define the process for each stage
 
+build :
+  stage: build
+  tags:
+    - shared-openshift
+  script:
+    - java -version
+    - mvn install
+  artifacts:
+    name: orgrek-db-build-$CI_BUILD_ID-$CI_BUILD_REF
+    paths:
+      - target/*.jar
+    expire_in: 1h
+
 test :
   stage: test
   tags:
-    - ohtu-build-1
+    - shared-openshift
   script:
     - mvn test
     - cat target/site/jacoco/index.html | grep -o 'Total[^%]*%'
@@ -31,35 +43,22 @@ test :
       - target/site/jacoco/jacoco.xml
     expire_in: 1 mos
 
-build :
-  stage: build
-  tags:
-    - ohtu-build-1
-  script:
-    - java -version
-    - mvn install
-  artifacts:
-    name: orgrek-db-build-$CI_BUILD_ID-$CI_BUILD_REF
-    paths:
-      - target/*.jar
-
   # Define the process for deploy stage to development environment
 deploy_dev:
   stage: deploy
   tags:
-    - ohtu-build-1
+    - shared-openshift
   environment:
     name: development
   only:
-    - main
+    - master
   except:
     - schedules
   script:
-    - curl -fsSLO --compressed "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz";
-    - tar xvzf openshift-client-linux.tar.gz -C /usr/local/bin
+    # set home path for openshift 1001 user
+    - export HOME=/home/1001
     # before any action, I connect to the OpenShift server with the appropriate credentials
-    # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
-    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST --insecure-skip-tls-verify
+    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST
     - oc project organisaatiorekisteri
     # add secrets here
     - oc delete secret generic db-dev-password --ignore-not-found
@@ -78,17 +77,16 @@ deploy_dev:
 deploy_test:
   stage: deploy
   tags:
-    - ohtu-build-1
+    - shared-openshift
   environment:
     name: test
   only:
     - test
   script:
-    - curl -fsSLO --compressed "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz";
-    - tar xvzf openshift-client-linux.tar.gz -C /usr/local/bin
+    # set home path for openshift 1001 user
+    - export HOME=/home/1001
     # before any action, I connect to the OpenShift server with the appropriate credentials
-    # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
-    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST --insecure-skip-tls-verify
+    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST
     - oc project organisaatiorekisteri
     # add secrets here
     - oc delete secret generic db-test-password --ignore-not-found
@@ -107,18 +105,17 @@ deploy_test:
 deploy_prod:
   stage: deploy
   tags:
-    - ohtu-build-1
+    - shared-openshift
   environment:
     name: prod
   only:
     - prod
   when: manual
   script:
-    - curl -fsSLO --compressed "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz";
-    - tar xvzf openshift-client-linux.tar.gz -C /usr/local/bin
+    # set home path for openshift 1001 user
+    - export HOME=/home/1001
     # before any action, I connect to the OpenShift server with the appropriate credentials
-    # this parameter: `--insecure-skip-tls-verify` is important because we use a certificate signed by an unknown authority
-    - oc login https://$OPENSHIFT_ADDR_PROD:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_PROD --insecure-skip-tls-verify
+    - oc login https://$OPENSHIFT_ADDR_PROD:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_PROD
     - oc project organisaatiorekisteri
     # add secrets here
     - oc delete secret generic db-prod-password --ignore-not-found
@@ -138,7 +135,7 @@ deploy_prod:
 dependency scanning:
   stage: audit_scan
   tags:
-    - ohtu-build-1
+    - shared-openshift
   allow_failure: true
   only:
     - schedules

@@ -1,29 +1,30 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
+import java.util.Date;
+
 public class NodeEdgeHistoryWrapper {
-
-    private String nodeId;
+    private String id;
     private String name;
-    private String startDate;
-    private String endDate;
-    private String edgeStartDate;
-    private String edgeEndDate;
-    private String uniqueId;
+    private Date startDate;
+    private Date endDate;
+    private Date edgeStartDate;
+    private Date edgeEndDate;
+    private int unique_id;
 
-    public String getUniqueId() {
-        return uniqueId;
+    public int getUnique_id() {
+        return unique_id;
     }
 
-    public void setUniqueId(String uniqueId) {
-        this.uniqueId = uniqueId;
+    public void setUnique_id(int unique_id) {
+        this.unique_id = unique_id;
     }
 
-    public String getNodeId() {
-        return nodeId;
+    public String getId() {
+        return id;
     }
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -34,35 +35,35 @@ public class NodeEdgeHistoryWrapper {
         this.name = name;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    public String getEdgeStartDate() {
+    public Date getEdgeStartDate() {
         return edgeStartDate;
     }
 
-    public void setEdgeStartDate(String edgeStartDate) {
+    public void setEdgeStartDate(Date edgeStartDate) {
         this.edgeStartDate = edgeStartDate;
     }
 
-    public String getEdgeEndDate() {
+    public Date getEdgeEndDate() {
         return edgeEndDate;
     }
 
-    public void setEdgeEndDate(String edgeEndDate) {
+    public void setEdgeEndDate(Date edgeEndDate) {
         this.edgeEndDate = edgeEndDate;
     }
 
