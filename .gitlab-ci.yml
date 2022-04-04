@@ -51,7 +51,7 @@ deploy_dev:
   environment:
     name: development
   only:
-    - master
+    - main
   except:
     - schedules
   script:
