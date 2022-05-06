@@ -1,10 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeEdgeHistoryWrapper;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.*;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ConstantsTest;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.junit.jupiter.api.Test;
@@ -14,9 +11,9 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations="classpath:application.properties")
@@ -273,4 +270,33 @@ public class OrgUnitDaoTest {
         assertEquals(1, wrapperList.size());
         assertEquals("9999", wrapperList.get(0).getId());
     }
+
+    @Test
+    public void testOneSteeringGroupIsReturned() {
+        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
+        assertEquals(steeringGroups.size(), 1);
+        assertEquals("hy-humtdk-spt-jory", steeringGroups.get("19063").getIamGroup());
+    }
+    @Test
+    public void testSteeringGroupHasNamesInThreeLanguages() {
+        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
+        assertNotNull(steeringGroups.get("19063").getEn());
+        assertNotNull(steeringGroups.get("19063").getFi());
+        assertNotNull(steeringGroups.get("19063").getSv());
+    }
+
+    @Test
+    public void testOneDegreeProgrammeIsReturned() {
+        List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
+        assertEquals(programmes.size(), 1);
+    }
+
+    @Test
+    public void testDegreeProgrammeHasNamesInThreeLanguages() {
+        List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
+        assertEquals("Master's Programme in International Business Law", programmes.get(0).getProgrammeNameEn() );
+        assertEquals("Magisterprogramme", programmes.get(0).getProgrammeNameSv());
+        assertEquals("Kansainvälisen liikejuridiikan maisteriohjelma", programmes.get(0).getProgrammeNameFi());
+    }
+
 }

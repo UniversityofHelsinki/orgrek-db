@@ -260,7 +260,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return attributes;
     }
 
-    public Map<String, SteeringGroup> getSteeringGroupNames() {
+    public Map<String, SteeringGroup> getSteeringGroups() {
         String sql = "SELECT NA.NODE_ID, T.KEY, T.VALUE, T.LANGUAGE FROM NODE_ATTR NA " +
                 " JOIN NODE N ON NA.NODE_ID = N.ID " +
                 " JOIN TEXT T ON NA.VALUE = T.KEY " +

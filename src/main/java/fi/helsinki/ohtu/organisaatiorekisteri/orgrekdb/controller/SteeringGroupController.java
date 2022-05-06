@@ -22,7 +22,7 @@ public class SteeringGroupController {
     @RequestMapping(method = GET, value="/")
     public List<DegreeProgrammeDTO> getSteeringGroups() {
         List<DegreeProgrammeDTO> dtos = orgUnitDao.getDegreeProgrammesAndAttributes();
-        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroupNames();
+        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
         for(DegreeProgrammeDTO dto : dtos) {
             String id = dto.getNodeId();
             if((steeringGroups.get(id)!=null)){
