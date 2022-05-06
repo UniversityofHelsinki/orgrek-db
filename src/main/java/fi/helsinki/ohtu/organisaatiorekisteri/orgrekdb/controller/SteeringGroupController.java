@@ -26,7 +26,9 @@ public class SteeringGroupController {
         dtos.forEach(dto -> {
             String id = dto.getNodeId();
             if ((steeringGroups.get(id) != null)) {
-                dto.setSteeringGroup(steeringGroups.get(id));
+                dto.setSteeringGroupNameEn(steeringGroups.get(id).getEn());
+                dto.setSteeringGroupNameFi(steeringGroups.get(id).getFi());
+                dto.setSteeringGroupNameSv(steeringGroups.get(id).getSv());
             }
         });
         return dtos;

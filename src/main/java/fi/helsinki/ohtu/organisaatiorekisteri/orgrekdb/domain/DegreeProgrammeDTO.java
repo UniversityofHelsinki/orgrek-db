@@ -9,7 +9,34 @@ public class DegreeProgrammeDTO {
     private String programmeNameEn;
     private String programmeNameSv;
     private String type;
-    private SteeringGroup steeringGroup;
+
+    private String steeringGroupNameFi;
+    private String steeringGroupNameSv;
+    private String steeringGroupNameEn;
+
+    public String getSteeringGroupNameFi() {
+        return steeringGroupNameFi;
+    }
+
+    public void setSteeringGroupNameFi(String steeringGroupNameFi) {
+        this.steeringGroupNameFi = steeringGroupNameFi;
+    }
+
+    public String getSteeringGroupNameSv() {
+        return steeringGroupNameSv;
+    }
+
+    public void setSteeringGroupNameSv(String steeringGroupNameSv) {
+        this.steeringGroupNameSv = steeringGroupNameSv;
+    }
+
+    public String getSteeringGroupNameEn() {
+        return steeringGroupNameEn;
+    }
+
+    public void setSteeringGroupNameEn(String steeringGroupNameEn) {
+        this.steeringGroupNameEn = steeringGroupNameEn;
+    }
 
     public String getNodeId() {
         return nodeId;
@@ -66,12 +93,4 @@ public class DegreeProgrammeDTO {
     public void setType(String type) {
         this.type = type;
     }
-    public SteeringGroup getSteeringGroup() {
-        return steeringGroup;
     }
-
-    public void setSteeringGroup(SteeringGroup steeringGroup) {
-        this.steeringGroup = steeringGroup;
-    }
-
-}
