@@ -23,12 +23,12 @@ public class SteeringGroupController {
     public List<DegreeProgrammeDTO> getSteeringGroups() {
         List<DegreeProgrammeDTO> dtos = orgUnitDao.getDegreeProgrammesAndAttributes();
         Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
-        for(DegreeProgrammeDTO dto : dtos) {
+        dtos.forEach(dto -> {
             String id = dto.getNodeId();
-            if((steeringGroups.get(id)!=null)){
+            if ((steeringGroups.get(id) != null)) {
                 dto.setSteeringGroup(steeringGroups.get(id));
             }
-        }
+        });
         return dtos;
     }
 
