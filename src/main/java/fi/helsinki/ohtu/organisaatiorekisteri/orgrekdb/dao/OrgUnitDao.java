@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil.extractSteeringProgrammes;
 
@@ -274,7 +273,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
 
-    public List<DegreeProgrammeDTO> getSteeringGroups() {
+    public List<DegreeProgrammeDTO> getDegreeProgrammesAndAttributes() {
         String sql = "SELECT nat.NODE_ID, nat.KEY, nat.VALUE from NODE_ATTR nat " +
                 "WHERE  nat.NODE_ID in (SELECT N.ID FROM NODE N, NODE_ATTR NA  WHERE N.ID=NA.NODE_ID AND NA.KEY = 'iam-johtoryhma' AND NA.NODE_ID IN " +
                 "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma'))) " +
