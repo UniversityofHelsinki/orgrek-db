@@ -1,10 +1,8 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeEdgeHistoryWrapper;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.*;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,8 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
+import static fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil.extractSteeringProgrammes;
 
 @Repository(value = "orgUnitDao")
 public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
@@ -260,5 +259,30 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
     }
+
+    public Map<String, SteeringGroup> getSteeringGroups() {
+        String sql = "SELECT NA.NODE_ID, T.KEY, T.VALUE, T.LANGUAGE FROM NODE_ATTR NA " +
+                " JOIN NODE N ON NA.NODE_ID = N.ID " +
+                " JOIN TEXT T ON NA.VALUE = T.KEY " +
+                " WHERE NA.KEY = 'iam-johtoryhma' " +
+                " ORDER BY NA.NODE_ID, T.LANGUAGE";
+
+        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
+        Map<String, SteeringGroup> groups = extractSteeringProgrammes(rows);
+        return groups;
+    }
+
+
+    public List<DegreeProgrammeDTO> getDegreeProgrammesAndAttributes() {
+        String sql = "SELECT nat.NODE_ID, nat.KEY, nat.VALUE from NODE_ATTR nat " +
+                "WHERE  nat.NODE_ID in (SELECT N.ID FROM NODE N, NODE_ATTR NA  WHERE N.ID=NA.NODE_ID AND NA.KEY = 'iam-johtoryhma' AND NA.NODE_ID IN " +
+                "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma'))) " +
+                "ORDER BY NODE_ID, KEY";
+
+        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
+        List<DegreeProgrammeDTO> degreeProgrammes = OrgUnitDbUtil.extractDegreeProgrammeDTOs(rows);
+        return degreeProgrammes;
+    }
+
 }
 

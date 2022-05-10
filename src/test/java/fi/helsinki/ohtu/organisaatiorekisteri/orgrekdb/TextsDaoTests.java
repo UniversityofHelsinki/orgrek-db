@@ -20,27 +20,27 @@ public class TextsDaoTests {
     @Test
     public void testGetAllTexts() {
         List<Map<String, String>> allTexts = textsDao.getAllTexts();
-        assertEquals(19, allTexts.size());
+        assertEquals(22, allTexts.size());
     }
 
     @Test
     public void testGetAllFinnishTexts() {
         Map<String, String> allTexts = textsDao.getTextsByLang("fi");
-        assertEquals(10, allTexts.size());
+        assertEquals(11, allTexts.size());
         assertEquals("julkinen", allTexts.get("public"));
     }
 
     @Test
     public void testGetAllEnglishTexts() {
         Map<String, String> allTexts = textsDao.getTextsByLang("en");
-        assertEquals(6, allTexts.size());
+        assertEquals(7, allTexts.size());
         assertEquals("Public", allTexts.get("public"));
     }
 
     @Test
     public void testGetAllSwedishTexts() {
         Map<String, String> allTexts = textsDao.getTextsByLang("sv");
-        assertEquals(3, allTexts.size());
+        assertEquals(4, allTexts.size());
         assertEquals("offentlig", allTexts.get("public"));
     }
 
