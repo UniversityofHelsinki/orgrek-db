@@ -10,7 +10,7 @@ INSERT INTO NODE (ID, NAME, START_DATE, END_DATE, TIMESTAMP, UNIQUE_ID) VALUES (
 INSERT INTO NODE (ID, NAME, START_DATE, END_DATE, TIMESTAMP, UNIQUE_ID) VALUES ('3288', 'Biotekniikan instituutti', null, null, TO_TIMESTAMP('2018-01-16 14:23:40.265476', 'YYYY-MM-DD HH24:MI:SS.FF6'), '14856367');
 INSERT INTO NODE (ID, NAME, START_DATE, END_DATE, TIMESTAMP, UNIQUE_ID) VALUES ('6770', 'HY, Tiedekunnat (TDK)', TO_TIMESTAMP('1961-03-19 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'), null, TO_TIMESTAMP('2020-01-23 13:46:40.790825', 'YYYY-MM-DD HH24:MI:SS.FF6'), '32800844');
 INSERT INTO NODE (ID, NAME, START_DATE, END_DATE, TIMESTAMP, UNIQUE_ID) VALUES ('3130', 'Erilliset laitokset', TO_TIMESTAMP('3000-03-19 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'), null, TO_TIMESTAMP('2017-12-28 10:49:04.463428', 'YYYY-MM-DD HH24:MI:SS.FF6'), '42275629');
-INSERT INTO NODE (ID, NAME, START_DATE, END_DATE, TIMESTAMP, UNIQUE_ID) VALUES ('19063', 'Kansainvälisen liikejuridiikan maisteriohjelma', null, null, null, 'kukkuuu');
+INSERT INTO NODE (ID, NAME, START_DATE, END_DATE, TIMESTAMP, UNIQUE_ID) VALUES ('19063', 'Kansainvalisen liikejuridiikan maisteriohjelma', null, null, null, 'kukkuuu');
 
 
 INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (3648, 'a1', 'name_en', 'University of Helsinki', null, null);
@@ -33,7 +33,7 @@ INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (56
 INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (56325, 'a1', 'publicity', 'Julkinen', TO_TIMESTAMP('2021-01-01 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'), null);
 INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (66325, '19063', 'iam-johtoryhma', 'hy-humtdk-spt-jory', null, null);
 INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (66326, '19063', 'oppiaine_tunnus', 'MP50', null, null);
-INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (66327, '19063', 'name_fi', 'Kansainvälisen liikejuridiikan maisteriohjelma', null, null);
+INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (66327, '19063', 'name_fi', 'Kansainvalisen liikejuridiikan maisteriohjelma', null, null);
 INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (66328, '19063', 'name_en', 'Master''s Programme in International Business Law', null, null);
 INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (66329, '19063', 'name_sv', 'Magisterprogramme', null, null);
 INSERT INTO NODE_ATTR (ID, NODE_ID, KEY, VALUE, START_DATE, END_DATE) VALUES (66330, '19063', 'type', 'maisteriohjelma', null, null);
@@ -49,7 +49,7 @@ INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) VALUES ('parent_un
 INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) VALUES ('children_units', 'fi', 'Aliyksiköt', null, null);
 INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) VALUES ('value', 'fi', 'Arvo', null, null);
 INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) VALUES ('start', 'fi', 'Alku', null, null);
-INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) VALUES ('hy-humtdk-spt-jory', 'fi', 'Kansainvälisen liikejuridiikan maisteriohjelman johtoryhmä', null, null);
+INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) VALUES ('hy-humtdk-spt-jory', 'fi', 'Kansainvalisen liikejuridiikan maisteriohjelman johtoryhmä', null, null);
 INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) VALUES ('hy-humtdk-spt-jory', 'sv', 'Ledningsgruppen för magisterprogrammet i internationell affärsjuridik', null, null);
 INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) VALUES ('hy-humtdk-spt-jory', 'en', 'Steering group for Master''s Programme in International Business Law', null, null);
 

@@ -296,7 +296,8 @@ public class OrgUnitDaoTest {
         List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
         assertEquals("Master's Programme in International Business Law", programmes.get(0).getProgrammeNameEn() );
         assertEquals("Magisterprogramme", programmes.get(0).getProgrammeNameSv());
-        assertEquals("Kansainvälisen liikejuridiikan maisteriohjelma", programmes.get(0).getProgrammeNameFi());
+        System.out.println(programmes.get(0).getProgrammeNameFi() + "*******************");
+        assertEquals("Kansainvalisen liikejuridiikan maisteriohjelma", programmes.get(0).getProgrammeNameFi());
     }
 
 }
