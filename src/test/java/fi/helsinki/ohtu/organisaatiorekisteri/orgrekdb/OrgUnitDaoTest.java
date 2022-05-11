@@ -1,10 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeEdgeHistoryWrapper;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.*;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ConstantsTest;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.junit.jupiter.api.Test;
@@ -14,9 +11,9 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations="classpath:application.properties")
@@ -134,13 +131,12 @@ public class OrgUnitDaoTest {
         assertEquals("6777", children.get(1).getId());
 
         children = orgUnitDao.getCurrentChildrenByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2015");
-        assertEquals(6 , children.size());
+        assertEquals(5 , children.size());
         assertEquals("3201", children.get(0).getId());
         assertEquals("3288", children.get(1).getId());
-        assertEquals("3368", children.get(2).getId());
-        assertEquals("3459", children.get(3).getId());
-        assertEquals("5935", children.get(4).getId());
-        assertEquals("6777", children.get(5).getId());
+        assertEquals("3459", children.get(2).getId());
+        assertEquals("5935", children.get(3).getId());
+        assertEquals("6777", children.get(4).getId());
     }
 
     @Test
@@ -156,35 +152,151 @@ public class OrgUnitDaoTest {
     @Test
     public void testGetCurrentTypesByParentNodeIdShouldReturnCorrectTypesByDate() {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2015");
-        assertEquals(6, wrapperList.size());
+        assertEquals(5, wrapperList.size());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(0).getType());
-        assertEquals("3368", wrapperList.get(0).getNodeId());
+        assertEquals("3459", wrapperList.get(0).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(1).getType());
+        assertEquals("3201", wrapperList.get(1).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(2).getType());
+        assertEquals("6777", wrapperList.get(2).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(3).getType());
+        assertEquals("5935", wrapperList.get(3).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS, wrapperList.get(4).getType());
+        assertEquals("3288", wrapperList.get(4).getNodeId());
+    }
+
+    @Test
+    public void testGetHistoryAndCurrentParentsByChildNodeAndByDate(){
+        List<Node> parentNodes = orgUnitDao.getHistoryAndCurrentParentsByChildNodeId("5935", "23.12.2021");
+        assertEquals(2, parentNodes.size());
+        assertEquals("6770", parentNodes.get(0).getId());
+        assertEquals("a1", parentNodes.get(1).getId());
+    }
+
+    @Test
+    public void testGetFutureAndCurrentParentsByChildNodeAndByDate(){
+        List<Node> parentNodes = orgUnitDao.getFutureAndCurrentParentsByChildNodeId("5935", "23.12.2021");
+        assertEquals(2, parentNodes.size());
+        assertEquals("3130", parentNodes.get(0).getId());
+        assertEquals("a1", parentNodes.get(1).getId());
+    }
+
+    @Test
+    public void testGetHistoryAndCurrentParentTypesByChildNodeAndByDate(){
+        List<NodeWrapper> wrapperList = orgUnitDao.getHistoryAndCurrentTypesByChildNodeId("5935", "23.12.2021");
+        assertEquals(2, wrapperList.size());
+        assertEquals("a1", wrapperList.get(0).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getType());
+        assertEquals("6770", wrapperList.get(1).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(1).getType());
+    }
+
+    @Test
+    public void testGetFutureAndCurrentParentTypesByChildNodeAndByDate(){
+        List<NodeWrapper> wrapperList = orgUnitDao.getFutureAndCurrentTypesByChildNodeId("5935", "23.12.2021");
+        assertEquals(3, wrapperList.size());
+        assertEquals("a1", wrapperList.get(0).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getType());
+        assertEquals("a1", wrapperList.get(1).getNodeId());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getType());
+        assertEquals("3130", wrapperList.get(2).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(2).getType());
+    }
+
+    @Test
+    public void testGetHistoryAndCurrentChildrenByParentNodeAndByDate(){
+        List<Node> childNodes = orgUnitDao.getHistoryAndCurrentChildrenByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
+        assertEquals(6, childNodes.size());
+        assertEquals("3201", childNodes.get(0).getId());
+        assertEquals("3288", childNodes.get(1).getId());
+        assertEquals("3368", childNodes.get(2).getId());
+        assertEquals("3459", childNodes.get(3).getId());
+        assertEquals("5935", childNodes.get(4).getId());
+        assertEquals("6777", childNodes.get(5).getId());
+    }
+
+    @Test
+    public void testGetFutureAndCurrentChildrenByParentNodeAndByDate(){
+        List<Node> childNodes = orgUnitDao.getFutureAndCurrentChildrenByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
+        assertEquals(3, childNodes.size());
+        assertEquals("3130", childNodes.get(0).getId());
+        assertEquals("5935", childNodes.get(1).getId());
+        assertEquals("6777", childNodes.get(2).getId());
+    }
+
+    @Test
+    public void testGetHistoryAndCurrentChildTypesByParentNodeAndByDate(){
+        List<NodeWrapper> wrapperList = orgUnitDao.getHistoryAndCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
+        assertEquals(6, wrapperList.size());
+        assertEquals("3368", wrapperList.get(0).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(0).getType());
         assertEquals("3459", wrapperList.get(1).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(2).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getType());
         assertEquals("3201", wrapperList.get(2).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(3).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(2).getType());
         assertEquals("6777", wrapperList.get(3).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(4).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(3).getType());
         assertEquals("5935", wrapperList.get(4).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS, wrapperList.get(5).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(4).getType());
         assertEquals("3288", wrapperList.get(5).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS, wrapperList.get(5).getType());
+    }
+
+    @Test
+    public void testGetFutureAndCurrentChildTypesByParentNodeAndByDate(){
+        List<NodeWrapper> wrapperList = orgUnitDao.getFutureAndCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
+        assertEquals(4, wrapperList.size());
+        assertEquals("6777", wrapperList.get(0).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(0).getType());
+        assertEquals("3130", wrapperList.get(1).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getType());
+        assertEquals("5935", wrapperList.get(2).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(2).getType());
+        assertEquals("5935", wrapperList.get(3).getNodeId());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(3).getType());
     }
 
     @Test
     public void testGetPredecessorsOfNode(){
         List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getPredecessors(ConstantsTest.ROOT_UNIT_NODE_ID, ConstantsTest.HIERARCHY_TYPE_HISTORY);
         assertEquals(2, wrapperList.size());
-        assertEquals("3337", wrapperList.get(0).getNodeId());
-        assertEquals("3471", wrapperList.get(1).getNodeId());
+        assertEquals("3337", wrapperList.get(0).getId());
+        assertEquals("3471", wrapperList.get(1).getId());
     }
 
     @Test
     public void testGetSuccessorsOfNode(){
         List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getSuccessors(ConstantsTest.ROOT_UNIT_NODE_ID, ConstantsTest.HIERARCHY_TYPE_HISTORY);
         assertEquals(1, wrapperList.size());
-        assertEquals("9999", wrapperList.get(0).getNodeId());
-        System.out.println(wrapperList.get(0).getEdgeStartDate());
-        System.out.println(wrapperList.get(0).getEdgeEndDate());
+        assertEquals("9999", wrapperList.get(0).getId());
     }
+
+    @Test
+    public void testOneSteeringGroupIsReturned() {
+        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
+        assertEquals(steeringGroups.size(), 1);
+        assertEquals("hy-humtdk-spt-jory", steeringGroups.get("19063").getIamGroup());
+    }
+    @Test
+    public void testSteeringGroupHasNamesInThreeLanguages() {
+        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
+        assertNotNull(steeringGroups.get("19063").getEn());
+        assertNotNull(steeringGroups.get("19063").getFi());
+        assertNotNull(steeringGroups.get("19063").getSv());
+    }
+
+    @Test
+    public void testOneDegreeProgrammeIsReturned() {
+        List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
+        assertEquals(programmes.size(), 1);
+    }
+
+    @Test
+    public void testDegreeProgrammeHasNamesInThreeLanguages() {
+        List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
+        assertEquals("Master's Programme in International Business Law", programmes.get(0).getProgrammeNameEn() );
+        assertEquals("Magisterprogramme", programmes.get(0).getProgrammeNameSv());
+        assertEquals("Kansainvalisen liikejuridiikan maisteriohjelma", programmes.get(0).getProgrammeNameFi());
+    }
+
 }
