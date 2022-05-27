@@ -1,6 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,4 +41,8 @@ public class TextsController {
         else return Collections.emptyMap();
     }
 
+    @RequestMapping("/api/degreeTitles")
+    public List<TextDTO> getDegreeTitles() {
+        return textsDao.getDegreeTitles();
+    }
 }
