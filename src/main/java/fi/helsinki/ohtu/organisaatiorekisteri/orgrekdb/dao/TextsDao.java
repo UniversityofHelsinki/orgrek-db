@@ -1,5 +1,6 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -115,6 +116,32 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
         });
             return textKey;
     }
+
+    /**
+     * Return degree titles (bachelor, master and doctoral)
+     * <p>
+     * Language, key, value pairs are returned in a list of TextDTO objects
+     * <p>
+     *
+     * @return TextDTO entries in a list
+     */
+    public List<TextDTO> getDegreeTitles() {
+
+        String sql = "SELECT KEY, LANGUAGE, VALUE FROM TEXT WHERE KEY IN ('kandiohjelma-joryt', 'maisteriohjelma-joryt', 'tohtoriohjelma-joryt')";
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        List<TextDTO> query = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            TextDTO textDTO = new TextDTO();
+            textDTO.setKey(rs.getString(KEY_FIELD));
+            textDTO.setValue(rs.getString(VALUE_FIELD));
+            textDTO.setLanguage(rs.getString(LANGUAGE_FIELD));
+            return textDTO;
+        });
+
+        return query;
+    }
+
 }
 
 
