@@ -1,8 +1,10 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.DegreeProgrammeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,13 +18,16 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 Public API to get Steering Groups from database
  */
 @RestController
-@RequestMapping("/api/public/steeringGroups")
+@RequestMapping("/api/public")
 public class SteeringGroupController {
 
     @Autowired
     private OrgUnitDao orgUnitDao;
 
-    @RequestMapping(method = GET, value="/")
+    @Autowired
+    private TextsDao textsDao;
+
+    @RequestMapping(method = GET, value="/steeringGroups")
     public List<DegreeProgrammeDTO> getSteeringGroups() {
         List<DegreeProgrammeDTO> dtos = orgUnitDao.getDegreeProgrammesAndAttributes();
         Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
@@ -37,5 +42,8 @@ public class SteeringGroupController {
         return dtos;
     }
 
-
+    @RequestMapping("/degreeTitles")
+    public List<TextDTO> getDegreeTitles() {
+        return textsDao.getDegreeTitles();
+    }
 }
