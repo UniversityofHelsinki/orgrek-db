@@ -12,8 +12,11 @@ import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/*
+Public API to get Steering Groups from database
+ */
 @RestController
-@RequestMapping("/api/steering")
+@RequestMapping("/api/public/steeringGroups")
 public class SteeringGroupController {
 
     @Autowired
