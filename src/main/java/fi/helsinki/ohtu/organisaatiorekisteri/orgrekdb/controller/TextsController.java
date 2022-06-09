@@ -40,9 +40,4 @@ public class TextsController {
         }
         else return Collections.emptyMap();
     }
-
-    @RequestMapping("/api/degreeTitles")
-    public List<TextDTO> getDegreeTitles() {
-        return textsDao.getDegreeTitles();
-    }
 }
