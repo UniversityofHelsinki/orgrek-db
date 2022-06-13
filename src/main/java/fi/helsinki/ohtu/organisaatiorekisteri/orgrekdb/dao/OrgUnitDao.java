@@ -265,6 +265,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 " JOIN NODE N ON NA.NODE_ID = N.ID " +
                 " JOIN TEXT T ON NA.VALUE = T.KEY " +
                 " WHERE NA.KEY = 'iam-johtoryhma' " +
+                " AND N.id IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') "+
                 " ORDER BY NA.NODE_ID, T.LANGUAGE";
 
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
@@ -276,7 +277,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<DegreeProgrammeDTO> getDegreeProgrammesAndAttributes() {
         String sql = "SELECT nat.NODE_ID, nat.KEY, nat.VALUE from NODE_ATTR nat " +
                 "WHERE  nat.NODE_ID in (SELECT N.ID FROM NODE N, NODE_ATTR NA  WHERE N.ID=NA.NODE_ID AND NA.KEY = 'iam-johtoryhma' AND NA.NODE_ID IN " +
-                "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma'))) " +
+                "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
+                "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus')) " +
                 "ORDER BY NODE_ID, KEY";
 
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
