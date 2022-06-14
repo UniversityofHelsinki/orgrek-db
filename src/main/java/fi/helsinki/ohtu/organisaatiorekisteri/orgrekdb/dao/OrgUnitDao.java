@@ -265,7 +265,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 " JOIN NODE N ON NA.NODE_ID = N.ID " +
                 " JOIN TEXT T ON NA.VALUE = T.KEY " +
                 " WHERE NA.KEY = 'iam-johtoryhma' " +
-                " AND N.id IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') "+
+                " AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') "+
                 " ORDER BY NA.NODE_ID, T.LANGUAGE";
 
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
