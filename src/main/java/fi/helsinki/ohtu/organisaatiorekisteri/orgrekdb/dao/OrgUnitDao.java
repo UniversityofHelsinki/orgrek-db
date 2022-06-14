@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 import static fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil.extractSteeringProgrammes;
@@ -265,10 +267,16 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 " JOIN NODE N ON NA.NODE_ID = N.ID " +
                 " JOIN TEXT T ON NA.VALUE = T.KEY " +
                 " WHERE NA.KEY = 'iam-johtoryhma' " +
+                " AND (N.END_DATE IS NULL OR N.END_DATE > trunc(:today)) " +
+                " AND (N.START_DATE IS NULL OR N.START_DATE <= trunc(:today)) " +
                 " AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') "+
                 " ORDER BY NA.NODE_ID, T.LANGUAGE";
 
-        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
+        Timestamp ts = Timestamp.from(Instant.now());
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("today", ts);
+
+        List<Map<String, Object>> rows = getNamedParameterJdbcTemplate().queryForList(sql, params);
         Map<String, SteeringGroup> groups = extractSteeringProgrammes(rows);
         return groups;
     }
@@ -276,12 +284,20 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<DegreeProgrammeDTO> getDegreeProgrammesAndAttributes() {
         String sql = "SELECT nat.NODE_ID, nat.KEY, nat.VALUE from NODE_ATTR nat " +
-                "WHERE  nat.NODE_ID in (SELECT N.ID FROM NODE N, NODE_ATTR NA  WHERE N.ID=NA.NODE_ID AND NA.KEY = 'iam-johtoryhma' AND NA.NODE_ID IN " +
-                "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
-                "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus')) " +
+                "WHERE  nat.NODE_ID in (SELECT N.ID FROM NODE N, NODE_ATTR NA  WHERE N.ID=NA.NODE_ID AND NA.KEY = 'iam-johtoryhma' " +
+                "AND NA.NODE_ID IN " +
+                "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' " +
+                "AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
+                "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') " +
+                "AND (N.END_DATE IS NULL OR N.END_DATE > trunc(:today)) " +
+                "AND (N.START_DATE IS NULL OR N.START_DATE <= trunc(:today))) " +
                 "ORDER BY NODE_ID, KEY";
 
-        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
+        Timestamp ts = Timestamp.from(Instant.now());
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("today", ts);
+
+        List<Map<String, Object>> rows = getNamedParameterJdbcTemplate().queryForList(sql, params);
         List<DegreeProgrammeDTO> degreeProgrammes = OrgUnitDbUtil.extractDegreeProgrammeDTOs(rows);
         return degreeProgrammes;
     }
