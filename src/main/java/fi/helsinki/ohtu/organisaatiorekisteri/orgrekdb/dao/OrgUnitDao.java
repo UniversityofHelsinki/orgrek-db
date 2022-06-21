@@ -269,7 +269,9 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 " WHERE NA.KEY = 'iam-johtoryhma' " +
                 " AND (N.END_DATE IS NULL OR N.END_DATE > trunc(:today)) " +
                 " AND (N.START_DATE IS NULL OR N.START_DATE <= trunc(:today)) " +
-                " AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') "+
+                " AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus' " +
+                " AND (END_DATE IS NULL OR END_DATE > trunc(:today))" +
+                " AND (START_DATE IS NULL OR START_DATE <= trunc(:today))) "+
                 " ORDER BY NA.NODE_ID, T.LANGUAGE";
 
         Timestamp ts = Timestamp.from(Instant.now());
@@ -288,7 +290,9 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "AND NA.NODE_ID IN " +
                 "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' " +
                 "AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
-                "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') " +
+                "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus' " +
+                "AND (END_DATE IS NULL OR END_DATE > trunc(:today)) " +
+                "AND (START_DATE IS NULL OR START_DATE <= trunc(:today))) " +
                 "AND (N.END_DATE IS NULL OR N.END_DATE > trunc(:today)) " +
                 "AND (N.START_DATE IS NULL OR N.START_DATE <= trunc(:today))) " +
                 "ORDER BY NODE_ID, KEY";
