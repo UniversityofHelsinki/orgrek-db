@@ -62,7 +62,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getCurrentParentsByChildNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT PARENT_NODE_ID FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) and " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY')) and " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY')) and " +
@@ -77,7 +77,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getHistoryAndCurrentParentsByChildNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT PARENT_NODE_ID FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) AND " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) AND " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))) " +
                 "AND (START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
 
@@ -91,7 +91,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getFutureAndCurrentParentsByChildNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT PARENT_NODE_ID FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) AND " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) AND " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))) " +
                 "AND (END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -102,8 +102,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeWrapper> getCurrentTypesByChildNodeId(String nodeId, String date) {
-        String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE, START_DATE, END_DATE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) and " +
+        String sql = "SELECT PARENT_NODE_ID AS NODE_ID, HIERARCHY, START_DATE, END_DATE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY')) and " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -114,8 +114,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeWrapper> getHistoryAndCurrentTypesByChildNodeId(String nodeId, String date) {
-        String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE, START_DATE, END_DATE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) AND " +
+        String sql = "SELECT PARENT_NODE_ID AS NODE_ID, HIERARCHY, START_DATE, END_DATE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) AND " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.EDGE_TYPE_FIELD, Constants.HISTORY_UNIT_TYPE);
@@ -125,8 +125,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeWrapper> getFutureAndCurrentTypesByChildNodeId(String nodeId, String date) {
-        String sql = "SELECT PARENT_NODE_ID AS NODE_ID, TYPE, START_DATE, END_DATE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) AND " +
+        String sql = "SELECT PARENT_NODE_ID AS NODE_ID, HIERARCHY, START_DATE, END_DATE FROM EDGE WHERE CHILD_NODE_ID = :nodeId and " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) AND " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
@@ -138,7 +138,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getCurrentChildrenByParentNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT CHILD_NODE_ID FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) and " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY')) and " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY')) and " +
@@ -153,7 +153,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getHistoryAndCurrentChildrenByParentNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT CHILD_NODE_ID FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) AND " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) AND " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))) " +
                 "AND (START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
 
@@ -167,7 +167,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     public List<Node> getFutureAndCurrentChildrenByParentNodeId(String nodeId, String date) {
         String sql = "SELECT * FROM NODE WHERE ID IN " +
                 "(SELECT CHILD_NODE_ID FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) AND " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) AND " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))) " +
                 "AND (END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))";
 
@@ -179,8 +179,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeWrapper> getCurrentTypesByParentNodeId(String nodeId, String date) {
-        String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE, START_DATE, END_DATE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) and " +
+        String sql = "SELECT CHILD_NODE_ID AS NODE_ID, HIERARCHY, START_DATE, END_DATE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) and " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt,'DD.MM.YYYY')) and " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -191,8 +191,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeWrapper> getHistoryAndCurrentTypesByParentNodeId(String nodeId, String date) {
-        String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE, START_DATE, END_DATE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) AND " +
+        String sql = "SELECT CHILD_NODE_ID AS NODE_ID, HIERARCHY, START_DATE, END_DATE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) AND " +
                 "(START_DATE is null or trunc(START_DATE) <= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
@@ -202,8 +202,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<NodeWrapper> getFutureAndCurrentTypesByParentNodeId(String nodeId, String date) {
-        String sql = "SELECT CHILD_NODE_ID AS NODE_ID, TYPE, START_DATE, END_DATE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
-                "(TYPE is null or TYPE != :edgeType) AND " +
+        String sql = "SELECT CHILD_NODE_ID AS NODE_ID, HIERARCHY, START_DATE, END_DATE FROM EDGE WHERE PARENT_NODE_ID = :nodeId and " +
+                "(HIERARCHY is null or HIERARCHY != :edgeType) AND " +
                 "(END_DATE is null or trunc(END_DATE) >= to_date(:dt, 'DD.MM.YYYY'))";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
@@ -218,7 +218,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "FROM EDGE " +
                 "INNER JOIN NODE " +
                 "ON EDGE.CHILD_NODE_ID = NODE.ID " +
-                "WHERE PARENT_NODE_ID = :startId AND TYPE = :edgeType";
+                "WHERE PARENT_NODE_ID = :startId AND HIERARCHY = :edgeType";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.START_ID_FIELD, startId);
         params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
@@ -231,7 +231,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "FROM EDGE " +
                 "INNER JOIN NODE " +
                 "ON EDGE.PARENT_NODE_ID = NODE.ID " +
-                "WHERE CHILD_NODE_ID = :endId AND TYPE = :edgeType";
+                "WHERE CHILD_NODE_ID = :endId AND HIERARCHY = :edgeType";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.END_ID_FIELD, endId);
         params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
@@ -269,7 +269,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 " WHERE NA.KEY = 'iam-johtoryhma' " +
                 " AND (N.END_DATE IS NULL OR N.END_DATE > trunc(:today)) " +
                 " AND (N.START_DATE IS NULL OR N.START_DATE <= trunc(:today)) " +
-                " AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') "+
+                " AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE HIERARCHY='toiminnanohjaus') "+
                 " ORDER BY NA.NODE_ID, T.LANGUAGE";
 
         Timestamp ts = Timestamp.from(Instant.now());
@@ -288,7 +288,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "AND NA.NODE_ID IN " +
                 "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' " +
                 "AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
-                "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE TYPE='toiminnanohjaus') " +
+                "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE HIERARCHY='toiminnanohjaus') " +
                 "AND (N.END_DATE IS NULL OR N.END_DATE > trunc(:today)) " +
                 "AND (N.START_DATE IS NULL OR N.START_DATE <= trunc(:today))) " +
                 "ORDER BY NODE_ID, KEY";

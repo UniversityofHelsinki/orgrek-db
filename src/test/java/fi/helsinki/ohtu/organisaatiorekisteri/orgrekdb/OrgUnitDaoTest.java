@@ -102,7 +102,7 @@ public class OrgUnitDaoTest {
     public void testGetCurrentTypesByChildNodeIdShouldReturnCorrectTypes() {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("5935", "01.01.2021");
         assertEquals(1, wrapperList.size());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getHierarchy());
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, wrapperList.get(0).getNodeId());
     }
 
@@ -111,7 +111,7 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("3201", "01.01.2021");
         assertEquals(0, wrapperList.size());
         wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("3201", "01.01.2015");
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(0).getHierarchy());
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, wrapperList.get(0).getNodeId());
     }
 
@@ -144,24 +144,24 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2021");
         assertEquals(2, wrapperList.size());
         assertEquals("6777", wrapperList.get(0).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(0).getHierarchy());
         assertEquals("5935", wrapperList.get(1).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(1).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(1).getHierarchy());
     }
 
     @Test
     public void testGetCurrentTypesByParentNodeIdShouldReturnCorrectTypesByDate() {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2015");
         assertEquals(5, wrapperList.size());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(0).getHierarchy());
         assertEquals("3459", wrapperList.get(0).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(1).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(1).getHierarchy());
         assertEquals("3201", wrapperList.get(1).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(2).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(2).getHierarchy());
         assertEquals("6777", wrapperList.get(2).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(3).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(3).getHierarchy());
         assertEquals("5935", wrapperList.get(3).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS, wrapperList.get(4).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS, wrapperList.get(4).getHierarchy());
         assertEquals("3288", wrapperList.get(4).getNodeId());
     }
 
@@ -186,9 +186,9 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getHistoryAndCurrentTypesByChildNodeId("5935", "23.12.2021");
         assertEquals(2, wrapperList.size());
         assertEquals("a1", wrapperList.get(0).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getHierarchy());
         assertEquals("6770", wrapperList.get(1).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(1).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(1).getHierarchy());
     }
 
     @Test
@@ -196,11 +196,11 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getFutureAndCurrentTypesByChildNodeId("5935", "23.12.2021");
         assertEquals(3, wrapperList.size());
         assertEquals("a1", wrapperList.get(0).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getHierarchy());
         assertEquals("a1", wrapperList.get(1).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getHierarchy());
         assertEquals("3130", wrapperList.get(2).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(2).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(2).getHierarchy());
     }
 
     @Test
@@ -229,17 +229,17 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getHistoryAndCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
         assertEquals(6, wrapperList.size());
         assertEquals("3368", wrapperList.get(0).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(0).getHierarchy());
         assertEquals("3459", wrapperList.get(1).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getHierarchy());
         assertEquals("3201", wrapperList.get(2).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(2).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO, wrapperList.get(2).getHierarchy());
         assertEquals("6777", wrapperList.get(3).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(3).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(3).getHierarchy());
         assertEquals("5935", wrapperList.get(4).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(4).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(4).getHierarchy());
         assertEquals("3288", wrapperList.get(5).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS, wrapperList.get(5).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS, wrapperList.get(5).getHierarchy());
     }
 
     @Test
@@ -247,13 +247,13 @@ public class OrgUnitDaoTest {
         List<NodeWrapper> wrapperList = orgUnitDao.getFutureAndCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
         assertEquals(4, wrapperList.size());
         assertEquals("6777", wrapperList.get(0).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(0).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS, wrapperList.get(0).getHierarchy());
         assertEquals("3130", wrapperList.get(1).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(1).getHierarchy());
         assertEquals("5935", wrapperList.get(2).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(2).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(2).getHierarchy());
         assertEquals("5935", wrapperList.get(3).getNodeId());
-        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(3).getType());
+        assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(3).getHierarchy());
     }
 
     @Test

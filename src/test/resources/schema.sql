@@ -47,5 +47,5 @@ create table EDGE
         references NODE,
     START_DATE     TIMESTAMP(6),
     END_DATE       TIMESTAMP(6),
-    TYPE           VARCHAR2(255 char)
+    HIERARCHY           VARCHAR2(255 char)
 );
