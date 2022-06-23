@@ -1,17 +1,14 @@
 
-#### Lisää ympäristömuuttujat application.properties tiedostoon
+#### Lisää projektiin application-local.properties tiedosto src/main/resources hakemiston alle (tiedostoa ei saa lisätä versionhallintaan)
 
-spring.datasource.url=${url}
+spring.datasource.url=xxxxxxxxx
+spring.datasource.password=xxxxxxxxx
+spring.datasource.username=xxxxxxxxx
+server.port=xxxx
 
-spring.datasource.password=${password}
-
-spring.datasource.username=${username}
-
-server.port=${port}
-
-
-Lisää arvot Edit configurations -valikon Environment variablesiin.
-
-Katso arvot sopa-serversistä.
+Katso arvot keepassistä.
 
 Portti, johon haluat db projektin käynnistyvän alustetaan ympäristömuuttujassa nimeltä port
+
+Lisää Intellij Idean Spring Boot konfiguraatioon tieto, että haluat paikallisesti ajaa Spring sovellusta lokaalilla profiililla
+Edit Configurations -> Spring Boot Configuration -> VM Options kohtaan -Dspring.profiles.active=local
