@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository(value = "edgeDao")
 public class EdgeDao extends NamedParameterJdbcDaoSupport {
@@ -22,7 +21,7 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<String> getHierarchyTypes() {
-        String sql = "SELECT DISTINCT TYPE FROM EDGE";
+        String sql = "SELECT DISTINCT HIERARCHY FROM EDGE";
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         List<String> hierarchies = jdbcTemplate.queryForList(sql, String.class);
         return hierarchies;
