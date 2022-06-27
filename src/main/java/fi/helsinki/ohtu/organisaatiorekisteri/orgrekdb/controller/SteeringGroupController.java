@@ -3,9 +3,11 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.DegreeProgrammeDTO;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,5 +47,10 @@ public class SteeringGroupController {
     @RequestMapping("/degreeTitles")
     public List<TextDTO> getDegreeTitles() {
         return textsDao.getDegreeTitles();
+    }
+
+    @RequestMapping("/degreeProgrammes/{id}")
+    public List<Node> getDegreeProgrammes(@PathVariable("id") int uniqueId) {
+        return orgUnitDao.getDegreeProgrammes(uniqueId);
     }
 }
