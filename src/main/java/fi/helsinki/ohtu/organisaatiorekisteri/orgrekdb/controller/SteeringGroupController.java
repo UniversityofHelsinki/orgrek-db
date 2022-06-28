@@ -30,13 +30,18 @@ public class SteeringGroupController {
     @RequestMapping(method = GET, value="/steeringGroups")
     public List<DegreeProgrammeDTO> getSteeringGroups() {
         List<DegreeProgrammeDTO> dtos = orgUnitDao.getDegreeProgrammesAndAttributes();
-        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
+        Map<String, List<SteeringGroup>> steeringGroups = orgUnitDao.getSteeringGroups();
         dtos.forEach(dto -> {
             String id = dto.getNodeId();
-            if ((steeringGroups.get(id) != null)) {
-                dto.setSteeringGroupNameEn(steeringGroups.get(id).getEn());
-                dto.setSteeringGroupNameFi(steeringGroups.get(id).getFi());
-                dto.setSteeringGroupNameSv(steeringGroups.get(id).getSv());
+            if ((steeringGroups.containsKey(id))) {
+                List<SteeringGroup> nodeSteeringGroups = steeringGroups.get(id);
+                nodeSteeringGroups.forEach(nsg -> {
+                    if (nsg.getIamGroup().equals(dto.getIamGroup())) {
+                        dto.setSteeringGroupNameEn(nsg.getEn());
+                        dto.setSteeringGroupNameFi(nsg.getFi());
+                        dto.setSteeringGroupNameSv(nsg.getSv());
+                    }
+                });
             }
         });
         return dtos;
