@@ -12,6 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -273,16 +274,18 @@ public class OrgUnitDaoTest {
 
     @Test
     public void testOneSteeringGroupIsReturned() {
-        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
+        Map<String, List<SteeringGroup>> steeringGroups = orgUnitDao.getSteeringGroups();
         assertEquals(steeringGroups.size(), 1);
-        assertEquals("hy-humtdk-spt-jory", steeringGroups.get("19063").getIamGroup());
+        assertTrue(steeringGroups.get("19063").stream().map(SteeringGroup::getIamGroup).collect(Collectors.toList()).contains("hy-humtdk-spt-jory"));
     }
     @Test
     public void testSteeringGroupHasNamesInThreeLanguages() {
-        Map<String, SteeringGroup> steeringGroups = orgUnitDao.getSteeringGroups();
-        assertNotNull(steeringGroups.get("19063").getEn());
-        assertNotNull(steeringGroups.get("19063").getFi());
-        assertNotNull(steeringGroups.get("19063").getSv());
+        Map<String, List<SteeringGroup>> steeringGroups = orgUnitDao.getSteeringGroups();
+        steeringGroups.get("19063").forEach(steeringGroup -> {
+            assertNotNull(steeringGroup.getEn());
+            assertNotNull(steeringGroup.getFi());
+            assertNotNull(steeringGroup.getSv());
+        });
     }
 
     @Test
