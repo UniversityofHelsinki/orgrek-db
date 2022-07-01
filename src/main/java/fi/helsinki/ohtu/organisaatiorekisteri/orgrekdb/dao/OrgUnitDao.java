@@ -212,29 +212,27 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
 
-    public List<NodeEdgeHistoryWrapper> getPredecessors(String startId, String edgeType) {
-        String sql = "SELECT EDGE.CHILD_NODE_ID AS ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, " +
-                "EDGE.END_DATE AS EDGE_END_DATE, NODE.UNIQUE_ID " +
-                "FROM EDGE " +
+    public List<NodeEdgeHistoryWrapper> getPredecessors(String startId) {
+        String sql = "SELECT PREDECESSOR_RELATION.PREDECESSOR_ID AS ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, PREDECESSOR_RELATION.START_DATE AS EDGE_START_DATE, " +
+                "PREDECESSOR_RELATION.END_DATE AS EDGE_END_DATE, NODE.UNIQUE_ID " +
+                "FROM PREDECESSOR_RELATION " +
                 "INNER JOIN NODE " +
-                "ON EDGE.CHILD_NODE_ID = NODE.ID " +
-                "WHERE PARENT_NODE_ID = :startId AND HIERARCHY = :edgeType";
+                "ON PREDECESSOR_RELATION.PREDECESSOR_ID = NODE.ID " +
+                "WHERE PREDECESSOR_RELATION.NODE_ID = :startId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.START_ID_FIELD, startId);
-        params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
     }
 
-    public List<NodeEdgeHistoryWrapper> getSuccessors(String endId, String edgeType) {
-        String sql = "SELECT EDGE.PARENT_NODE_ID AS ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, " +
-                "EDGE.END_DATE AS EDGE_END_DATE, NODE.UNIQUE_ID " +
-                "FROM EDGE " +
+    public List<NodeEdgeHistoryWrapper> getSuccessors(String endId) {
+        String sql = "SELECT SUCCESSOR_RELATION.SUCCESSOR_ID AS ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, SUCCESSOR_RELATION.START_DATE AS EDGE_START_DATE, " +
+                "SUCCESSOR_RELATION.END_DATE AS EDGE_END_DATE, NODE.UNIQUE_ID " +
+                "FROM SUCCESSOR_RELATION " +
                 "INNER JOIN NODE " +
-                "ON EDGE.PARENT_NODE_ID = NODE.ID " +
-                "WHERE CHILD_NODE_ID = :endId AND HIERARCHY = :edgeType";
+                "ON SUCCESSOR_RELATION.SUCCESSOR_ID = NODE.ID " +
+                "WHERE NODE_ID = :endId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.END_ID_FIELD, endId);
-        params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
     }
 

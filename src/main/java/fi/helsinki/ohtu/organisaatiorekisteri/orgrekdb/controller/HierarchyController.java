@@ -95,13 +95,13 @@ public class HierarchyController {
     @RequestMapping(method = GET, value = "/predecessors/{id}")
     public List<NodeEdgeHistoryWrapper> getPredecessorsById(@PathVariable("id") int uniqueId) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getPredecessors(node.getId(), Constants.HISTORY_UNIT_TYPE);
+        return orgUnitDao.getPredecessors(node.getId());
     }
 
     @RequestMapping(method = GET, value = "/successors/{id}")
     public List<NodeEdgeHistoryWrapper> getSuccessors(@PathVariable("id") int uniqueId) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getSuccessors(node.getId(), Constants.HISTORY_UNIT_TYPE);
+        return orgUnitDao.getSuccessors(node.getId());
     }
 
 }
