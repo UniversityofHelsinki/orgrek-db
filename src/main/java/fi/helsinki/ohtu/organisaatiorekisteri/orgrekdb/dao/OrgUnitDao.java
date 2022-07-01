@@ -312,9 +312,9 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "FROM (SELECT * FROM edge WHERE " +
                 "   (END_DATE IS NULL OR END_DATE > trunc(:today))" +
                 "   AND (START_DATE IS NULL OR START_DATE <= trunc(:today))" +
-                "   AND type = 'toiminnanohjaus') " +
+                "   AND hierarchy = 'toiminnanohjaus') " +
                 "START WITH PARENT_NODE_ID = :nodeId " +
-                "CONNECT BY PRIOR CHILD_NODE_ID = PARENT_NODE_ID)" +
+                "CONNECT BY PRIOR CHILD_NODE_ID = PARENT_NODE_ID) " +
                 "AND NODE_ATTR.KEY = 'type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
