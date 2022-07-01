@@ -259,7 +259,7 @@ public class OrgUnitDaoTest {
 
     @Test
     public void testGetPredecessorsOfNode(){
-        List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getPredecessors(ConstantsTest.ROOT_UNIT_NODE_ID, ConstantsTest.HIERARCHY_TYPE_HISTORY);
+        List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getPredecessors(ConstantsTest.ROOT_UNIT_NODE_ID);
         assertEquals(2, wrapperList.size());
         assertEquals("3337", wrapperList.get(0).getId());
         assertEquals("3471", wrapperList.get(1).getId());
@@ -267,7 +267,7 @@ public class OrgUnitDaoTest {
 
     @Test
     public void testGetSuccessorsOfNode(){
-        List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getSuccessors(ConstantsTest.ROOT_UNIT_NODE_ID, ConstantsTest.HIERARCHY_TYPE_HISTORY);
+        List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getSuccessors(ConstantsTest.ROOT_UNIT_NODE_ID);
         assertEquals(1, wrapperList.size());
         assertEquals("9999", wrapperList.get(0).getId());
     }
