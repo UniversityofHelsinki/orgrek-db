@@ -306,15 +306,22 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<Node> getDegreeProgrammes(Integer uniqueId) {
         Node node = getNodeByUniqueId(uniqueId);
-        String sql = "SELECT * FROM NODE WHERE ID IN " +
+        String sql = "SELECT NODE.* FROM NODE JOIN NODE_ATTR ON NODE.ID = NODE_ATTR.NODE_ID " +
+                "WHERE NODE.ID IN " +
                 "(SELECT distinct CHILD_NODE_ID " +
-                "FROM edge " +
+                "FROM (SELECT * FROM edge WHERE " +
+                "   (END_DATE IS NULL OR END_DATE > trunc(:today))" +
+                "   AND (START_DATE IS NULL OR START_DATE <= trunc(:today))" +
+                "   AND type = 'toiminnanohjaus') " +
                 "START WITH PARENT_NODE_ID = :nodeId " +
-                "CONNECT BY PRIOR CHILD_NODE_ID = PARENT_NODE_ID)";
+                "CONNECT BY PRIOR CHILD_NODE_ID = PARENT_NODE_ID)" +
+                "AND NODE_ATTR.KEY = 'type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')";
+
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, node.getId());
+        params.addValue("today", Timestamp.from(Instant.now()));
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(Node.class));
-    };
+    }
 
 
 }
