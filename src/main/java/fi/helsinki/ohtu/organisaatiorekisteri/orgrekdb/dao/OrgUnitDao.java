@@ -286,8 +286,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         String sql = "SELECT nat.NODE_ID, nat.KEY, nat.VALUE from NODE_ATTR nat " +
                 "WHERE  nat.NODE_ID in (SELECT N.ID FROM NODE N, NODE_ATTR NA  WHERE N.ID=NA.NODE_ID AND NA.KEY = 'iam-johtoryhma' " +
                 "AND NA.NODE_ID IN " +
-                "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' " +
-                "AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
+                "(SELECT NODE_ID FROM NODE_TYPE WHERE " +
+                "NODE_TYPE.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
                 "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE HIERARCHY='toiminnanohjaus') " +
                 "AND (N.END_DATE IS NULL OR N.END_DATE > trunc(:today)) " +
                 "AND (N.START_DATE IS NULL OR N.START_DATE <= trunc(:today))) " +
@@ -304,7 +304,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<Node> getDegreeProgrammes(Integer uniqueId) {
         Node node = getNodeByUniqueId(uniqueId);
-        String sql = "SELECT NODE.* FROM NODE JOIN NODE_ATTR ON NODE.ID = NODE_ATTR.NODE_ID " +
+        String sql = "SELECT NODE.* FROM NODE JOIN NODE_TYPE ON NODE.ID = NODE_TYPE.NODE_ID " +
                 "WHERE NODE.ID IN " +
                 "(SELECT distinct CHILD_NODE_ID " +
                 "FROM (SELECT * FROM edge WHERE " +
@@ -313,7 +313,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "   AND hierarchy = 'toiminnanohjaus') " +
                 "START WITH PARENT_NODE_ID = :nodeId " +
                 "CONNECT BY PRIOR CHILD_NODE_ID = PARENT_NODE_ID) " +
-                "AND NODE_ATTR.KEY = 'type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')";
+                "AND NODE_TYPE.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, node.getId());

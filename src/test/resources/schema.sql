@@ -58,5 +58,9 @@ where HIERARCHY='history';
 
 create view SUCCESSOR_RELATION as
 select "ID",PARENT_NODE_ID SUCCESSOR_ID,CHILD_NODE_ID NODE_ID,"START_DATE","END_DATE" from EDGE
-where HIERARCHY='history'
+where HIERARCHY='history';
+
+create view NODE_TYPE as
+select "ID","NODE_ID","KEY","VALUE","START_DATE","END_DATE" from NODE_ATTR
+where KEY='type';
 
