@@ -304,5 +304,18 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return degreeProgrammes;
     }
 
+    public List<Node> getDegreeProgrammes(Integer uniqueId) {
+        Node node = getNodeByUniqueId(uniqueId);
+        String sql = "SELECT * FROM NODE WHERE ID IN " +
+                "(SELECT distinct CHILD_NODE_ID " +
+                "FROM edge " +
+                "START WITH PARENT_NODE_ID = :nodeId " +
+                "CONNECT BY PRIOR CHILD_NODE_ID = PARENT_NODE_ID)";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, node.getId());
+        return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(Node.class));
+    };
+
+
 }
 
