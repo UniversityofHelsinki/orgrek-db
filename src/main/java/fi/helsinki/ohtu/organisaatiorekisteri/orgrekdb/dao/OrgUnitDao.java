@@ -212,29 +212,27 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
 
-    public List<NodeEdgeHistoryWrapper> getPredecessors(String startId, String edgeType) {
-        String sql = "SELECT EDGE.CHILD_NODE_ID AS ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, " +
-                "EDGE.END_DATE AS EDGE_END_DATE, NODE.UNIQUE_ID " +
-                "FROM EDGE " +
+    public List<NodeEdgeHistoryWrapper> getPredecessors(String startId) {
+        String sql = "SELECT PREDECESSOR_RELATION.PREDECESSOR_ID AS ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, PREDECESSOR_RELATION.START_DATE AS EDGE_START_DATE, " +
+                "PREDECESSOR_RELATION.END_DATE AS EDGE_END_DATE, NODE.UNIQUE_ID " +
+                "FROM PREDECESSOR_RELATION " +
                 "INNER JOIN NODE " +
-                "ON EDGE.CHILD_NODE_ID = NODE.ID " +
-                "WHERE PARENT_NODE_ID = :startId AND HIERARCHY = :edgeType";
+                "ON PREDECESSOR_RELATION.PREDECESSOR_ID = NODE.ID " +
+                "WHERE PREDECESSOR_RELATION.NODE_ID = :startId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.START_ID_FIELD, startId);
-        params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
     }
 
-    public List<NodeEdgeHistoryWrapper> getSuccessors(String endId, String edgeType) {
-        String sql = "SELECT EDGE.PARENT_NODE_ID AS ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, EDGE.START_DATE AS EDGE_START_DATE, " +
-                "EDGE.END_DATE AS EDGE_END_DATE, NODE.UNIQUE_ID " +
-                "FROM EDGE " +
+    public List<NodeEdgeHistoryWrapper> getSuccessors(String endId) {
+        String sql = "SELECT SUCCESSOR_RELATION.SUCCESSOR_ID AS ID, NODE.NAME, NODE.START_DATE, NODE.END_DATE, SUCCESSOR_RELATION.START_DATE AS EDGE_START_DATE, " +
+                "SUCCESSOR_RELATION.END_DATE AS EDGE_END_DATE, NODE.UNIQUE_ID " +
+                "FROM SUCCESSOR_RELATION " +
                 "INNER JOIN NODE " +
-                "ON EDGE.PARENT_NODE_ID = NODE.ID " +
-                "WHERE CHILD_NODE_ID = :endId AND HIERARCHY = :edgeType";
+                "ON SUCCESSOR_RELATION.SUCCESSOR_ID = NODE.ID " +
+                "WHERE NODE_ID = :endId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.END_ID_FIELD, endId);
-        params.addValue(Constants.EDGE_TYPE_FIELD, edgeType);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
     }
 
@@ -288,8 +286,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         String sql = "SELECT nat.NODE_ID, nat.KEY, nat.VALUE from NODE_ATTR nat " +
                 "WHERE  nat.NODE_ID in (SELECT N.ID FROM NODE N, NODE_ATTR NA  WHERE N.ID=NA.NODE_ID AND NA.KEY = 'iam-johtoryhma' " +
                 "AND NA.NODE_ID IN " +
-                "(SELECT NODE_ID FROM NODE_ATTR WHERE NODE_ATTR.KEY='type' " +
-                "AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
+                "(SELECT NODE_ID FROM NODE_TYPE WHERE " +
+                "NODE_TYPE.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')) " +
                 "AND N.ID IN (SELECT CHILD_NODE_ID FROM EDGE WHERE HIERARCHY='toiminnanohjaus') " +
                 "AND (N.END_DATE IS NULL OR N.END_DATE > trunc(:today)) " +
                 "AND (N.START_DATE IS NULL OR N.START_DATE <= trunc(:today))) " +
@@ -306,7 +304,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<Node> getDegreeProgrammes(Integer uniqueId) {
         Node node = getNodeByUniqueId(uniqueId);
-        String sql = "SELECT NODE.* FROM NODE JOIN NODE_ATTR ON NODE.ID = NODE_ATTR.NODE_ID " +
+        String sql = "SELECT NODE.* FROM NODE JOIN NODE_TYPE ON NODE.ID = NODE_TYPE.NODE_ID " +
                 "WHERE NODE.ID IN " +
                 "(SELECT distinct CHILD_NODE_ID " +
                 "FROM (SELECT * FROM edge WHERE " +
@@ -315,7 +313,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "   AND hierarchy = 'toiminnanohjaus') " +
                 "START WITH PARENT_NODE_ID = :nodeId " +
                 "CONNECT BY PRIOR CHILD_NODE_ID = PARENT_NODE_ID) " +
-                "AND NODE_ATTR.KEY = 'type' AND NODE_ATTR.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')";
+                "AND NODE_TYPE.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, node.getId());
