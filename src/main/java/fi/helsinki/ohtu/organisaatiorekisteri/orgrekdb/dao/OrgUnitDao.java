@@ -321,6 +321,190 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(Node.class));
     }
 
+    public List<FullName> getFullNames(String nodeId, String date) {
+        String sql = "SELECT * FROM FULL_NAME WHERE NODE_ID = :nodeId AND " +
+                "(START_DATE IS NULL OR START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND" +
+                "(END_DATE IS NULL OR END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(FullName.class));
+    }
+
+    public List<FullName> getAllFullNames(String nodeId) {
+        String sql = "SELECT * FROM FULL_NAME WHERE NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(FullName.class));
+    }
+
+    public List<FullName> getHistoryAndCurrentFullNames(String nodeId, String date) {
+        String sql = "SELECT * FROM FULL_NAME WHERE NODE_ID = :nodeId AND " +
+                "(START_DATE IS NULL OR START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(FullName.class));
+    }
+
+    public List<FullName> getFutureAndCurrentFullNames(String nodeId, String date) {
+        String sql = "SELECT * FROM FULL_NAME WHERE NODE_ID = :nodeId AND " +
+                "(END_DATE IS NULL OR END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(FullName.class));
+    }
+
+    public List<Relative> getChildren(String nodeId, String date) {
+        String sql = "SELECT N.ID, N.UNIQUE_ID, N.START_DATE, N.END_DATE, E.HIERARCHY, E.START_DATE edge_start_date, E.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM EDGE E " +
+        "JOIN NODE N ON E.CHILD_NODE_ID = N.ID " +
+        "JOIN FULL_NAME FN ON E.CHILD_NODE_ID = FN.NODE_ID AND E.HIERARCHY != 'history' " +
+        "WHERE ((E.START_DATE IS NULL OR E.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(E.END_DATE IS NULL OR E.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+                "((FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+        "E.PARENT_NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getParents(String nodeId, String date) {
+        String sql = "SELECT N.ID, N.UNIQUE_ID, N.START_DATE, N.END_DATE, E.HIERARCHY, E.START_DATE edge_start_date, E.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM EDGE E " +
+        "JOIN NODE N ON E.PARENT_NODE_ID = N.ID " +
+        "JOIN FULL_NAME FN ON E.PARENT_NODE_ID = FN.NODE_ID AND E.HIERARCHY != 'history' " +
+        "WHERE ((E.START_DATE IS NULL OR E.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+        "E.END_DATE IS NULL OR E.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "((FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+        "E.CHILD_NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getCurrentAndFutureParents(String nodeId, String date) {
+        String sql = "SELECT N.ID, N.UNIQUE_ID, N.START_DATE, N.END_DATE, E.HIERARCHY, E.START_DATE edge_start_date, E.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM EDGE E " +
+                "JOIN NODE N ON E.PARENT_NODE_ID = N.ID " +
+                "JOIN FULL_NAME FN ON E.PARENT_NODE_ID = FN.NODE_ID AND E.HIERARCHY != 'history' " +
+                "WHERE (E.END_DATE IS NULL OR E.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "((FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+                "E.CHILD_NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getCurrentAndFutureChildren(String nodeId, String date) {
+        String sql = "SELECT N.ID, N.UNIQUE_ID, N.START_DATE, N.END_DATE, E.HIERARCHY, E.START_DATE edge_start_date, E.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM EDGE E " +
+                "JOIN NODE N ON E.CHILD_NODE_ID = N.ID " +
+                "JOIN FULL_NAME FN ON E.CHILD_NODE_ID = FN.NODE_ID AND E.HIERARCHY != 'history' " +
+                "WHERE (E.END_DATE IS NULL OR E.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "((FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))) AND" +
+                "(FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+                "E.PARENT_NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getCurrentAndPastParents(String nodeId, String date) {
+        String sql = "SELECT N.ID, N.UNIQUE_ID, N.START_DATE, N.END_DATE, E.HIERARCHY, E.START_DATE edge_start_date, E.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM EDGE E " +
+                "JOIN NODE N ON E.PARENT_NODE_ID = N.ID " +
+                "JOIN FULL_NAME FN ON E.PARENT_NODE_ID = FN.NODE_ID AND E.HIERARCHY != 'history' " +
+                "WHERE (E.START_DATE IS NULL OR E.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "((FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+                "E.CHILD_NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getCurrentAndPastChildren(String nodeId, String date) {
+        String sql = "SELECT N.ID, N.UNIQUE_ID, N.START_DATE, N.END_DATE, E.HIERARCHY, E.START_DATE edge_start_date, E.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM EDGE E " +
+                "JOIN NODE N ON E.CHILD_NODE_ID = N.ID " +
+                "JOIN FULL_NAME FN ON E.CHILD_NODE_ID = FN.NODE_ID AND E.HIERARCHY != 'history' " +
+                "WHERE (E.START_DATE IS NULL OR E.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "((FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+                "E.PARENT_NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getAllChildren(String nodeId, String date) {
+        String sql = "SELECT N.ID, N.UNIQUE_ID, N.START_DATE, N.END_DATE, E.HIERARCHY, E.START_DATE edge_start_date, E.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM EDGE E " +
+                "JOIN NODE N ON E.CHILD_NODE_ID = N.ID " +
+                "JOIN FULL_NAME FN ON E.CHILD_NODE_ID = FN.NODE_ID AND E.HIERARCHY != 'history' " +
+                "WHERE ((FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+                "E.PARENT_NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getAllParents(String nodeId, String date) {
+        String sql = "SELECT N.ID, N.UNIQUE_ID, N.START_DATE, N.END_DATE, E.HIERARCHY, E.START_DATE edge_start_date, E.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM EDGE E " +
+                "JOIN NODE N ON E.PARENT_NODE_ID = N.ID " +
+                "JOIN FULL_NAME FN ON E.PARENT_NODE_ID = FN.NODE_ID AND E.HIERARCHY != 'history' " +
+                "WHERE ((FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))) AND " +
+                "E.CHILD_NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getPredecessors1(String nodeId, String date) {
+        String sql = "SELECT PN.ID, PN.UNIQUE_ID, PN.START_DATE, PN.END_DATE, P.START_DATE edge_start_date, P.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM PREDECESSOR_RELATION P " +
+        "JOIN NODE N ON P.NODE_ID = N.ID " +
+        "JOIN NODE PN ON P.PREDECESSOR_ID = PN.ID " +
+        "JOIN FULL_NAME FN on P.PREDECESSOR_ID = FN.NODE_ID " +
+        "AND (((PN.START_DATE IS NULL OR PN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(PN.END_DATE IS NULL OR PN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "((FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) " +
+        "AND (FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))))) " +
+        "OR (PN.END_DATE < trunc(to_date(:date, 'DD.MM.YYYY')) AND " +
+                        "(FN.START_DATE IS NULL OR FN.START_DATE <= PN.END_DATE) " +
+                "AND (FN.END_DATE IS NULL OR FN.END_DATE >= PN.END_DATE))) " +
+        "where P.NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
+
+    public List<Relative> getSuccessors1(String nodeId, String date) {
+        String sql = "SELECT SN.ID, SN.UNIQUE_ID, SN.START_DATE, SN.END_DATE, S.START_DATE edge_start_date, S.END_DATE edge_end_date, FN.NAME full_name, FN.LANGUAGE FROM SUCCESSOR_RELATION S " +
+        "JOIN NODE N ON S.NODE_ID = N.ID " +
+        "JOIN NODE SN ON S.SUCCESSOR_ID = SN.ID " +
+        "JOIN FULL_NAME FN ON S.SUCCESSOR_ID = FN.NODE_ID " +
+        "AND (((SN.START_DATE IS NULL OR SN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "(SN.END_DATE IS NULL OR SN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "((FN.START_DATE IS NULL OR FN.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) " +
+        "AND (FN.END_DATE IS NULL OR FN.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY'))))) " +
+        "OR ((SN.START_DATE > trunc(to_date(:date, 'DD.MM.YYYY'))) AND " +
+                "((FN.START_DATE IS NULL OR FN.START_DATE <= SN.START_DATE)) " +
+        "AND (FN.END_DATE IS NULL OR FN.END_DATE >= SN.START_DATE))) " +
+        "WHERE S.NODE_ID = :nodeId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("date", date);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+    }
 
 }
 

@@ -27,6 +27,8 @@ public class Constants {
     public static final String LANG_CODE_EN = "en";
     public static final String LANG_CODE_SV = "sv";
     public static final Integer DEGREE_PROGRAMME_KOONTIYKSIKKO_UNIQUE_ID = 33539259;
+    public static final String FULL_NAME_VIEW_MINUS_INF = "01.01.1000";
+    public static final String FULL_NAME_VIEW_PLUS_INF = "01.01.9999";
 
 
 }
