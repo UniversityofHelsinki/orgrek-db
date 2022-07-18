@@ -10,9 +10,8 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository(value = "textsDao")
 public class TextsDao extends NamedParameterJdbcDaoSupport {
@@ -35,6 +34,8 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
      * "key": "Opetus",
      * "language": "fi",
      * "value": "Opetus",
+     * "username": "baabenom",
+     * "timestamp": 13.07.2022
      * }
      *
      * @return all text entries in a list
@@ -43,10 +44,12 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
     private static final String VALUE_FIELD = "value";
     private static final String KEY_FIELD = "key";
     private static final String LANGUAGE_FIELD = "language";
+    private static final String EDITOR_FIELD = "user_name";
+    private static final String TIMESTAMP_FIELD = "timestamp";
     private static final String NODE_ID = "node_id";
 
     public List<Map<String, String>> getAllTexts() {
-        final String SQL_GET_ALL_TEXTS = "SELECT KEY, LANGUAGE, VALUE FROM TEXT";
+        final String SQL_GET_ALL_TEXTS = "SELECT * FROM TEXT ORDER BY LOWER(KEY), LANGUAGE";
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
@@ -55,10 +58,48 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
             textKey.put(KEY_FIELD, rs.getString(KEY_FIELD));
             textKey.put(LANGUAGE_FIELD, rs.getString(LANGUAGE_FIELD));
             textKey.put(VALUE_FIELD, rs.getString(VALUE_FIELD));
+            textKey.put(EDITOR_FIELD, rs.getString(EDITOR_FIELD));
+            textKey.put(TIMESTAMP_FIELD, rs.getString(TIMESTAMP_FIELD));
             return textKey;
         });
 
         return query;
+    }
+
+    public int[] insertTexts(List<Map<String, String>> texts) {
+        String sql = "INSERT INTO TEXT (KEY, LANGUAGE, VALUE, USER_NAME, TIMESTAMP) " +
+                "VALUES (:key, :language, :value, :user_name, current_date)";
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        MapSqlParameterSource[] paramMaps = texts.stream().map(text -> {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("key", text.get("key"));
+            params.addValue("language", text.get("language"));
+            params.addValue("value", text.get("value"));
+            params.addValue("user_name", text.get("user_name"));
+            return params;
+        }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
+        int[] result = getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
+        return result;
+    }
+
+    public int updateText(Map<String, String> text) {
+        String sql = "UPDATE TEXT SET " +
+                "KEY=:key, LANGUAGE=:language, VALUE=:value, USER_NAME=:user_name, TIMESTAMP=current_date " +
+                "WHERE KEY=:key AND LANGUAGE=:language";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("key", text.get("key"));
+        params.addValue("value", text.get("value"));
+        params.addValue("language", text.get("language"));
+        params.addValue("user_name", text.get("user_name"));
+        return getNamedParameterJdbcTemplate().update(sql, params);
+    }
+
+    public int deleteText(Map<String, String> text) {
+        String sql = "DELETE TEXT WHERE KEY=:key AND LANGUAGE=:language";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("key", text.get("key"));
+        params.addValue("language", text.get("language"));
+        return getNamedParameterJdbcTemplate().update(sql, params);
     }
 
     /**
