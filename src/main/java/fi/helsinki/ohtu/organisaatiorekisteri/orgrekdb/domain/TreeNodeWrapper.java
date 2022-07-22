@@ -10,7 +10,7 @@ public class TreeNodeWrapper {
 
     private String nameEn;
 
-    private String nameSV;
+    private String nameSv;
 
     public String getChildNodeId() {
         return childNodeId;
@@ -44,11 +44,11 @@ public class TreeNodeWrapper {
         this.nameEn = nameEn;
     }
 
-    public String getNameSV() {
-        return nameSV;
+    public String getNameSv() {
+        return nameSv;
     }
 
-    public void setNameSV(String nameSV) {
-        this.nameSV = nameSV;
+    public void setNameSv(String nameSv) {
+        this.nameSv = nameSv;
     }
 }
