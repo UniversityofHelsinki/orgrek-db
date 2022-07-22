@@ -322,7 +322,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<TreeNodeWrapper> getTreeNodes(String hierarchy) {
-        String sql = "SELECT distinct CHILD_NODE_ID, PARENT_NODE_ID, LEVEL  FROM edge where " +
+        String sql = "with nodes as (SELECT distinct CHILD_NODE_ID, PARENT_NODE_ID, LEVEL  FROM edge where " +
                 "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
                 "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
                 "and HIERARCHY = :hierarchy " +
@@ -330,7 +330,26 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "CONNECT BY NOCYCLE PRIOR CHILD_NODE_ID = PARENT_NODE_ID and HIERARCHY = :hierarchy and " +
                 "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
                 "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
-                "ORDER BY LEVEL";
+                "ORDER BY LEVEL)" +
+                "select nc.*,n_fi.name name_fi,n_en.name name_en,n_sv.name name_sv from nodes nc,full_name n_fi, full_name n_en, full_name n_sv " +
+                "where " +
+                "nc.child_node_id = n_fi.NODE_ID " +
+                " and" +
+                "(n_fi.END_DATE IS NULL OR n_fi.END_DATE > trunc(:today)) and " +
+                "(n_fi.START_DATE IS NULL OR n_fi.START_DATE <= trunc(:today)) " +
+                "and n_fi.language='fi' " +
+                "and " +
+                "nc.child_node_id = n_en.NODE_ID " +
+                "and" +
+                "(n_en.END_DATE IS NULL OR n_en.END_DATE > trunc(:today)) and " +
+                "(n_en.START_DATE IS NULL OR n_en.START_DATE <= trunc(:today)) " +
+                "and n_en.language='en' " +
+                "and " +
+                "nc.child_node_id = n_sv.NODE_ID " +
+                "and" +
+                "(n_sv.END_DATE IS NULL OR n_sv.END_DATE > trunc(:today)) and " +
+                "(n_sv.START_DATE IS NULL OR n_sv.START_DATE <= trunc(:today)) " +
+                "and n_sv.language='sv'";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, "a1");

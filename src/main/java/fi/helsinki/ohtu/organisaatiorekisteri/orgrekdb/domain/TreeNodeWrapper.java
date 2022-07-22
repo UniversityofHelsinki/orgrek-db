@@ -1,13 +1,16 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TreeNodeWrapper {
 
     private String childNodeId;
 
     private String parentNodeId;
+
+    private String nameFi;
+
+    private String nameEn;
+
+    private String nameSV;
 
     public String getChildNodeId() {
         return childNodeId;
@@ -23,5 +26,29 @@ public class TreeNodeWrapper {
 
     public void setParentNodeId(String parentNodeId) {
         this.parentNodeId = parentNodeId;
+    }
+
+    public String getNameFi() {
+        return nameFi;
+    }
+
+    public void setNameFi(String nameFi) {
+        this.nameFi = nameFi;
+    }
+
+    public String getNameEn() {
+        return nameEn;
+    }
+
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
+
+    public String getNameSV() {
+        return nameSV;
+    }
+
+    public void setNameSV(String nameSV) {
+        this.nameSV = nameSV;
     }
 }
