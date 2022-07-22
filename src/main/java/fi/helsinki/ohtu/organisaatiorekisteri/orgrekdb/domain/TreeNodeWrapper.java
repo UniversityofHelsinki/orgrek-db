@@ -12,6 +12,8 @@ public class TreeNodeWrapper {
 
     private String nameSv;
 
+    private int uniqueId;
+
     public String getChildNodeId() {
         return childNodeId;
     }
@@ -50,5 +52,13 @@ public class TreeNodeWrapper {
 
     public void setNameSv(String nameSv) {
         this.nameSv = nameSv;
+    }
+
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
     }
 }
