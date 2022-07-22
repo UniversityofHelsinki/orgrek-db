@@ -343,7 +343,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "and " +
                 "nc.child_node_id = n_en.NODE_ID and nc.CHILD_NODE_ID = n.ID " +
                 "and " +
-                "(n_en.END_DATE IS NULL OR n_en.END_DATE > sysdate) and " +
+                "(n_en.END_DATE IS NULL OR n_en.END_DATE > trunc(:today)) and " +
                 "(n_en.START_DATE IS NULL OR n_en.START_DATE <= trunc(:today)) " +
                 "and n_en.language='en' " +
                 "and " +
