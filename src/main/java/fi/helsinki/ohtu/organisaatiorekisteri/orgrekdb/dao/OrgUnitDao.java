@@ -321,6 +321,24 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(Node.class));
     }
 
+    public List<TreeNodeWrapper> getTreeNodes(String hierarchy) {
+        String sql = "SELECT distinct CHILD_NODE_ID, PARENT_NODE_ID, LEVEL  FROM edge where " +
+                "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
+                "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
+                "and HIERARCHY = :hierarchy " +
+                "START WITH PARENT_NODE_ID = :nodeId " +
+                "CONNECT BY NOCYCLE PRIOR CHILD_NODE_ID = PARENT_NODE_ID and HIERARCHY = :hierarchy and " +
+                "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
+                "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
+                "ORDER BY LEVEL";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.NODE_ID_FIELD, "a1");
+        params.addValue(Constants.HIERARCHY, hierarchy);
+        params.addValue("today", Timestamp.from(Instant.now()));
+        return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(TreeNodeWrapper.class));
+    }
+
 
 }
 
