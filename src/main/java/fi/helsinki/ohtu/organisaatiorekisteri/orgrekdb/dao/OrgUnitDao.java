@@ -322,8 +322,6 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<TreeNodeWrapper> getTreeNodes(String hierarchy, Date date) {
-        System.out.println(date);
-
         String sql = "with nodes as (SELECT distinct CHILD_NODE_ID, PARENT_NODE_ID, LEVEL  FROM edge where " +
                 "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
                 "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
