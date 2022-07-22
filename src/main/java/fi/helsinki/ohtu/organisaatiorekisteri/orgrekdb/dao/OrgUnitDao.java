@@ -321,9 +321,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(Node.class));
     }
 
-    public List<TreeNodeWrapper> getTreeNodes(String hierarchy) {
+    public List<TreeNodeWrapper> getTreeNodes(String hierarchy, Date date) {
+        System.out.println(date);
+
         String sql = "with nodes as (SELECT distinct CHILD_NODE_ID, PARENT_NODE_ID, LEVEL  FROM edge where " +
-                "(END_DATE IS NULL OR END_DATE > trunc(:today))" +
+                "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
                 "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
                 "and HIERARCHY = :hierarchy " +
                 "START WITH PARENT_NODE_ID = :nodeId " +
@@ -331,7 +333,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
                 "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
                 "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
                 "ORDER BY LEVEL) " +
-                "select nc.*,n.UNIQUE_ID, n_fi.name name_fi,n_en.name name_en,n_sv.name name_sv from nodes nc, node n, full_name n_fi, full_name n_en, full_name n_sv\n" +
+                "select nc.*,n.UNIQUE_ID, n_fi.name name_fi,n_en.name name_en,n_sv.name name_sv from nodes nc, node n, full_name n_fi, full_name n_en, full_name n_sv " +
                 "where " +
                 "nc.child_node_id = n_fi.NODE_ID and nc.CHILD_NODE_ID = n.ID " +
                 "and " +
@@ -374,7 +376,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, "a1");
         params.addValue(Constants.HIERARCHY, hierarchy);
-        params.addValue("today", Timestamp.from(Instant.now()));
+        params.addValue("today", date);
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(TreeNodeWrapper.class));
     }
 
