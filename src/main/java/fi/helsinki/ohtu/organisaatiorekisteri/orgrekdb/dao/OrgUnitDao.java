@@ -323,58 +323,58 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<TreeNodeWrapper> getTreeNodes(String hierarchy, Date date) {
         String sql = "with nodes as (SELECT distinct CHILD_NODE_ID, PARENT_NODE_ID, LEVEL  FROM edge where " +
-                "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
-                "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
+                "(END_DATE IS NULL OR END_DATE > trunc(:date)) " +
+                "AND (START_DATE IS NULL OR START_DATE <= trunc(:date)) " +
                 "and HIERARCHY = :hierarchy " +
                 "START WITH PARENT_NODE_ID = :nodeId " +
                 "CONNECT BY NOCYCLE PRIOR CHILD_NODE_ID = PARENT_NODE_ID and HIERARCHY = :hierarchy and " +
-                "(END_DATE IS NULL OR END_DATE > trunc(:today)) " +
-                "AND (START_DATE IS NULL OR START_DATE <= trunc(:today)) " +
+                "(END_DATE IS NULL OR END_DATE > trunc(:date)) " +
+                "AND (START_DATE IS NULL OR START_DATE <= trunc(:date)) " +
                 "ORDER BY LEVEL) " +
                 "select nc.*,n.UNIQUE_ID, n_fi.name name_fi,n_en.name name_en,n_sv.name name_sv from nodes nc, node n, full_name n_fi, full_name n_en, full_name n_sv " +
                 "where " +
                 "nc.child_node_id = n_fi.NODE_ID and nc.CHILD_NODE_ID = n.ID " +
                 "and " +
-                "(n_fi.END_DATE IS NULL OR n_fi.END_DATE > trunc(:today)) and " +
-                "(n_fi.START_DATE IS NULL OR n_fi.START_DATE <= trunc(:today)) " +
+                "(n_fi.END_DATE IS NULL OR n_fi.END_DATE > trunc(:date)) and " +
+                "(n_fi.START_DATE IS NULL OR n_fi.START_DATE <= trunc(:date)) " +
                 "and n_fi.language='fi' " +
                 "and " +
                 "nc.child_node_id = n_en.NODE_ID and nc.CHILD_NODE_ID = n.ID " +
                 "and " +
-                "(n_en.END_DATE IS NULL OR n_en.END_DATE > trunc(:today)) and " +
-                "(n_en.START_DATE IS NULL OR n_en.START_DATE <= trunc(:today)) " +
+                "(n_en.END_DATE IS NULL OR n_en.END_DATE > trunc(:date)) and " +
+                "(n_en.START_DATE IS NULL OR n_en.START_DATE <= trunc(:date)) " +
                 "and n_en.language='en' " +
                 "and " +
                 "nc.child_node_id = n_sv.NODE_ID and nc.CHILD_NODE_ID = n.ID " +
                 "and" +
-                "(n_sv.END_DATE IS NULL OR n_sv.END_DATE > trunc(:today)) and " +
-                "(n_sv.START_DATE IS NULL OR n_sv.START_DATE <= trunc(:today)) " +
+                "(n_sv.END_DATE IS NULL OR n_sv.END_DATE > trunc(:date)) and " +
+                "(n_sv.START_DATE IS NULL OR n_sv.START_DATE <= trunc(:date)) " +
                 "and n_sv.language='sv' " +
                 "union " +
                 "select n.ID ,null, 0, n.UNIQUE_ID, n_fi.name child_name_fi,n_en.name child_name_en,n_sv.name child_name_sv from node n, full_name n_fi, full_name n_en, full_name n_sv " +
                 "where " +
                 "'a1' = n_fi.NODE_ID and 'a1' = n.id " +
                 "and " +
-                "(n_fi.END_DATE IS NULL OR n_fi.END_DATE > trunc(:today)) and " +
-                "(n_fi.START_DATE IS NULL OR n_fi.START_DATE <= trunc(:today)) " +
+                "(n_fi.END_DATE IS NULL OR n_fi.END_DATE > trunc(:date)) and " +
+                "(n_fi.START_DATE IS NULL OR n_fi.START_DATE <= trunc(:date)) " +
                 "and n_fi.language='fi' " +
                 "and " +
                 "'a1' = n_en.NODE_ID and  'a1' = n.id " +
                 "and " +
-                "(n_en.END_DATE IS NULL OR n_en.END_DATE > trunc(:today)) and " +
-                "(n_en.START_DATE IS NULL OR n_en.START_DATE <= trunc(:today)) " +
+                "(n_en.END_DATE IS NULL OR n_en.END_DATE > trunc(:date)) and " +
+                "(n_en.START_DATE IS NULL OR n_en.START_DATE <= trunc(:date)) " +
                 "and n_en.language='en' " +
                 "and " +
                 "'a1' = n_sv.NODE_ID and 'a1' = n.id " +
                 "and " +
-                "(n_sv.END_DATE IS NULL OR n_sv.END_DATE > trunc(:today)) and " +
-                "(n_sv.START_DATE IS NULL OR n_sv.START_DATE <= trunc(:today)) " +
+                "(n_sv.END_DATE IS NULL OR n_sv.END_DATE > trunc(:date)) and " +
+                "(n_sv.START_DATE IS NULL OR n_sv.START_DATE <= trunc(:date)) " +
                 "and n_sv.language='sv'";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, "a1");
         params.addValue(Constants.HIERARCHY, hierarchy);
-        params.addValue("today", date);
+        params.addValue("date", date);
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(TreeNodeWrapper.class));
     }
 
