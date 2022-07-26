@@ -11,6 +11,8 @@ public class Constants {
     public static final String EDGE_TYPE_FIELD = "edgeType";
     public static final String NODE_ID_FIELD = "nodeId";
 
+    public static final String HIERARCHY ="hierarchy";
+
     public static final String NAME_EN_FIELD = "name_en";
 
     public static final String NAME_FI_FIELD = "name_fi";
