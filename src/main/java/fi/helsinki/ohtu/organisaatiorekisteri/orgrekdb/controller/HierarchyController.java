@@ -4,6 +4,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeEdgeHistoryWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Relative;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,6 +103,67 @@ public class HierarchyController {
     public List<NodeEdgeHistoryWrapper> getSuccessors(@PathVariable("id") int uniqueId) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getSuccessors(node.getId());
+    }
+
+    @RequestMapping(method = GET, value = "/predecessors1/{id}/{date}")
+    public List<Relative> getPredecessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getPredecessors1(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/successors1/{id}/{date}")
+    public List<Relative> getSuccessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getSuccessors1(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/parents1/{id}/{date}")
+    public List<Relative> getParents1(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getParents(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/children1/{id}/{date}")
+    public List<Relative> getChildren1(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getChildren(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/children1/historyandcurrent/{id}/{date}")
+    public List<Relative> getCurrentAndPastChildren(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getCurrentAndPastChildren(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/parents1/historyandcurrent/{id}/{date}")
+    public List<Relative> getCurrentAndPastParents(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getCurrentAndPastParents(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/children1/futureandcurrent/{id}/{date}")
+    public List<Relative> getCurrentAndFutureChildren(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getCurrentAndFutureChildren(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/parents1/futureandcurrent/{id}/{date}")
+    public List<Relative> getCurrentAndFutureParents(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getCurrentAndFutureParents(node.getId(), date);
+    }
+
+    @RequestMapping(method = GET, value = "/children1/all/{id}/{date}")
+    public List<Relative> getAllChildren(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getAllChildren(node.getId(), date);
+    }
+
+
+    @RequestMapping(method = GET, value = "/parents1/all/{id}/{date}")
+    public List<Relative> getAllParents(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return orgUnitDao.getAllParents(node.getId(), date);
     }
 
 }
