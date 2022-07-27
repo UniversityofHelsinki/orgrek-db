@@ -4,6 +4,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.*;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -510,9 +511,9 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
     public List<TreeNodeWrapper> getTreeNodes(String hierarchy, Date date) throws IOException {
-
+        ClassPathResource resource = new ClassPathResource("sql/tree.sql");
         BufferedReader reader = new BufferedReader
-                (new InputStreamReader(new FileInputStream("./sql/tree.sql"), "UTF-8"));
+                (new InputStreamReader(resource.getInputStream()));
         String sql = reader.lines().map(line -> line + "\n").collect(Collectors.joining());
 
         MapSqlParameterSource params = new MapSqlParameterSource();
