@@ -29,15 +29,6 @@ public class FullNameController {
     @RequestMapping(method = GET, value = "{id}/{date}")
     public List<FullName> getFullNames(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        /*
-        Date selectedDay = DateUtil.parseDate(date);
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("fi"));
-        if (node.getEndDate() != null && selectedDay.after(node.getEndDate())) {
-            return orgUnitDao.getFullNames(node.getId(), df.format(node.getEndDate()));
-        } else if (node.getStartDate() != null && selectedDay.before(node.getStartDate())) {
-            return orgUnitDao.getFullNames(node.getId(), df.format(node.getStartDate()));
-        }
-        */
         return orgUnitDao.getFullNames(node.getId(), date);
     }
 
@@ -58,29 +49,4 @@ public class FullNameController {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getAllFullNames(node.getId());
     }
-
-    /*
-
-    @RequestMapping(method = POST, value = "{date}/mass")
-    public List<FullName> getFullNames(@PathVariable("date") String date, @RequestBody List<Integer> uniqueIds) {
-        if (uniqueIds.size() == 0) {
-            return new ArrayList<>();
-        }
-        return orgUnitDao.getFullNames(uniqueIds, date);
-    }
-
-    @RequestMapping(method = GET, value = "history/{id}/{date}")
-    public List<FullName> getFullNamesUntil(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getFullNamesUntil(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "future/{id}/{date}")
-    public List<FullName> getFullNamesFrom(@PathVariable("id") int uniqueId, @PathVariable("date") String date) {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getFullNamesFrom(node.getId(), date);
-    }
-
-     */
-
 }
