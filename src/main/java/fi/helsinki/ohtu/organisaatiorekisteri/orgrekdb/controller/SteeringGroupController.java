@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class SteeringGroupController {
     private TextsDao textsDao;
 
     @RequestMapping(method = GET, value="/steeringGroups")
-    public List<DegreeProgrammeDTO> getSteeringGroups() {
+    public List<DegreeProgrammeDTO> getSteeringGroups() throws IOException {
         Set<String> degreeProgrammeNodeIds = orgUnitDao.getDegreeProgrammes(Constants.DEGREE_PROGRAMME_KOONTIYKSIKKO_UNIQUE_ID)
                 .stream()
                 .map(Node::getId)
@@ -60,12 +61,12 @@ public class SteeringGroupController {
     }
 
     @RequestMapping("/degreeTitles")
-    public List<TextDTO> getDegreeTitles() {
+    public List<TextDTO> getDegreeTitles() throws IOException {
         return textsDao.getDegreeTitles();
     }
 
     @RequestMapping("/degreeProgrammes/{id}")
-    public List<Node> getDegreeProgrammes(@PathVariable("id") int uniqueId) {
+    public List<Node> getDegreeProgrammes(@PathVariable("id") int uniqueId) throws IOException {
         return orgUnitDao.getDegreeProgrammes(uniqueId);
     }
 }

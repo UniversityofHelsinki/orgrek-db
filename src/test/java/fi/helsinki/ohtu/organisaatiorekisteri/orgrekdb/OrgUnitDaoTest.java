@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +24,13 @@ public class OrgUnitDaoTest {
     private OrgUnitDao orgUnitDao;
 
     @Test
-    public void testFindNodeByUniqueId() {
+    public void testFindNodeByUniqueId() throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
     }
 
     @Test
-    public void testFindNodeAttributesWithUniqueIdAfterYear2021() {
+    public void testFindNodeAttributesWithUniqueIdAfterYear2021() throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.1.2021");
@@ -41,7 +42,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testFindNodeAttributesWithUniqueIdAfterYear2018() {
+    public void testFindNodeAttributesWithUniqueIdAfterYear2018() throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.1.2018");
@@ -53,7 +54,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testFindNodeAttributesWithUniqueIdAfterSeptemberOfYear2018() {
+    public void testFindNodeAttributesWithUniqueIdAfterSeptemberOfYear2018() throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.8.2018");
@@ -65,26 +66,26 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testRootUnitGetCurrentParentsByChildNodeIdShouldNotReturnAnything() {
+    public void testRootUnitGetCurrentParentsByChildNodeIdShouldNotReturnAnything() throws IOException {
         List<Node> parents = orgUnitDao.getCurrentParentsByChildNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2021");
         assertEquals(0, parents.size());
     }
 
     @Test
-    public void testGetCurrentParentsByChildNodeIdShouldNotReturnAnythingWithHistoryType() {
+    public void testGetCurrentParentsByChildNodeIdShouldNotReturnAnythingWithHistoryType() throws IOException {
         List<Node> parents = orgUnitDao.getCurrentParentsByChildNodeId("11116", "01.01.2021");
         assertEquals(0, parents.size());
     }
 
     @Test
-    public void testGetCurrentParentsByChildNodeIdShouldReturnCorrectParents() {
+    public void testGetCurrentParentsByChildNodeIdShouldReturnCorrectParents() throws IOException {
         List<Node> parents = orgUnitDao.getCurrentParentsByChildNodeId("6777", "01.01.2021");
         assertEquals(1, parents.size());
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, parents.get(0).getId());
     }
 
     @Test
-    public void testGetCurrentParentsByChildNodeIdShouldReturnCorrectParentsByDate() {
+    public void testGetCurrentParentsByChildNodeIdShouldReturnCorrectParentsByDate() throws IOException {
         List<Node> parents = orgUnitDao.getCurrentParentsByChildNodeId("3201", "01.01.2021");
         assertEquals(0, parents.size());
 
@@ -94,13 +95,13 @@ public class OrgUnitDaoTest {
 
 
     @Test
-    public void testGetCurrentTypesByChildNodeIdShouldNotReturnAnythingWithHistoryType() {
+    public void testGetCurrentTypesByChildNodeIdShouldNotReturnAnythingWithHistoryType() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("3337", "01.01.2021");
         assertEquals(0, wrapperList.size());
     }
 
     @Test
-    public void testGetCurrentTypesByChildNodeIdShouldReturnCorrectTypes() {
+    public void testGetCurrentTypesByChildNodeIdShouldReturnCorrectTypes() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("5935", "01.01.2021");
         assertEquals(1, wrapperList.size());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_OPETUS, wrapperList.get(0).getHierarchy());
@@ -108,7 +109,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetCurrentTypesByChildNodeIdShouldReturnCorrectTypesByDate() {
+    public void testGetCurrentTypesByChildNodeIdShouldReturnCorrectTypesByDate() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("3201", "01.01.2021");
         assertEquals(0, wrapperList.size());
         wrapperList = orgUnitDao.getCurrentTypesByChildNodeId("3201", "01.01.2015");
@@ -117,7 +118,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetCurrentChildrenByParentNodeIdShouldReturnCorrectChildren() {
+    public void testGetCurrentChildrenByParentNodeIdShouldReturnCorrectChildren() throws IOException {
         List<Node> children = orgUnitDao.getCurrentChildrenByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2021");
         assertEquals(2, children.size());
         assertEquals("5935", children.get(0).getId());
@@ -125,7 +126,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetCurrentChildrenByParentNodeIdShouldReturnCorrectChildrenByDate() {
+    public void testGetCurrentChildrenByParentNodeIdShouldReturnCorrectChildrenByDate() throws IOException {
         List<Node> children = orgUnitDao.getCurrentChildrenByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2021");
         assertEquals(2, children.size());
         assertEquals("5935", children.get(0).getId());
@@ -141,7 +142,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetCurrentTypesByParentNodeIdShouldNotReturnAnythingWithHistoryType() {
+    public void testGetCurrentTypesByParentNodeIdShouldNotReturnAnythingWithHistoryType() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2021");
         assertEquals(2, wrapperList.size());
         assertEquals("6777", wrapperList.get(0).getNodeId());
@@ -151,7 +152,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetCurrentTypesByParentNodeIdShouldReturnCorrectTypesByDate() {
+    public void testGetCurrentTypesByParentNodeIdShouldReturnCorrectTypesByDate() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2015");
         assertEquals(5, wrapperList.size());
         assertEquals(ConstantsTest.HIERARCHY_TYPE_TALOUS, wrapperList.get(0).getHierarchy());
@@ -167,7 +168,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetHistoryAndCurrentParentsByChildNodeAndByDate(){
+    public void testGetHistoryAndCurrentParentsByChildNodeAndByDate() throws IOException {
         List<Node> parentNodes = orgUnitDao.getHistoryAndCurrentParentsByChildNodeId("5935", "23.12.2021");
         assertEquals(2, parentNodes.size());
         assertEquals("6770", parentNodes.get(0).getId());
@@ -175,7 +176,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetFutureAndCurrentParentsByChildNodeAndByDate(){
+    public void testGetFutureAndCurrentParentsByChildNodeAndByDate() throws IOException {
         List<Node> parentNodes = orgUnitDao.getFutureAndCurrentParentsByChildNodeId("5935", "23.12.2021");
         assertEquals(2, parentNodes.size());
         assertEquals("3130", parentNodes.get(0).getId());
@@ -183,7 +184,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetHistoryAndCurrentParentTypesByChildNodeAndByDate(){
+    public void testGetHistoryAndCurrentParentTypesByChildNodeAndByDate() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getHistoryAndCurrentTypesByChildNodeId("5935", "23.12.2021");
         assertEquals(2, wrapperList.size());
         assertEquals("a1", wrapperList.get(0).getNodeId());
@@ -193,7 +194,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetFutureAndCurrentParentTypesByChildNodeAndByDate(){
+    public void testGetFutureAndCurrentParentTypesByChildNodeAndByDate() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getFutureAndCurrentTypesByChildNodeId("5935", "23.12.2021");
         assertEquals(3, wrapperList.size());
         assertEquals("a1", wrapperList.get(0).getNodeId());
@@ -205,7 +206,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetHistoryAndCurrentChildrenByParentNodeAndByDate(){
+    public void testGetHistoryAndCurrentChildrenByParentNodeAndByDate() throws IOException {
         List<Node> childNodes = orgUnitDao.getHistoryAndCurrentChildrenByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
         assertEquals(6, childNodes.size());
         assertEquals("3201", childNodes.get(0).getId());
@@ -217,7 +218,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetFutureAndCurrentChildrenByParentNodeAndByDate(){
+    public void testGetFutureAndCurrentChildrenByParentNodeAndByDate() throws IOException {
         List<Node> childNodes = orgUnitDao.getFutureAndCurrentChildrenByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
         assertEquals(3, childNodes.size());
         assertEquals("3130", childNodes.get(0).getId());
@@ -226,7 +227,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetHistoryAndCurrentChildTypesByParentNodeAndByDate(){
+    public void testGetHistoryAndCurrentChildTypesByParentNodeAndByDate() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getHistoryAndCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
         assertEquals(6, wrapperList.size());
         assertEquals("3368", wrapperList.get(0).getNodeId());
@@ -244,7 +245,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetFutureAndCurrentChildTypesByParentNodeAndByDate(){
+    public void testGetFutureAndCurrentChildTypesByParentNodeAndByDate() throws IOException {
         List<NodeWrapper> wrapperList = orgUnitDao.getFutureAndCurrentTypesByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "23.12.2021");
         assertEquals(4, wrapperList.size());
         assertEquals("6777", wrapperList.get(0).getNodeId());
@@ -258,7 +259,7 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetPredecessorsOfNode(){
+    public void testGetPredecessorsOfNode() throws IOException {
         List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getPredecessors(ConstantsTest.ROOT_UNIT_NODE_ID);
         assertEquals(2, wrapperList.size());
         assertEquals("3337", wrapperList.get(0).getId());
@@ -266,20 +267,20 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetSuccessorsOfNode(){
+    public void testGetSuccessorsOfNode() throws IOException {
         List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getSuccessors(ConstantsTest.ROOT_UNIT_NODE_ID);
         assertEquals(1, wrapperList.size());
         assertEquals("9999", wrapperList.get(0).getId());
     }
 
     @Test
-    public void testOneSteeringGroupIsReturned() {
+    public void testOneSteeringGroupIsReturned() throws IOException {
         Map<String, List<SteeringGroup>> steeringGroups = orgUnitDao.getSteeringGroups();
         assertEquals(steeringGroups.size(), 1);
         assertTrue(steeringGroups.get("19063").stream().map(SteeringGroup::getIamGroup).collect(Collectors.toList()).contains("hy-humtdk-spt-jory"));
     }
     @Test
-    public void testSteeringGroupHasNamesInThreeLanguages() {
+    public void testSteeringGroupHasNamesInThreeLanguages() throws IOException {
         Map<String, List<SteeringGroup>> steeringGroups = orgUnitDao.getSteeringGroups();
         steeringGroups.get("19063").forEach(steeringGroup -> {
             assertNotNull(steeringGroup.getEn());
@@ -289,13 +290,13 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testOneDegreeProgrammeIsReturned() {
+    public void testOneDegreeProgrammeIsReturned() throws IOException {
         List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
         assertEquals(programmes.size(), 1);
     }
 
     @Test
-    public void testDegreeProgrammeHasNamesInThreeLanguages() {
+    public void testDegreeProgrammeHasNamesInThreeLanguages() throws IOException {
         List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
         assertEquals("Master's Programme in International Business Law", programmes.get(0).getProgrammeNameEn() );
         assertEquals("Magisterprogramme", programmes.get(0).getProgrammeNameSv());

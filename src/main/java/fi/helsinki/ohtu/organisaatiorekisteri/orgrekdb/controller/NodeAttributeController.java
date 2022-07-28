@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -22,20 +23,20 @@ public class NodeAttributeController {
     private OrgUnitDao orgUnitDao;
 
     @RequestMapping(method = GET, value = "/{id}/{date}/attributes")
-    public List<Attribute> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+    public List<Attribute> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
         return orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
     }
     @RequestMapping(method = GET, value = "/historyandcurrent/{id}/{date}/attributes")
-    public List<Attribute> getHistoryAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+    public List<Attribute> getHistoryAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
         return orgUnitDao.getHistoryAndCurrentAttributeListByDate(node.getId(), dateObj);
     }
 
     @RequestMapping(method = GET, value = "/futureandcurrent/{id}/{date}/attributes")
-    public List<Attribute> getFutureAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+    public List<Attribute> getFutureAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
         return orgUnitDao.getFutureAndCurrentAttributeListByDate(node.getId(), dateObj);
