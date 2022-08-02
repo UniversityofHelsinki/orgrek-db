@@ -2,6 +2,7 @@ drop table if exists NODE_ATTR;
 drop table if exists NODE;
 drop table if exists TEXTS;
 drop table if exists EDGE;
+drop table if exists HIERARCHY_FILTER;
 drop view if exists PREDECESSOR_RELATION;
 drop view if exists SUCCESSOR_RELATION;
 
@@ -50,6 +51,17 @@ create table EDGE
     START_DATE     TIMESTAMP(6),
     END_DATE       TIMESTAMP(6),
     HIERARCHY           VARCHAR2(255 char)
+);
+
+create table HIERARCHY_FILTER
+(
+    ID         NUMBER not null
+        primary key,
+    HIERARCHY VARCHAR2(255 char),
+    KEY VARCHAR2(255 char),
+    VALUE VARCHAR2(255 char),
+    START_DATE TIMESTAMP(6),
+    END_DATE   TIMESTAMP(6)
 );
 
 create view PREDECESSOR_RELATION as
