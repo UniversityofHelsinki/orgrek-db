@@ -3,12 +3,14 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.HierarchyFilterDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ConstantsTest;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,8 +38,9 @@ public class HierarchyFilterTests {
         @Test
         public void testHierarchyFilter() {
             String hierarchy = "henkilosto";
-            List<HierarchyFilter> henkilosto_hierarchyFilters = hierarchyFilterDao.getHierarchyFilter(hierarchy);
-            assertEquals(5, henkilosto_hierarchyFilters.size());
+            Date dateObj = DateUtil.parseDate("01.01.2021");
+            List<HierarchyFilter> henkilosto_hierarchyFilters = hierarchyFilterDao.getHierarchyFilter(hierarchy, dateObj);
+            assertEquals(4, henkilosto_hierarchyFilters.size());
         }
 
     }
