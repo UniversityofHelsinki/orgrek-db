@@ -5,6 +5,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +26,12 @@ public class TextsController {
     }
 
     @RequestMapping("/api/texts")
-    public List<Map<String, String>> getAllTexts() {
+    public List<Map<String, String>> getAllTexts() throws IOException {
         return textsDao.getAllTexts();
     }
 
     @RequestMapping(method = PUT, path = "/api/texts")
-    public Map<String, String> updateText(@RequestBody Map<String, String> text) {
+    public Map<String, String> updateText(@RequestBody Map<String, String> text) throws IOException {
         textsDao.updateText(text);
         List<Map<String, String>> allTexts = textsDao.getAllTexts();
         return allTexts.stream().filter(t ->
@@ -40,13 +41,13 @@ public class TextsController {
     }
 
     @RequestMapping(method = DELETE, path = "/api/texts")
-    public Map<String, String> deleteText(@RequestBody Map<String, String> text) {
+    public Map<String, String> deleteText(@RequestBody Map<String, String> text) throws IOException {
         textsDao.deleteText(text);
         return text;
     }
 
     @RequestMapping(method = POST, path = "/api/texts")
-    public List<Map<String, String>> addText(@RequestBody List<Map<String, String>> texts) {
+    public List<Map<String, String>> addText(@RequestBody List<Map<String, String>> texts) throws IOException {
         textsDao.insertTexts(texts);
         return textsDao.getAllTexts().stream().filter(text ->
                 texts.stream().anyMatch(requestText ->
@@ -58,7 +59,7 @@ public class TextsController {
 
     @CrossOrigin
     @RequestMapping("/api/texts/{language}/{ns}")
-    public Map<String, String> getTextsByLang(@PathVariable("language") String language, @PathVariable("ns") String namespace) {
+    public Map<String, String> getTextsByLang(@PathVariable("language") String language, @PathVariable("ns") String namespace) throws IOException {
         if (namespace.equals("texts")) {
             return textsDao.getTextsByLang(language);
         }

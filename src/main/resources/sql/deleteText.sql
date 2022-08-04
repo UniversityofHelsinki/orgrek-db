@@ -1,0 +1,1 @@
+DELETE TEXT WHERE KEY=:key AND LANGUAGE=:language
