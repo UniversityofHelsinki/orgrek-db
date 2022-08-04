@@ -17,12 +17,9 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-<<<<<<< HEAD
 import java.util.Set;
 import java.util.stream.Collectors;
-=======
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
->>>>>>> organisation-dev
 
 import static fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil.extractSteeringProgrammes;
 
