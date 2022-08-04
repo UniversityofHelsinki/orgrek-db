@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -32,9 +33,9 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         return hierarchyFilters;
     }
 
-    public List<HierarchyFilter> getHierarchyFilter(String hierarchy,  Date date) {
+    public List<HierarchyFilter> getHierarchyFilter(List<String> hierarchy,  Date date) {
         Date attrstart = date;
-        String sql = "SELECT * FROM HIERARCHY_FILTER WHERE HIERARCHY = :hierarchy" +
+        String sql = "SELECT * FROM HIERARCHY_FILTER WHERE HIERARCHY IN (:hierarchy)" +
                         " AND (END_DATE IS NULL OR END_DATE > trunc(:attrstart))" +
                         " AND (START_DATE IS NULL OR START_DATE <= trunc(:attrstart))";
 

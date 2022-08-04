@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -37,10 +38,13 @@ public class HierarchyFilterTests {
 
         @Test
         public void testHierarchyFilter() {
-            String hierarchy = "henkilosto";
-            Date dateObj = DateUtil.parseDate("01.01.2021");
-            List<HierarchyFilter> henkilosto_hierarchyFilters = hierarchyFilterDao.getHierarchyFilter(hierarchy, dateObj);
-            assertEquals(4, henkilosto_hierarchyFilters.size());
+            String hierarchy = "henkilosto,talous";
+            String[] hierarchyArr = hierarchy.split(",");
+            List<String> hierarchies = Arrays.asList(hierarchyArr);
+
+            Date dateObj = DateUtil.parseDate("04.08.2022");
+            List<HierarchyFilter> henkilosto_hierarchyFilters = hierarchyFilterDao.getHierarchyFilter(hierarchies, dateObj);
+            assertEquals(8, henkilosto_hierarchyFilters.size());
         }
 
     }
