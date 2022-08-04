@@ -41,7 +41,7 @@ public class TreeController {
         return ResponseEntity.status(HttpStatus.OK).body(orgUnitDao.getTreeNodes("a1", hierarchies, date));
     }
 
-    private boolean containsUnknownHierarchies(Set<String> hierarchies) {
+    private boolean containsUnknownHierarchies(Set<String> hierarchies) throws IOException {
         Set<String> copy = new HashSet<>(hierarchies);
         List<String> validHierarchies = edgeDao.getHierarchyTypes();
         validHierarchies.remove("history");
