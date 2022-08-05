@@ -32,12 +32,33 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         List<HierarchyFilter> hierarchyFilters = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(HierarchyFilter.class));
         return hierarchyFilters;
     }
-
-    public List<HierarchyFilter> getHierarchyFilter(List<String> hierarchy,  Date date) {
+    public List<HierarchyFilter> getCurrentHierarchyFilter(List<String> hierarchy, Date date) {
         Date attrstart = date;
         String sql = "SELECT * FROM HIERARCHY_FILTER WHERE HIERARCHY IN (:hierarchy)" +
                         " AND (END_DATE IS NULL OR END_DATE > trunc(:attrstart))" +
                         " AND (START_DATE IS NULL OR START_DATE <= trunc(:attrstart))";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.HIERARCHY, hierarchy);
+        params.addValue("attrstart", attrstart);
+        List<HierarchyFilter> hierarchyFilters = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(HierarchyFilter.class));
+        return hierarchyFilters;
+    }
+    public List<HierarchyFilter> getHistoryAndCurrentHierarchyFilter(List<String> hierarchy, Date date) {
+        Date attrstart = date;
+        String sql = "SELECT * FROM HIERARCHY_FILTER WHERE HIERARCHY IN (:hierarchy)" +
+                " AND (START_DATE IS NULL OR START_DATE <= trunc(:attrstart))";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Constants.HIERARCHY, hierarchy);
+        params.addValue("attrstart", attrstart);
+        List<HierarchyFilter> hierarchyFilters = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(HierarchyFilter.class));
+        return hierarchyFilters;
+    }
+    public List<HierarchyFilter> getFutureAndCurrentHierarchyFilter(List<String> hierarchy, Date date) {
+        Date attrstart = date;
+        String sql = "SELECT * FROM HIERARCHY_FILTER WHERE HIERARCHY IN (:hierarchy)" +
+                " AND (END_DATE IS NULL OR END_DATE > trunc(:attrstart))";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.HIERARCHY, hierarchy);

@@ -31,6 +31,8 @@ public class Constants {
     public static final Integer DEGREE_PROGRAMME_KOONTIYKSIKKO_UNIQUE_ID = 33539259;
     public static final String FULL_NAME_VIEW_MINUS_INF = "01.01.1000";
     public static final String FULL_NAME_VIEW_PLUS_INF = "01.01.9999";
-
+    public static final String HISTORY = "history";
+    public static final String FUTURE = "future";
+    public static final String NOW = "now";
 
 }
