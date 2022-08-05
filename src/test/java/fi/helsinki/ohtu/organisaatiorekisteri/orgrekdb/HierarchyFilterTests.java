@@ -43,7 +43,7 @@ public class HierarchyFilterTests {
             List<String> hierarchies = Arrays.asList(hierarchyArr);
 
             Date dateObj = DateUtil.parseDate("04.08.2022");
-            List<HierarchyFilter> henkilosto_hierarchyFilters = hierarchyFilterDao.getHierarchyFilter(hierarchies, dateObj);
+            List<HierarchyFilter> henkilosto_hierarchyFilters = hierarchyFilterDao.getCurrentHierarchyFilter(hierarchies, dateObj);
             assertEquals(8, henkilosto_hierarchyFilters.size());
         }
 
