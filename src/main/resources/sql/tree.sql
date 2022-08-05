@@ -52,7 +52,7 @@ from traversed
          left join NODE_ATTR pattr on traversed.parent_node_id = pattr.node_id and pattr.key='talous_tunnus' and
                                       (pattr.start_date is null or pattr.start_date <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
                                       (pattr.END_DATE is null or pattr.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join NODE_ATTR cattr on traversed.child_node_id = cattr.NODE_ID and cattr.key='talous_tunnus' and
+         join NODE_ATTR cattr on traversed.child_node_id = cattr.NODE_ID and cattr.key='talous_tunnus' and
                                       (cattr.START_DATE is null or cattr.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
                                       (cattr.END_DATE is null or cattr.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
 group by parent_node_id, child_node_id, parent_node.unique_id, child_node.unique_id, pattr.value, cattr.value, pfn.name, cfn.name, parent_node.name, child_node.name, languages.language order by parent_node_id, child_node_id
