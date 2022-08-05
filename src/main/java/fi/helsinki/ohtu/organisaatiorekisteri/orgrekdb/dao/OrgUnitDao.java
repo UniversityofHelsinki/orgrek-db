@@ -17,6 +17,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 import static fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil.extractSteeringProgrammes;
@@ -381,15 +383,15 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue("date", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
-    public List<TreeNodeWrapper> getTreeNodes(String hierarchy, Date date) throws IOException {
+    public List<TreeNode> getTreeNodes(String start, Set<String> hierarchies, String date) throws IOException {
         String sql = ReadSqlFiles.sqlString("tree.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Constants.NODE_ID_FIELD, "a1");
-        params.addValue(Constants.HIERARCHY, hierarchy);
+        params.addValue("start", start);
+        params.addValue("hierarchies", hierarchies);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(TreeNodeWrapper.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(TreeNode.class));
     }
 
-}
 
+}
