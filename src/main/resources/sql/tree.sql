@@ -24,6 +24,10 @@ with traversed(id, child_node_id, parent_node_id, start_date, end_date, hierarch
     select 'sv' from dual
     union
     select 'en' from dual
+), hierarchy_attributes(key, hierarchy) as (
+    select 'talous_tunnus', 'talous' from dual
+    union
+    select 'oppiaine_tunnus', 'opetus' from dual
 ) select parent_node_id,
          child_node_id,
          parent_node.unique_id parent_node_unique_id,
@@ -33,26 +37,27 @@ with traversed(id, child_node_id, parent_node_id, start_date, end_date, hierarch
          case when pfn.name is null then parent_node.name else pfn.name end as parent_name,
          case when cfn.name is null then child_node.name else cfn.name end as child_name,
          languages.language language,
-         listagg(distinct hierarchy, ' ') within group (order by parent_node_id, child_node_id) hierarchies
+         listagg(distinct traversed.hierarchy, ' ') within group (order by parent_node_id, child_node_id) hierarchies
 from traversed
          cross join languages
          left join full_name cfn on traversed.child_node_id=cfn.node_id and cfn.LANGUAGE = languages.language
-                                        and (cfn.start_date is null or cfn.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
-                                        and (cfn.END_DATE is null or cfn.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
+    and (cfn.start_date is null or cfn.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
+    and (cfn.END_DATE is null or cfn.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
          left join full_name pfn on traversed.parent_node_id = pfn.node_id and pfn.LANGUAGE = languages.language
-                                        and cfn.language = pfn.language
-                                        and (pfn.START_DATE is null or pfn.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
-                                        and (pfn.END_DATE is null or pfn.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
+    and cfn.language = pfn.language
+    and (pfn.START_DATE is null or pfn.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
+    and (pfn.END_DATE is null or pfn.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
          join node parent_node on traversed.parent_node_id = parent_node.id
-                                        and (parent_node.START_DATE is null or parent_node.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
-                                        and (parent_node.END_DATE is null or parent_node.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
+    and (parent_node.START_DATE is null or parent_node.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
+    and (parent_node.END_DATE is null or parent_node.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
          join node child_node on traversed.child_node_id = child_node.id
-                                        and (child_node.START_DATE is null or child_node.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
-                                        and (child_node.END_DATE is null or child_node.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join NODE_ATTR pattr on traversed.parent_node_id = pattr.node_id and pattr.key='talous_tunnus' and
+    and (child_node.START_DATE is null or child_node.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
+    and (child_node.END_DATE is null or child_node.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
+         left join hierarchy_attributes ha on ha.hierarchy = traversed.hierarchy and traversed.hierarchy = all(:hierarchies)
+         left join NODE_ATTR pattr on traversed.parent_node_id = pattr.node_id and pattr.key=ha.key and
                                       (pattr.start_date is null or pattr.start_date <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
                                       (pattr.END_DATE is null or pattr.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         join NODE_ATTR cattr on traversed.child_node_id = cattr.NODE_ID and cattr.key='talous_tunnus' and
+         left join NODE_ATTR cattr on traversed.child_node_id = cattr.NODE_ID and cattr.key=ha.key and
                                       (cattr.START_DATE is null or cattr.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
                                       (cattr.END_DATE is null or cattr.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-group by parent_node_id, child_node_id, parent_node.unique_id, child_node.unique_id, pattr.value, cattr.value, pfn.name, cfn.name, parent_node.name, child_node.name, languages.language order by parent_node_id, child_node_id
+group by parent_node_id, child_node_id, parent_node.unique_id, child_node.unique_id, cattr.value, pattr.value, pfn.name, cfn.name, parent_node.name, child_node.name, languages.language order by parent_node_id, child_node_id
