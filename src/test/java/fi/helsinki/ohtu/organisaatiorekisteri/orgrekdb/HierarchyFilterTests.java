@@ -24,27 +24,23 @@ public class HierarchyFilterTests {
         private HierarchyFilterDao hierarchyFilterDao;
 
         @Test
-        public void testHierarchyFilters() {
-            List<String> expectedTypes = new ArrayList<>();
-            expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO);
-            //expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_HISTORY);
-            expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_OPETUS);
-            expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_TALOUS);
-            //expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS);
-            //expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS);
-            List<HierarchyFilter> hierarchyFilters = hierarchyFilterDao.getHierarchyFilters();
-            assertEquals(12, hierarchyFilters.size());
+        public void testCurrentHierarchyFilters() {
+            Date dateObj = DateUtil.parseDate("04.08.2022");
+            List<HierarchyFilter> hierarchyFilters = hierarchyFilterDao.getCurrentHierarchyFilter(dateObj);
+            assertEquals(11, hierarchyFilters.size());
         }
 
         @Test
-        public void testHierarchyFilter() {
-            String hierarchy = "henkilosto,talous";
-            String[] hierarchyArr = hierarchy.split(",");
-            List<String> hierarchies = Arrays.asList(hierarchyArr);
-
-            Date dateObj = DateUtil.parseDate("04.08.2022");
-            List<HierarchyFilter> henkilosto_hierarchyFilters = hierarchyFilterDao.getCurrentHierarchyFilter(hierarchies, dateObj);
-            assertEquals(8, henkilosto_hierarchyFilters.size());
+        public void testHistoryAndCurrentHierarchyFilter() {
+            Date dateObj = DateUtil.parseDate("21.01.2021"); //2021-01-30
+            List<HierarchyFilter> hierarchyFilters = hierarchyFilterDao.getHistoryAndCurrentHierarchyFilter(dateObj);
+            assertEquals(4, hierarchyFilters.size());
         }
 
+        @Test
+        public void testFutureAndCurrentHierarchyFilter() {
+            Date dateObj = DateUtil.parseDate("04.08.2021");
+            List<HierarchyFilter> hierarchyFilters = hierarchyFilterDao.getFutureAndCurrentHierarchyFilter(dateObj);
+            assertEquals(12, hierarchyFilters.size());
+        }
     }

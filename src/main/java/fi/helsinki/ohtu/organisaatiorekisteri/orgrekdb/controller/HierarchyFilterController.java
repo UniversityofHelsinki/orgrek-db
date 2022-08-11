@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -23,26 +22,18 @@ public class HierarchyFilterController {
     @Autowired
     private HierarchyFilterDao hierarchyFilterDao;
 
-    @RequestMapping(method = GET, value = "/hierarchyfilter/all")
-    public List<HierarchyFilter> getHierarchyFilters() {
-        List<HierarchyFilter>  hierarchyFilters = hierarchyFilterDao.getHierarchyFilters();
-        return hierarchyFilters;
-    }
-    @RequestMapping(method = GET, value = "/hierarchyfilter/{hierarchy}/{date}/{whichtime}")
-    public List<HierarchyFilter> getHierarchyFilter(@PathVariable("hierarchy") String hierarchy, @PathVariable("date") String date, @PathVariable("whichtime") String whichtime) {
+    @RequestMapping(method = GET, value = "/hierarchyfilter/{date}/{whichtime}")
+    public List<HierarchyFilter> getAllHierarchyFilters(@PathVariable("date") String date, @PathVariable("whichtime") String whichtime) {
         Date dateObj = DateUtil.parseDate(date);
-        String[] hierarchyArr = hierarchy.split(",");
-        List<String> hierarchies = Arrays.asList(hierarchyArr);
         List<HierarchyFilter> hierarchyFilters = new ArrayList<>();
 
         if (whichtime.equalsIgnoreCase(Constants.NOW)) {
-            hierarchyFilters = hierarchyFilterDao.getCurrentHierarchyFilter(hierarchies, dateObj);
+            hierarchyFilters = hierarchyFilterDao.getCurrentHierarchyFilter(dateObj);
         } else if (whichtime.equalsIgnoreCase(Constants.FUTURE)) {
-            hierarchyFilters = hierarchyFilterDao.getFutureAndCurrentHierarchyFilter(hierarchies, dateObj);
+            hierarchyFilters = hierarchyFilterDao.getFutureAndCurrentHierarchyFilter(dateObj);
         } else if (whichtime.equalsIgnoreCase(Constants.HISTORY)) {
-            hierarchyFilters = hierarchyFilterDao.getHistoryAndCurrentHierarchyFilter(hierarchies, dateObj);
+            hierarchyFilters = hierarchyFilterDao.getHistoryAndCurrentHierarchyFilter(dateObj);
         }
-
         return hierarchyFilters;
     }
 }
