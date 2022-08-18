@@ -50,4 +50,9 @@ public class FullNameController {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getAllFullNames(node.getId());
     }
+
+    @RequestMapping(method = GET, value = "favorable/{id}/{date}")
+    public List<FullName> getFavorableNames(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
+        return orgUnitDao.getFavorableNames(uniqueId, date);
+    }
 }

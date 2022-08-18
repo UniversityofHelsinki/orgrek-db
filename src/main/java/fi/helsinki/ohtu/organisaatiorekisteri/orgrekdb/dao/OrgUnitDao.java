@@ -258,6 +258,14 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(Node.class));
     }
 
+    public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
+        String sql = ReadSqlFiles.sqlString("favorableFullNames.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("date", date);
+        params.addValue("uniqueId", uniqueId);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(FullName.class));
+    }
+
     public List<FullName> getFullNames(String nodeId, String date)  throws IOException {
         String sql = ReadSqlFiles.sqlString("fullNames.sql");
 
