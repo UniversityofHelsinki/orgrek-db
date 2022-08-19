@@ -24,16 +24,6 @@ with traversed(id, child_node_id, parent_node_id, start_date, end_date, hierarch
     select 'sv' from dual
     union
     select 'en' from dual
-), hierarchy_attributes(key, hierarchy) as (
-    select 'talous_tunnus', 'talous' from dual
-    union
-    select case when 'talous' = any(:hierarchies) then 'talous_tunnus' else 'oppiaine_tunnus' end, 'opetus' from dual
-    union
-    select 'talous_tunnus', 'henkilosto' from dual
-    union
-    select 'talous_tunnus', 'toiminnanohjaus' from dual
-    union
-    select 'talous_tunnus', 'tutkimus' from dual
 ) select parent_node_id,
          child_node_id,
          parent_node.unique_id parent_node_unique_id,
