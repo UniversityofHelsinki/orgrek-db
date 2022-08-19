@@ -27,13 +27,19 @@ with traversed(id, child_node_id, parent_node_id, start_date, end_date, hierarch
 ), hierarchy_attributes(key, hierarchy) as (
     select 'talous_tunnus', 'talous' from dual
     union
-    select 'oppiaine_tunnus', 'opetus' from dual
+    select case when 'talous' = any(:hierarchies) then 'talous_tunnus' else 'oppiaine_tunnus' end, 'opetus' from dual
+    union
+    select 'talous_tunnus', 'henkilosto' from dual
+    union
+    select 'talous_tunnus', 'toiminnanohjaus' from dual
+    union
+    select 'talous_tunnus', 'tutkimus' from dual
 ) select parent_node_id,
          child_node_id,
          parent_node.unique_id parent_node_unique_id,
          child_node.unique_id child_node_unique_id,
-         pattr.value parent_code,
-         cattr.value child_code,
+         coalesce(p_talous_tunnus.value, p_oppiaine_tunnus.value) parent_code,
+         coalesce(c_talous_tunnus.value, c_oppiaine_tunnus.value) child_code,
          case when pfn.name is null then parent_node.name else pfn.name end as parent_name,
          case when cfn.name is null then child_node.name else cfn.name end as child_name,
          languages.language language,
@@ -53,11 +59,16 @@ from traversed
          join node child_node on traversed.child_node_id = child_node.id
     and (child_node.START_DATE is null or child_node.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
     and (child_node.END_DATE is null or child_node.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join hierarchy_attributes ha on ha.hierarchy = traversed.hierarchy and traversed.hierarchy = all(:hierarchies)
-         left join NODE_ATTR pattr on traversed.parent_node_id = pattr.node_id and pattr.key=ha.key and
-                                      (pattr.start_date is null or pattr.start_date <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
-                                      (pattr.END_DATE is null or pattr.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join NODE_ATTR cattr on traversed.child_node_id = cattr.NODE_ID and cattr.key=ha.key and
-                                      (cattr.START_DATE is null or cattr.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
-                                      (cattr.END_DATE is null or cattr.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-group by parent_node_id, child_node_id, parent_node.unique_id, child_node.unique_id, cattr.value, pattr.value, pfn.name, cfn.name, parent_node.name, child_node.name, languages.language order by parent_node_id, child_node_id
+         left join NODE_ATTR p_talous_tunnus on ((not 'opetus' = any(:hierarchies)) or 'talous' = any(:hierarchies)) and traversed.parent_node_id = p_talous_tunnus.node_id and p_talous_tunnus.key='talous_tunnus' and
+                                      (p_talous_tunnus.start_date is null or p_talous_tunnus.start_date <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
+                                      (p_talous_tunnus.END_DATE is null or p_talous_tunnus.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
+         left join NODE_ATTR p_oppiaine_tunnus on ('opetus' = any(:hierarchies) and not 'talous' = any(:hierarchies)) and traversed.parent_node_id = p_oppiaine_tunnus.NODE_ID and p_oppiaine_tunnus.key='oppiaine_tunnus' and
+                                      (p_oppiaine_tunnus.START_DATE is null or p_oppiaine_tunnus.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
+                                      (p_oppiaine_tunnus.END_DATE is null or p_oppiaine_tunnus.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
+         left join NODE_ATTR c_talous_tunnus on ((not 'opetus' = any(:hierarchies)) or 'talous' = any(:hierarchies)) and traversed.child_node_id = c_talous_tunnus.node_id and c_talous_tunnus.key='talous_tunnus' and
+                                                (c_talous_tunnus.start_date is null or c_talous_tunnus.start_date <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
+                                                (c_talous_tunnus.END_DATE is null or c_talous_tunnus.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
+         left join NODE_ATTR c_oppiaine_tunnus on ('opetus' = any(:hierarchies) and not 'talous' = any(:hierarchies)) and traversed.child_node_id = c_oppiaine_tunnus.NODE_ID and c_oppiaine_tunnus.key='oppiaine_tunnus' and
+                                                  (c_oppiaine_tunnus.START_DATE is null or c_oppiaine_tunnus.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
+                                                  (c_oppiaine_tunnus.END_DATE is null or c_oppiaine_tunnus.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
+group by parent_node_id, child_node_id, parent_node.unique_id, child_node.unique_id, p_talous_tunnus.value, p_oppiaine_tunnus.value, c_talous_tunnus.value, c_oppiaine_tunnus.value, pfn.name, cfn.name, parent_node.name, child_node.name, languages.language order by parent_node_id, child_node_id
