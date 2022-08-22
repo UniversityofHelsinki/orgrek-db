@@ -11,6 +11,8 @@ public class Constants {
     public static final String EDGE_TYPE_FIELD = "edgeType";
     public static final String NODE_ID_FIELD = "nodeId";
 
+    public static final String HIERARCHY ="hierarchy";
+
     public static final String NAME_EN_FIELD = "name_en";
 
     public static final String NAME_FI_FIELD = "name_fi";
@@ -27,6 +29,10 @@ public class Constants {
     public static final String LANG_CODE_EN = "en";
     public static final String LANG_CODE_SV = "sv";
     public static final Integer DEGREE_PROGRAMME_KOONTIYKSIKKO_UNIQUE_ID = 33539259;
-
+    public static final String FULL_NAME_VIEW_MINUS_INF = "01.01.1000";
+    public static final String FULL_NAME_VIEW_PLUS_INF = "01.01.9999";
+    public static final String HISTORY = "history";
+    public static final String FUTURE = "future";
+    public static final String NOW = "now";
 
 }

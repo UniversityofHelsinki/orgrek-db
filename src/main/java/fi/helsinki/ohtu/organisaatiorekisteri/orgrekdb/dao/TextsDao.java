@@ -9,10 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 @Repository(value = "textsDao")
 public class TextsDao extends NamedParameterJdbcDaoSupport {
@@ -35,6 +37,8 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
      * "key": "Opetus",
      * "language": "fi",
      * "value": "Opetus",
+     * "username": "baabenom",
+     * "timestamp": 13.07.2022
      * }
      *
      * @return all text entries in a list
@@ -43,22 +47,63 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
     private static final String VALUE_FIELD = "value";
     private static final String KEY_FIELD = "key";
     private static final String LANGUAGE_FIELD = "language";
+    private static final String EDITOR_FIELD = "user_name";
+    private static final String TIMESTAMP_FIELD = "timestamp";
     private static final String NODE_ID = "node_id";
 
-    public List<Map<String, String>> getAllTexts() {
-        final String SQL_GET_ALL_TEXTS = "SELECT KEY, LANGUAGE, VALUE FROM TEXT";
-
+    public List<Map<String, String>> getAllTexts() throws IOException {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        final String SQL_GET_ALL_TEXTS = ReadSqlFiles.sqlString("allTexts.sql");
 
         List<Map<String, String>> query = jdbcTemplate.query(SQL_GET_ALL_TEXTS, (rs, rowNum) -> {
             Map<String, String> textKey = new HashMap<>();
             textKey.put(KEY_FIELD, rs.getString(KEY_FIELD));
             textKey.put(LANGUAGE_FIELD, rs.getString(LANGUAGE_FIELD));
             textKey.put(VALUE_FIELD, rs.getString(VALUE_FIELD));
+            textKey.put(EDITOR_FIELD, rs.getString(EDITOR_FIELD));
+            textKey.put(TIMESTAMP_FIELD, rs.getString(TIMESTAMP_FIELD));
             return textKey;
         });
 
         return query;
+    }
+
+    public int[] insertTexts(List<Map<String, String>> texts) throws IOException {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        String sql = ReadSqlFiles.sqlString("insertTexts.sql");
+
+        MapSqlParameterSource[] paramMaps = texts.stream().map(text -> {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("key", text.get("key"));
+            params.addValue("language", text.get("language"));
+            params.addValue("value", text.get("value"));
+            params.addValue("user_name", text.get("user_name"));
+            return params;
+        }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
+        int[] result = getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
+        return result;
+    }
+
+    public int updateText(Map<String, String> text) throws IOException {
+        String sql = ReadSqlFiles.sqlString("updateText.sql");
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("key", text.get("key"));
+        params.addValue("value", text.get("value"));
+        params.addValue("language", text.get("language"));
+        params.addValue("user_name", text.get("user_name"));
+        return getNamedParameterJdbcTemplate().update(sql, params);
+    }
+
+    public int deleteText(Map<String, String> text) throws IOException {
+        String sql = ReadSqlFiles.sqlString("deleteText.sql");
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("key", text.get("key"));
+        params.addValue("language", text.get("language"));
+        return getNamedParameterJdbcTemplate().update(sql, params);
     }
 
     /**
@@ -73,8 +118,9 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
      *
      * @return text entries in a map
      */
-    public Map<String, String> getTextsByLang(String lang) {
-        String sqlGetTextsByLang = "SELECT KEY, VALUE FROM TEXT where LANGUAGE= ? ";
+    public Map<String, String> getTextsByLang(String lang) throws IOException {
+        String sqlGetTextsByLang = ReadSqlFiles.sqlString("textsByLang.sql");
+
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         Map<String, String> textKey = new HashMap<>();
         jdbcTemplate.query(sqlGetTextsByLang, (ResultSet rs) -> {
@@ -98,14 +144,14 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
      * @return text entries in a map
      */
 
-    public Map<String, String> getAttributeNamesByLang(String language, String currentDate) {
+    public Map<String, String> getAttributeNamesByLang(String language, String currentDate) throws IOException {
         String lang;
         if (language.equals("sv")) lang = "name_sv";
         else if (language.equals("en")) lang = "name_en";
         else lang = "name_fi";
-        String sql = "SELECT NODE_ID, VALUE FROM NODE_ATTR WHERE KEY = :lang " +
-                "AND (END_DATE is null or :currentDate is null or trunc(END_DATE) >= to_date(:currentDate,'YYYY-MM-DD')) and " +
-                "(START_DATE is null or  :currentDate is null or trunc(START_DATE) <= to_date(:currentDate, 'YYYY-MM-DD'))";
+
+        String sql = ReadSqlFiles.sqlString("attributeNamesByLang.sql");
+
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("lang", lang);
         params.addValue("currentDate", currentDate);
@@ -125,9 +171,9 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
      *
      * @return TextDTO entries in a list
      */
-    public List<TextDTO> getDegreeTitles() {
+    public List<TextDTO> getDegreeTitles() throws IOException {
 
-        String sql = "SELECT KEY, LANGUAGE, VALUE FROM TEXT WHERE KEY IN ('kandiohjelma-joryt', 'maisteriohjelma-joryt', 'tohtoriohjelma-joryt')";
+        String sql = ReadSqlFiles.sqlString("degreeTitles.sql");
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
@@ -143,6 +189,3 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
     }
 
 }
-
-
-
