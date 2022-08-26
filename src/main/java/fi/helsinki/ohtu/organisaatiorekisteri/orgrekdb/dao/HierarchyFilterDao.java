@@ -12,8 +12,10 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -69,13 +71,15 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
     public int updateHierarchyFilter(HierarchyFilter hierarchyFilter) throws IOException {
         String sql = ReadSqlFiles.sqlString("updateHierarchyFilter.sql");
 
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("fi"));
+
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", hierarchyFilter.getId());
         params.addValue("hierarchy", hierarchyFilter.getHierarchy());
         params.addValue("key", hierarchyFilter.getKey());
         params.addValue("value", hierarchyFilter.getValue());
-        params.addValue("startDate", hierarchyFilter.getStartDate());
-        params.addValue("endDate", hierarchyFilter.getEndDate());
+        params.addValue("startDate", hierarchyFilter.getStartDate() != null ? df.format(hierarchyFilter.getStartDate()) : null);
+        params.addValue("endDate", hierarchyFilter.getEndDate() != null ? df.format(hierarchyFilter.getEndDate()) : null);
         return getNamedParameterJdbcTemplate().update(sql, params);
     }
 
@@ -90,13 +94,15 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
     public int[] insertHierarchyFilters(List<HierarchyFilter> hierarchyFilters) throws IOException {
         String sql = ReadSqlFiles.sqlString("insertHierarchyFilters.sql");
 
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("fi"));
+
         MapSqlParameterSource[] paramMaps = hierarchyFilters.stream().map(hierarchyFilter -> {
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("hierarchy", hierarchyFilter.getHierarchy());
             params.addValue("key", hierarchyFilter.getKey());
             params.addValue("value", hierarchyFilter.getValue());
-            params.addValue("startDate", hierarchyFilter.getStartDate());
-            params.addValue("endDate", hierarchyFilter.getEndDate());
+            params.addValue("startDate", hierarchyFilter.getStartDate() != null ? df.format(hierarchyFilter.getStartDate()) : null);
+            params.addValue("endDate", hierarchyFilter.getEndDate() != null ? df.format(hierarchyFilter.getEndDate()) : null);
             return params;
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         int[] result = getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
