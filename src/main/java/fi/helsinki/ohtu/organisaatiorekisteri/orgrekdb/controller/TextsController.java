@@ -20,11 +20,6 @@ public class TextsController {
     @Autowired
     private TextsDao textsDao;
 
-    @RequestMapping("/")
-    public String hello() {
-        return "Hello, world";
-    }
-
     @RequestMapping("/api/texts")
     public List<Map<String, String>> getAllTexts() throws IOException {
         return textsDao.getAllTexts();
