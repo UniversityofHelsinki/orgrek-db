@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/api/node")
@@ -53,4 +52,11 @@ public class NodeAttributeController {
         attributeDao.updateAttributes(attributes);
         return attributeDao.getAttributesByNodeId(nodeId);
     }
+
+    @RequestMapping(method = POST, value = "/attributes/{nodeId}")
+    public List<Attribute> insertAttributes(@PathVariable("nodeId") String nodeId, @RequestBody List<Attribute> attributes) throws IOException {
+        attributeDao.insertAttributes(attributes);
+        return attributeDao.getAttributesByNodeId(nodeId);
+    }
+
 }
