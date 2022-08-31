@@ -71,4 +71,24 @@ public class Attribute {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Attribute{" +
+                "key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", nodeId='" + nodeId + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }

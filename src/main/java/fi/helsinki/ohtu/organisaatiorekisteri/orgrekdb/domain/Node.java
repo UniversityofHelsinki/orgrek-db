@@ -58,4 +58,16 @@ public class Node {
     public void setUniqueId(int uniqueId) {
         this.uniqueId = uniqueId;
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", timestamp=" + timestamp +
+                ", uniqueId=" + uniqueId +
+                '}';
+    }
 }
