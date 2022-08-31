@@ -50,10 +50,7 @@ public class NodeAttributeController {
 
     @RequestMapping(method = PUT, value = "/attributes/{nodeId}")
     public List<Attribute> updateAttributes(@PathVariable("nodeId") String nodeId, @RequestBody List<Attribute> attributes) throws IOException {
-
-         attributes.stream().forEach(e -> System.out.println(e));
-         //List<Attribute> oldAttributes =  attributeDao.getAttributesByNodeId(nodeId);
         attributeDao.updateAttributes(attributes);
-        return null;
+        return attributeDao.getAttributesByNodeId(nodeId);
     }
 }
