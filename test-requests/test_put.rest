@@ -1,4 +1,4 @@
 PUT http://localhost:8000/api/node/attributes/5283
 Content-Type: application/json
 
-< data/short.json
+< data/put.json
