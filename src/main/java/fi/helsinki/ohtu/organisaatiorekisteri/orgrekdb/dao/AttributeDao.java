@@ -31,7 +31,6 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("getAttributesByNodeId.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("node_id", nodeId);
-        System.out.println(sql + nodeId);
         List<Attribute> attributes = getNamedParameterJdbcTemplate()
                 .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
