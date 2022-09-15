@@ -1,11 +1,10 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -27,6 +26,11 @@ public class NodeController {
     @RequestMapping(method = GET, value = "/id/{id}")
     public Node getNodeByNodeId(@PathVariable("id") String nodeId) throws IOException {
         return orgUnitDao.getNodeByNodeId(nodeId);
+    }
+
+    @PostMapping("/addNewUpperUnit")
+    public EdgeWrapper addNewUpperUnit(@RequestBody EdgeWrapper edgeWrapper) throws IOException {
+        return orgUnitDao.addNewUpperUnit(edgeWrapper);
     }
 
 }

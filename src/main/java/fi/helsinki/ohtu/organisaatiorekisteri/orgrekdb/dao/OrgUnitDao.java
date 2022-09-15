@@ -5,6 +5,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -402,4 +403,12 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
 
+    public EdgeWrapper addNewUpperUnit(EdgeWrapper edgeWrapper) throws IOException {
+        String sql = ReadSqlFiles.sqlString("addNewUpperUnit.sql");
+        String sqlSequence = "select node_seq.nextval from dual";
+        int sequence = getJdbcTemplate().queryForObject(sqlSequence, Integer.class);
+        edgeWrapper.setId(sequence);
+        getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(edgeWrapper));
+        return edgeWrapper;
+    }
 }
