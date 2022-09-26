@@ -411,4 +411,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(edgeWrapper));
         return edgeWrapper;
     }
+
+
+    public Node updateNodeProperties(Node node) throws IOException{
+        String sql = ReadSqlFiles.sqlString("updateNodeProperties.sql");
+        getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(node));
+        return node;
+    }
 }

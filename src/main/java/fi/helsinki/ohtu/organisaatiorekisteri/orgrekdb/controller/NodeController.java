@@ -33,5 +33,12 @@ public class NodeController {
         return orgUnitDao.addNewUpperUnit(edgeWrapper);
     }
 
+    @PutMapping("/properties/{id}")
+    public Node updateNodeProperties(@PathVariable("id") int nodeId, @RequestBody Node node) throws IOException {
+        orgUnitDao.updateNodeProperties(node);
+        return orgUnitDao.getNodeByUniqueId(nodeId);
+    }
+
+
 }
 
