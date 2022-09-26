@@ -1,0 +1,3 @@
+UPDATE NODE
+SET START_DATE= :startDate, END_DATE = :endDate
+WHERE ID = :id
