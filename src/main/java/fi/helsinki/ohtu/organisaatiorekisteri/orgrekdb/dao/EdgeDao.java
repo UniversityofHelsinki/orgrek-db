@@ -38,17 +38,8 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
 
     public int[] updateParentUnitProperties(List<EdgeWrapper> parentUnitProperties) throws IOException {
         String sql = ReadSqlFiles.sqlString("updateParentUnitProperties.sql");
-
-        MapSqlParameterSource[] paramMaps = parentUnitProperties.stream().map(property -> {
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("startDate", property.getStartDate());
-            params.addValue("endDate", property.getEndDate());
-            params.addValue("parentNodeId", property.getParentNodeId());
-            params.addValue("childNodeId", property.getChildNodeId());
-            params.addValue("hierarchy", property.getHierarchy());
-            return params;
-        }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
-        return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
+        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(parentUnitProperties.toArray());
+        return getNamedParameterJdbcTemplate().batchUpdate(sql, batch);
     }
 
 }
