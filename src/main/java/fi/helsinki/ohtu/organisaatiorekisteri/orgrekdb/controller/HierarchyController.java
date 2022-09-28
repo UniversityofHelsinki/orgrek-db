@@ -1,15 +1,11 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeEdgeHistoryWrapper;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Relative;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.*;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,6 +18,9 @@ public class HierarchyController {
 
     @Autowired
     private OrgUnitDao orgUnitDao;
+
+    @Autowired
+    private EdgeDao edgeDao;
 
     @RequestMapping(method = GET, value = "/parents/{id}/{date}")
     public List<Node> getParentNodesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
@@ -165,6 +164,11 @@ public class HierarchyController {
     public List<Relative> getAllParents(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getAllParents(node.getId(), date);
+    }
+
+    @PutMapping("/parentUnit/properties")
+    public void updateParentUnitProperties(@RequestBody List<EdgeWrapper> parentUnitProperties) throws IOException {
+        edgeDao.updateParentUnitProperties(parentUnitProperties);
     }
 
 }
