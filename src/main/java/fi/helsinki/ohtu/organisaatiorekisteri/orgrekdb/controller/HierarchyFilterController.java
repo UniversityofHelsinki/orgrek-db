@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping("/api/node/hierarchyfilter")
+@RequestMapping("/api/hierarchyfilter")
 public class HierarchyFilterController {
 
     @Autowired
