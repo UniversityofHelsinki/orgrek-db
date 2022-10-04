@@ -64,7 +64,7 @@ public class NodeAttributeController {
             return new ResponseEntity<>(created, HttpStatus.CREATED);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(existingAttribute, HttpStatus.CONFLICT);
         }
     }
 
