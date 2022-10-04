@@ -56,7 +56,7 @@ public class NodeAttributeController {
                                             @PathVariable("skipValidation") boolean skipValidation,
                                             @RequestBody Attribute attribute) throws IOException {
         Attribute existingAttribute = null;
-        if(!skipValidation || isFullnameAttribute(attribute)) {
+        if(!skipValidation || !isFullnameAttribute(attribute)) {
             existingAttribute = attributeDao.getExistingAttribute(nodeId, attribute);
         }
         if(skipValidation || existingAttribute==null) {
