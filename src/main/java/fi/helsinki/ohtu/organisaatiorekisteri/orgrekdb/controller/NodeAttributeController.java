@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class NodeAttributeController {
                                             @PathVariable("skipValidation") boolean skipValidation,
                                             @RequestBody Attribute attribute) throws IOException {
         Attribute existingAttribute = null;
-        if(!skipValidation) {
+        if(!skipValidation || isFullnameAttribute(attribute)) {
             existingAttribute = attributeDao.getExistingAttribute(nodeId, attribute);
         }
         if(skipValidation || existingAttribute==null) {
@@ -65,6 +66,11 @@ public class NodeAttributeController {
         else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+    }
+
+    private boolean isFullnameAttribute(Attribute attribute) {
+        List fullnameAttributes = Arrays.asList(new String[]{"emo_lyhenne", "lyhenne", "name_fi", "name_en", "name_sv"});
+        return fullnameAttributes.contains(attribute.getKey());
     }
 
 
