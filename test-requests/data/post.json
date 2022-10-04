@@ -1,17 +1,8 @@
-[
   {
     "key": "uusi",
     "value": "uusi value",
-    "startDate": "1800-12-02",
-    "endDate": "2022-12-03",
-    "nodeId": "5283"
-  },
-  {
-    "key": "uusi2",
-    "value": "joo",
-    "startDate": "2022-12-08",
-    "endDate": null,
+    "startDate": "1800-12-03",
+    "endDate": "2022-12-02",
     "nodeId": "5283"
   }
-]
 

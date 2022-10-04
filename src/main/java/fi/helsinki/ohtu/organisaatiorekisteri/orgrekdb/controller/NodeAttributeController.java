@@ -6,6 +6,8 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -48,10 +50,22 @@ public class NodeAttributeController {
         return attributeDao.getAttributesByNodeId(nodeId);
     }
 
-    @PostMapping("/attributes/{nodeId}")
-    public List<Attribute> insertAttributes(@PathVariable("nodeId") String nodeId, @RequestBody List<Attribute> attributes) throws IOException {
-        attributeDao.insertAttributes(attributes);
-        return attributeDao.getAttributesByNodeId(nodeId);
+    @PostMapping("/attributes/{nodeId}/{skipValidation}")
+    public ResponseEntity<Attribute> insertAttribute(@PathVariable("nodeId") String nodeId,
+                                            @PathVariable("skipValidation") boolean skipValidation,
+                                            @RequestBody Attribute attribute) throws IOException {
+        Attribute existingAttribute = null;
+        if(!skipValidation) {
+            existingAttribute = attributeDao.getExistingAttribute(nodeId, attribute);
+        }
+        if(skipValidation || existingAttribute==null) {
+            Attribute created = attributeDao.insertAttribute(attribute);
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
+
 
 }
