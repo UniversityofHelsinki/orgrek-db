@@ -46,12 +46,12 @@ public class NodeAttributeValidationTest {
         attr12 = new Attribute("5283", null, "kani", "nimi", null, DateUtil.parseDate("15.01.2022"));
         attr13 = new Attribute("5283", null, "kani", "nimi", DateUtil.parseDate("17.01.2022"), null);
 
-        attr14 = new Attribute("5283", null, "kissa", "nimi", DateUtil.parseDate("02.01.2022"), DateUtil.parseDate("12.01.2022"));
-        attr15 = new Attribute("5283", null, "kissa", "nimi", DateUtil.parseDate("15.01.2022"), DateUtil.parseDate("07.02.2022"));
-        attr16 = new Attribute("5283", null, "kissa", "nimi", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("07.01.2022"));
-        attr17 = new Attribute("5283", null, "kissa", "nimi", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("17.12.2021"));
-        attr18 = new Attribute("5283", null, "kissa", "nimi", null, DateUtil.parseDate("15.01.2022"));
-        attr19 = new Attribute("5283", null, "kissa", "nimi", DateUtil.parseDate("17.01.2022"), null);
+        attr14 = new Attribute("5283", null, "meduusa", "nimi", DateUtil.parseDate("02.01.2022"), DateUtil.parseDate("12.01.2022"));
+        attr15 = new Attribute("5283", null, "meduusa", "nimi", DateUtil.parseDate("15.01.2022"), DateUtil.parseDate("07.02.2022"));
+        attr16 = new Attribute("5283", null, "meduusa", "nimi", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("07.01.2022"));
+        attr17 = new Attribute("5283", null, "meduusa", "nimi", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("17.12.2021"));
+        attr18 = new Attribute("5283", null, "meduusa", "nimi", null, DateUtil.parseDate("15.01.2022"));
+        attr19 = new Attribute("5283", null, "meduusa", "nimi", DateUtil.parseDate("17.01.2022"), null);
      }
 
     @Nested
