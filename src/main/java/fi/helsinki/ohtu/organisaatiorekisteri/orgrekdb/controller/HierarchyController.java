@@ -3,7 +3,6 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.*;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -167,8 +166,9 @@ public class HierarchyController {
     }
 
     @PutMapping("/parentUnit/properties")
-    public void updateParentUnitProperties(@RequestBody List<EdgeWrapper> parentUnitProperties) throws IOException {
-        edgeDao.updateParentUnitProperties(parentUnitProperties);
+    public List<EdgeWrapper> updateParentUnitProperties(@RequestBody List<EdgeWrapper> parentUnitProperties) throws IOException {
+        int[] i = edgeDao.updateParentUnitProperties(parentUnitProperties);
+        return parentUnitProperties;
     }
 
 }
