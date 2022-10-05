@@ -72,6 +72,7 @@ public int[] updateAttributes(List<Attribute> attributes) throws IOException {
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("fi"));
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("key", attribute.getKey());
+        params.addValue("nodeId", nodeId);
         if(attribute.getStartDate()==null) params.addValue("startDate", "1.1.0001");
         else params.addValue("startDate", df.format(attribute.getStartDate()));
         if(attribute.getEndDate()==null) params.addValue("endDate", "12.12.9999");
