@@ -1,4 +1,4 @@
-POST http://localhost:8000/api/node/attributes/5283
+POST http://localhost:8000/api/node/attributes/5283/false
 Content-Type: application/json
 
 < data/post.json
