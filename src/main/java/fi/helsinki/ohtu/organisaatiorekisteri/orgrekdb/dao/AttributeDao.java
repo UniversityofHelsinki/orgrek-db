@@ -4,7 +4,6 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -13,7 +12,9 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Repository(value = "attributeDao")
@@ -37,16 +38,12 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
     }
 
 
-    public void insertAttributes(List<Attribute> attributes) throws IOException {
-
+    public Attribute insertAttribute(Attribute attribute) throws IOException {
+        Integer sequence = getJdbcTemplate().queryForObject("SELECT node_seq.nextval FROM dual", Integer.class);
+        attribute.setId(sequence);
         String sql = ReadSqlFiles.sqlString("insertAttributes.sql");
-        String sqlSequence = "SELECT node_seq.nextval FROM dual";
-
-        attributes.stream().forEach(attribute -> {
-            Integer sequence = getJdbcTemplate().queryForObject(sqlSequence, Integer.class);
-            attribute.setId(sequence);
-            getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(attribute));
-        });
+        getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(attribute));
+        return attribute;
     }
 
 
@@ -67,6 +64,22 @@ public int[] updateAttributes(List<Attribute> attributes) throws IOException {
             return params;
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
+
+    }
+
+    public Attribute getExistingAttribute(String nodeId, Attribute attribute) throws IOException {
+        String sql = ReadSqlFiles.sqlString("isSameAttributeAlreadyExisting.sql");
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("fi"));
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("key", attribute.getKey());
+        params.addValue("nodeId", nodeId);
+        params.addValue("value", attribute.getValue());
+        if(attribute.getStartDate()==null) params.addValue("startDate", "1.1.0001");
+        else params.addValue("startDate", df.format(attribute.getStartDate()));
+        if(attribute.getEndDate()==null) params.addValue("endDate", "12.12.9999");
+        else params.addValue("endDate", df.format(attribute.getEndDate()));
+        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return (attributes.isEmpty() ? null :  attributes.get(0));
 
     }
 }
