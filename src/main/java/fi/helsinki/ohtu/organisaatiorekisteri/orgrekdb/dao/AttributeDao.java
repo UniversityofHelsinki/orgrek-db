@@ -1,6 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -67,19 +68,34 @@ public int[] updateAttributes(List<Attribute> attributes) throws IOException {
 
     }
 
-    public Attribute getExistingAttribute(String nodeId, Attribute attribute) throws IOException {
+    public Attribute getExistingAttribute(Attribute attribute) throws IOException {
         String sql = ReadSqlFiles.sqlString("isSameAttributeAlreadyExisting.sql");
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("fi"));
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("key", attribute.getKey());
-        params.addValue("nodeId", nodeId);
+        params.addValue("nodeId", attribute.getNodeId());
         params.addValue("value", attribute.getValue());
+        fixDates(attribute, params);
+        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return (attributes.isEmpty() ? null :  attributes.get(0));
+
+    }
+
+    public Attribute checkIfExists(Attribute attribute) throws IOException {
+        String sql = ReadSqlFiles.sqlString("isUpdateOK.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("key", attribute.getKey());
+        params.addValue("nodeId", attribute.getNodeId());
+        params.addValue("value", attribute.getValue());
+        fixDates(attribute, params);
+        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return (attributes.isEmpty() ? null : attribute);
+    }
+
+    private static void fixDates(Attribute attribute, MapSqlParameterSource params) {
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("fi"));
         if(attribute.getStartDate()==null) params.addValue("startDate", "1.1.0001");
         else params.addValue("startDate", df.format(attribute.getStartDate()));
         if(attribute.getEndDate()==null) params.addValue("endDate", "12.12.9999");
         else params.addValue("endDate", df.format(attribute.getEndDate()));
-        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
-        return (attributes.isEmpty() ? null :  attributes.get(0));
-
     }
 }
