@@ -80,6 +80,24 @@ public int[] updateAttributes(List<Attribute> attributes) throws IOException {
 
     }
 
+    private Attribute checkIfEditingExistingAttribute(List<Attribute> attributeList, Attribute attribute) {
+        boolean found_other_than_under_editing_attribute = false;
+
+        for (Attribute attr: attributeList) {
+            if (attr.getId().intValue() == attribute.getId().intValue()) {
+                continue;
+            }
+            if (attr.getId().intValue() != attribute.getId().intValue()) {
+                found_other_than_under_editing_attribute = true;
+            }
+        };
+
+        if (found_other_than_under_editing_attribute) {
+            return attribute;
+        }
+        return null;
+    }
+
     public Attribute checkIfExists(Attribute attribute) throws IOException {
         String sql = ReadSqlFiles.sqlString("isUpdateOK.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -88,7 +106,7 @@ public int[] updateAttributes(List<Attribute> attributes) throws IOException {
         params.addValue("value", attribute.getValue());
         fixDates(attribute, params);
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
-        return (attributes.isEmpty() ? null : attribute);
+        return (attributes.isEmpty() ? null : checkIfEditingExistingAttribute(attributes, attribute));
     }
 
     private static void fixDates(Attribute attribute, MapSqlParameterSource params) {
