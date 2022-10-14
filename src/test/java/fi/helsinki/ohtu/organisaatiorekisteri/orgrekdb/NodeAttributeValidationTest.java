@@ -60,7 +60,7 @@ public class NodeAttributeValidationTest {
 
         @Test
         public void testAttributeWithSameNameCannotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr0);
+            Attribute ret = attributeDao.getExistingAttribute(attr0);
             assertThat(ret, is(notNullValue()));
         }
     }
@@ -70,42 +70,42 @@ public class NodeAttributeValidationTest {
     class BothDates {
         @Test
         public void testAttributeInsideExistingAttributesTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr1);
+            Attribute ret = attributeDao.getExistingAttribute(attr1);
             assertThat(ret, is(notNullValue()));
         }
 
         @Test
         public void testAttributeBeginningInsideExistingAttributesTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr2);
+            Attribute ret = attributeDao.getExistingAttribute(attr2);
             assertThat(ret, is(notNullValue()));
         }
 
         @Test
         public void testAttributeEndingInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr3);
+            Attribute ret = attributeDao.getExistingAttribute(attr3);
             assertThat(ret, is(notNullValue()));
         }
 
         @Test
         public void testAttributeBeforeExistingAttributeCanBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr4);
+            Attribute ret = attributeDao.getExistingAttribute(attr4);
             assertThat(ret, is(nullValue()));
         }
 
         @Test
         public void testAttributeAfterExistingAttributeCanBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr5);
+            Attribute ret = attributeDao.getExistingAttribute(attr5);
             assertThat(ret, is(nullValue()));
         }
 
         @Test
         public void testAttributeWithNoStartDateEndingInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr6);
+            Attribute ret = attributeDao.getExistingAttribute(attr6);
             assertThat(ret, is(notNullValue()));
         }
         @Test
         public void testAttributeWithNoEndDateBeginningInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr7);
+            Attribute ret = attributeDao.getExistingAttribute(attr7);
             assertThat(ret, is(notNullValue()));
         }
     }
@@ -115,36 +115,36 @@ public class NodeAttributeValidationTest {
     class EndDate {
         @Test
         public void testAttributeInsideExistingAttributesTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr8);
+            Attribute ret = attributeDao.getExistingAttribute(attr8);
             assertThat(ret, is(notNullValue()));
         }
         @Test
         public void testAttributeBeginningInsideExistingAttributesTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr9);
+            Attribute ret = attributeDao.getExistingAttribute(attr9);
             assertThat(ret, is(notNullValue()));
         }
 
         @Test
         public void testAttributeEndingInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr10);
+            Attribute ret = attributeDao.getExistingAttribute(attr10);
             assertThat(ret, is(notNullValue()));
         }
 
 
         @Test
         public void testAttributeAfterExistingAttributeCanBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr11);
+            Attribute ret = attributeDao.getExistingAttribute(attr11);
             assertThat(ret, is(nullValue()));
         }
 
         @Test
         public void testAttributeWithNoStartDateEndingInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr12);
+            Attribute ret = attributeDao.getExistingAttribute(attr12);
             assertThat(ret, is(notNullValue()));
         }
         @Test
         public void testAttributeWithNoEndDateBeginningInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr13);
+            Attribute ret = attributeDao.getExistingAttribute(attr13);
             assertThat(ret, is(notNullValue()));
         }
 
@@ -155,36 +155,36 @@ public class NodeAttributeValidationTest {
     class StartDate {
         @Test
         public void testAttributeInsideExistingAttributesTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr14);
+            Attribute ret = attributeDao.getExistingAttribute(attr14);
             assertThat(ret, is(notNullValue()));
         }
 
         @Test
         public void testAttributeBeginningInsideExistingAttributesTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr15);
+            Attribute ret = attributeDao.getExistingAttribute(attr15);
             assertThat(ret, is(notNullValue()));
         }
 
         @Test
         public void testAttributeEndingInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr16);
+            Attribute ret = attributeDao.getExistingAttribute(attr16);
             assertThat(ret, is(notNullValue()));
         }
 
         @Test
         public void testAttributeBeforeExistingAttributeCanBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr17);
+            Attribute ret = attributeDao.getExistingAttribute(attr17);
             assertThat(ret, is(nullValue()));
         }
 
         @Test
         public void testAttributeWithNoStartDateEndingInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr18);
+            Attribute ret = attributeDao.getExistingAttribute(attr18);
             assertThat(ret, is(notNullValue()));
         }
         @Test
         public void testAttributeWithNoEndDateBeginningInsideExistingAttributeTimeSlotCanNotBeAdded() throws IOException {
-            Attribute ret = attributeDao.getExistingAttribute(nodeId, attr19);
+            Attribute ret = attributeDao.getExistingAttribute(attr19);
             assertThat(ret, is(notNullValue()));
         }
     }

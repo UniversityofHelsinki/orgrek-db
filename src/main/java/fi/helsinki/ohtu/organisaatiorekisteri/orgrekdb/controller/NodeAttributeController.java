@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -45,10 +46,35 @@ public class NodeAttributeController {
         return orgUnitDao.getFutureAndCurrentAttributeListByDate(node.getId(), dateObj);
     }
 
-    @PutMapping("/attributes/{nodeId}")
-    public List<Attribute> updateAttributes(@PathVariable("nodeId") String nodeId, @RequestBody List<Attribute> attributes) throws IOException {
-        attributeDao.updateAttributes(attributes);
-        return attributeDao.getAttributesByNodeId(nodeId);
+    @PutMapping("/attributes/{nodeId}/{skipValidation}")
+    public ResponseEntity<List<Attribute>> updateAttributes(@PathVariable("nodeId") String nodeId,
+                                            @PathVariable("skipValidation") boolean skipValidation,
+                                            @RequestBody List<Attribute> attributes) throws IOException {
+        List<Attribute> conflictingAttributes = new ArrayList<>();
+        if(!skipValidation) {
+            conflictingAttributes = validate(attributes, skipValidation);
+        }
+        if(skipValidation || conflictingAttributes.isEmpty()) {
+            attributeDao.updateAttributes(attributes);
+            return new ResponseEntity<>(attributes, HttpStatus.OK);
+        }
+        if(!conflictingAttributes.isEmpty()) {
+            return new ResponseEntity<>(conflictingAttributes, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    private List<Attribute> validate(List<Attribute> attributes, boolean skipValidation) throws IOException {
+        List<Attribute> ret = new ArrayList<>();
+        for(Attribute attribute : attributes) {
+            if(!skipValidation || !isFullnameAttribute(attribute)) {
+                Attribute attr = attributeDao.checkIfExists(attribute);
+                if (attr != null) {
+                    ret.add(attr);
+                }
+            }
+        }
+        return ret;
     }
 
     @PostMapping("/attributes/{nodeId}/{skipValidation}")
@@ -57,7 +83,7 @@ public class NodeAttributeController {
                                             @RequestBody Attribute attribute) throws IOException {
         Attribute existingAttribute = null;
         if(!skipValidation || !isFullnameAttribute(attribute)) {
-            existingAttribute = attributeDao.getExistingAttribute(nodeId, attribute);
+            existingAttribute = attributeDao.getExistingAttribute(attribute);
         }
         if(skipValidation || existingAttribute==null) {
             Attribute created = attributeDao.insertAttribute(attribute);
