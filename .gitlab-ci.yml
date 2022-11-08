@@ -20,7 +20,7 @@ stages:
 build :
   stage: build
   tags:
-    - shared-openshift
+    - ohtu-build-2
   script:
     - java -version
     - mvn install
