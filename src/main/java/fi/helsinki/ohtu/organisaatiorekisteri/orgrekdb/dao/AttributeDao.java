@@ -55,6 +55,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         String endDate = yearMonthDay.format(attribute.getEndDate());
         params.addValue("end_date", endDate);
         getNamedParameterJdbcTemplate().update(sql, params);
+        attribute.setId(sequence);
         return attribute;
     }
 
