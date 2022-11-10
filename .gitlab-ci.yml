@@ -20,7 +20,7 @@ stages:
 build :
   stage: build
   tags:
-    - shared-openshift
+    - ohtu-build-2
   script:
     - java -version
     - mvn install
@@ -33,7 +33,7 @@ build :
 test :
   stage: test
   tags:
-    - shared-openshift
+    - ohtu-build-2
   script:
     - mvn test
     - cat target/site/jacoco/index.html | grep -o 'Total[^%]*%'
@@ -47,7 +47,7 @@ test :
 deploy_dev:
   stage: deploy
   tags:
-    - shared-openshift
+    - ohtu-build-2
   environment:
     name: development
   only:
@@ -77,7 +77,7 @@ deploy_dev:
 deploy_test:
   stage: deploy
   tags:
-    - shared-openshift
+    - ohtu-build-2
   environment:
     name: test
   only:
@@ -105,7 +105,7 @@ deploy_test:
 deploy_prod:
   stage: deploy
   tags:
-    - shared-openshift
+    - ohtu-build-2
   environment:
     name: prod
   only:
@@ -136,7 +136,7 @@ deploy_prod:
 deploy_organisation-dev:
   stage: deploy
   tags:
-    - shared-openshift
+    - ohtu-build-2
   environment:
     name: development
   only:
@@ -167,7 +167,7 @@ deploy_organisation-dev:
 dependency scanning:
   stage: audit_scan
   tags:
-    - shared-openshift
+    - ohtu-build-2
   allow_failure: true
   only:
     - schedules
