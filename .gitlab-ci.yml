@@ -20,7 +20,7 @@ stages:
 build :
   stage: build
   tags:
-    - ohtu-build-2
+    - ohtu-build-4
   script:
     - java -version
     - mvn install
@@ -33,7 +33,7 @@ build :
 test :
   stage: test
   tags:
-    - ohtu-build-2
+    - ohtu-build-4
   script:
     - mvn test
     - cat target/site/jacoco/index.html | grep -o 'Total[^%]*%'
@@ -47,7 +47,7 @@ test :
 deploy_dev:
   stage: deploy
   tags:
-    - ohtu-build-2
+    - ohtu-build-4
   environment:
     name: development
   only:
@@ -80,7 +80,7 @@ deploy_dev:
 deploy_test:
   stage: deploy
   tags:
-    - ohtu-build-2
+    - ohtu-build-4
   environment:
     name: test
   only:
@@ -111,7 +111,7 @@ deploy_test:
 deploy_prod:
   stage: deploy
   tags:
-    - ohtu-build-2
+    - ohtu-build-4
   environment:
     name: prod
   only:
@@ -144,7 +144,7 @@ deploy_prod:
 dependency scanning:
   stage: audit_scan
   tags:
-    - ohtu-build-2
+    - ohtu-build-4
   allow_failure: true
   only:
     - schedules
