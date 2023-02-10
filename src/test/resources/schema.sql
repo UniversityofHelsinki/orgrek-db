@@ -2,6 +2,9 @@ drop table if exists NODE_ATTR;
 drop table if exists NODE;
 drop table if exists TEXTS;
 drop table if exists EDGE;
+drop table if exists HIERARCHY_FILTER;
+drop view if exists PREDECESSOR_RELATION;
+drop view if exists SUCCESSOR_RELATION;
 
 create table NODE
 (
@@ -47,5 +50,29 @@ create table EDGE
         references NODE,
     START_DATE     TIMESTAMP(6),
     END_DATE       TIMESTAMP(6),
-    TYPE           VARCHAR2(255 char)
+    HIERARCHY           VARCHAR2(255 char)
 );
+
+create table HIERARCHY_FILTER
+(
+    ID         NUMBER not null
+        primary key,
+    HIERARCHY VARCHAR2(255 char),
+    KEY VARCHAR2(255 char),
+    VALUE VARCHAR2(255 char),
+    START_DATE TIMESTAMP(6),
+    END_DATE   TIMESTAMP(6)
+);
+
+create view PREDECESSOR_RELATION as
+select "ID","CHILD_NODE_ID" PREDECESSOR_ID,"PARENT_NODE_ID" NODE_ID,"START_DATE","END_DATE" from EDGE
+where HIERARCHY='history';
+
+create view SUCCESSOR_RELATION as
+select "ID",PARENT_NODE_ID SUCCESSOR_ID,CHILD_NODE_ID NODE_ID,"START_DATE","END_DATE" from EDGE
+where HIERARCHY='history';
+
+create view NODE_TYPE as
+select "ID","NODE_ID","KEY","VALUE","START_DATE","END_DATE" from NODE_ATTR
+where KEY='type';
+

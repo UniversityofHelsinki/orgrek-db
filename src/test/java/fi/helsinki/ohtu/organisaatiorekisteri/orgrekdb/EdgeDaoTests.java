@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class EdgeDaoTests {
     private EdgeDao edgeDao;
 
     @Test
-    public void testHierarchyTypes() {
+    public void testHierarchyTypes() throws IOException {
         List<String> expectedTypes = new ArrayList<>();
         expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_HENKILOSTO);
         expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_HISTORY);

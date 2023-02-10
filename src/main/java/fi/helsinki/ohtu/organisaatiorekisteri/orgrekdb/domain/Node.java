@@ -9,7 +9,7 @@ public class Node {
     private Date startDate;
     private Date endDate;
     private Timestamp timestamp;
-    private int unique_id;
+    private int uniqueId;
 
     public String getId() {
         return id;
@@ -51,11 +51,23 @@ public class Node {
         this.timestamp = timestamp;
     }
 
-    public int getUnique_id() {
-        return unique_id;
+    public int getUniqueId() {
+        return uniqueId;
     }
 
-    public void setUnique_id(int unique_id) {
-        this.unique_id = unique_id;
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", timestamp=" + timestamp +
+                ", uniqueId=" + uniqueId +
+                '}';
     }
 }

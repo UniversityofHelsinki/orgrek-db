@@ -1,18 +1,20 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
 @RequestMapping("/api/node")
@@ -21,23 +23,81 @@ public class NodeAttributeController {
     @Autowired
     private OrgUnitDao orgUnitDao;
 
-    @RequestMapping(method = GET, value = "/{id}/{date}/attributes")
-    public List<Attribute> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+    @Autowired
+    private AttributeDao attributeDao;
+
+    @GetMapping("/{id}/{date}/attributes")
+    public List<Attribute> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
         return orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
     }
-    @RequestMapping(method = GET, value = "/historyandcurrent/{id}/{date}/attributes")
-    public List<Attribute> getHistoryAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+    @GetMapping("/historyandcurrent/{id}/{date}/attributes")
+    public List<Attribute> getHistoryAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
         return orgUnitDao.getHistoryAndCurrentAttributeListByDate(node.getId(), dateObj);
     }
 
-    @RequestMapping(method = GET, value = "/futureandcurrent/{id}/{date}/attributes")
-    public List<Attribute> getFutureAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) {
+    @GetMapping("/futureandcurrent/{id}/{date}/attributes")
+    public List<Attribute> getFutureAndCurrentAttributes(@PathVariable("id") int id, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(id);
         Date dateObj = DateUtil.parseDate(date);
         return orgUnitDao.getFutureAndCurrentAttributeListByDate(node.getId(), dateObj);
     }
+
+    @PutMapping("/attributes/{nodeId}/{skipValidation}")
+    public ResponseEntity<List<Attribute>> updateAttributes(@PathVariable("nodeId") String nodeId,
+                                            @PathVariable("skipValidation") boolean skipValidation,
+                                            @RequestBody List<Attribute> attributes) throws IOException {
+        List<Attribute> conflictingAttributes = new ArrayList<>();
+        if(!skipValidation) {
+            conflictingAttributes = validate(attributes, skipValidation);
+        }
+        if(skipValidation || conflictingAttributes.isEmpty()) {
+            attributeDao.updateAttributes(attributes);
+            return new ResponseEntity<>(attributes, HttpStatus.OK);
+        }
+        if(!conflictingAttributes.isEmpty()) {
+            return new ResponseEntity<>(conflictingAttributes, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    private List<Attribute> validate(List<Attribute> attributes, boolean skipValidation) throws IOException {
+        List<Attribute> ret = new ArrayList<>();
+        for(Attribute attribute : attributes) {
+            if(!skipValidation || !isFullnameAttribute(attribute)) {
+                Attribute attr = attributeDao.checkIfExists(attribute);
+                if (attr != null) {
+                    ret.add(attr);
+                }
+            }
+        }
+        return ret;
+    }
+
+    @PostMapping("/attributes/{nodeId}/{skipValidation}")
+    public ResponseEntity<Attribute> insertAttribute(@PathVariable("nodeId") String nodeId,
+                                            @PathVariable("skipValidation") boolean skipValidation,
+                                            @RequestBody Attribute attribute) throws IOException {
+        Attribute existingAttribute = null;
+        if(!skipValidation || !isFullnameAttribute(attribute)) {
+            existingAttribute = attributeDao.getExistingAttribute(attribute);
+        }
+        if(skipValidation || existingAttribute==null) {
+            Attribute created = attributeDao.insertAttribute(attribute);
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
+        }
+        else {
+            return new ResponseEntity<>(existingAttribute, HttpStatus.CONFLICT);
+        }
+    }
+
+    private boolean isFullnameAttribute(Attribute attribute) {
+        List fullnameAttributes = Arrays.asList(new String[]{"emo_lyhenne", "lyhenne", "name_fi", "name_en", "name_sv"});
+        return fullnameAttributes.contains(attribute.getKey());
+    }
+
+
 }

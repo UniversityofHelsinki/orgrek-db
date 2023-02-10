@@ -20,7 +20,7 @@ stages:
 build :
   stage: build
   tags:
-    - shared-openshift
+    - ohtu-build-2
   script:
     - java -version
     - mvn install
@@ -33,7 +33,7 @@ build :
 test :
   stage: test
   tags:
-    - shared-openshift
+    - ohtu-build-2
   script:
     - mvn test
     - cat target/site/jacoco/index.html | grep -o 'Total[^%]*%'
@@ -47,7 +47,7 @@ test :
 deploy_dev:
   stage: deploy
   tags:
-    - shared-openshift
+    - ohtu-build-2
   environment:
     name: development
   only:
@@ -68,6 +68,7 @@ deploy_dev:
     - oc set env dc/organisaatiorekisteri-db-dev URL=$DB_DEV_URL
     - oc set env dc/organisaatiorekisteri-db-dev PORT=$DB_PORT
     - oc set env dc/organisaatiorekisteri-db-dev USERNAME=$DB_DEV_USERNAME
+    - oc set env dc/organisaatiorekisteri-db-dev TZ="Europe/Helsinki"
     # Start build process
     - oc start-build organisaatiorekisteri-db-dev --from-dir=. --follow
     # patch openshift buildConfig file
@@ -77,7 +78,7 @@ deploy_dev:
 deploy_test:
   stage: deploy
   tags:
-    - shared-openshift
+    - ohtu-build-2
   environment:
     name: test
   only:
@@ -96,6 +97,7 @@ deploy_test:
     - oc set env dc/organisaatiorekisteri-db-test URL=$DB_TEST_URL
     - oc set env dc/organisaatiorekisteri-db-test PORT=$DB_PORT
     - oc set env dc/organisaatiorekisteri-db-test USERNAME=$DB_TEST_USERNAME
+    - oc set env dc/organisaatiorekisteri-db-test TZ="Europe/Helsinki"
     # start build process
     - oc start-build organisaatiorekisteri-db-test --from-dir=. --follow
     # patch openshift buildConfig file
@@ -105,7 +107,7 @@ deploy_test:
 deploy_prod:
   stage: deploy
   tags:
-    - shared-openshift
+    - ohtu-build-2
   environment:
     name: prod
   only:
@@ -125,17 +127,51 @@ deploy_prod:
     - oc set env dc/organisaatiorekisteri-db-prod URL=$DB_PROD_URL
     - oc set env dc/organisaatiorekisteri-db-prod PORT=$DB_PORT
     - oc set env dc/organisaatiorekisteri-db-prod USERNAME=$DB_PROD_USERNAME
+    - oc set env dc/organisaatiorekisteri-db-prod TZ="Europe/Helsinki"
     # start build process
     - oc start-build organisaatiorekisteri-db-prod --from-dir=. --follow
     # patch openshift buildConfig file
     - oc patch bc/organisaatiorekisteri-db-prod --patch '{"spec":{"successfulBuildsHistoryLimit":1}}'
     - oc patch bc/organisaatiorekisteri-db-prod --patch '{"spec":{"failedBuildsHistoryLimit":1}}'
 
+
+  # Define the process for deploy stage to new db development environment
+deploy_organisation-dev:
+  stage: deploy
+  tags:
+    - ohtu-build-2
+  environment:
+    name: development
+  only:
+    - organisation-dev
+  except:
+    - schedules
+  script:
+    # set home path for openshift 1001 user
+    - export HOME=/home/1001
+    # before any action, I connect to the OpenShift server with the appropriate credentials
+    - oc login https://$OPENSHIFT_ADDR_TEST:$OPENSHIFT_PORT --token=$OPENSHIFT_TOKEN_TEST
+    - oc project organisaatiorekisteri
+    # add secrets here
+    - oc delete secret generic db-organisation-dev-password --ignore-not-found
+    - oc create secret generic db-organisation-dev-password --from-literal=password=$DB_ORGANISATION_DEV_PASSWORD
+    # list environment variables here
+    - oc set env --from=secret/db-organisation-dev-password dc/organisation-db-dev
+    - oc set env dc/organisation-db-dev URL=$DB_ORGANISATION_DEV_URL
+    - oc set env dc/organisation-db-dev PORT=$DB_PORT
+    - oc set env dc/organisation-db-dev USERNAME=$DB_ORGANISATION_DEV_USERNAME
+    - oc set env dc/organisation-db-dev TZ="Europe/Helsinki"
+    # Start build process
+    - oc start-build organisation-db-dev --from-dir=. --follow
+    # patch openshift buildConfig file
+    - oc patch bc/organisation-db-dev --patch '{"spec":{"successfulBuildsHistoryLimit":1}}'
+    - oc patch bc/organisation-db-dev --patch '{"spec":{"failedBuildsHistoryLimit":1}}'
+
 # Rules for the scheduled npm audit and outdated scans
 dependency scanning:
   stage: audit_scan
   tags:
-    - shared-openshift
+    - ohtu-build-2
   allow_failure: true
   only:
     - schedules
