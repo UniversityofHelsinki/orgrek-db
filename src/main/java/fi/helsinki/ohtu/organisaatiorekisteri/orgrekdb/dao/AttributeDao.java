@@ -67,10 +67,14 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
             params.addValue("node_id", attribute.getNodeId());
             params.addValue("key", attribute.getKey());
             params.addValue("value", attribute.getValue());
-
-            String start = yearMonthDay.format(attribute.getStartDate());
-            String end = yearMonthDay.format(attribute.getEndDate());
-
+            String start = null;
+            String end = null;
+            if (attribute.getStartDate() != null) {
+                start = yearMonthDay.format(attribute.getStartDate());
+            }
+            if (attribute.getEndDate() != null) {
+                end = yearMonthDay.format(attribute.getEndDate());
+            }
             params.addValue("start_date", start);
             params.addValue("end_date", end);
             params.addValue("id", attribute.getId());
