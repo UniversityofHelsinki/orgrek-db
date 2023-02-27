@@ -1,19 +1,19 @@
-  [
-    {
-      "key": "moro",
-      "value": "morjensta pöytään",
-      "startDate": "1800-12-02",
-      "endDate": "2022-12-03",
-      "nodeId": "5283",
-      "id": 31789
-    },
-    {
-      "key": "asfadsfasfdo",
-      "value": "haloo",
-      "startDate": "2022-12-08",
-      "endDate": null,
-      "nodeId": "5283",
-      "id": 31790
-    }
-    ]
+[
+  {
+    "key": "moro",
+    "value": "morjensta pöytään",
+    "startDate": "1800-12-02",
+    "endDate": "null",
+    "nodeId": "5283",
+    "id": 31917
+  },
+  {
+    "key": "what",
+    "value": "haloo",
+    "startDate": "2022-12-08",
+    "endDate": null,
+    "nodeId": "5283",
+    "id": 31898
+  }
+]
 

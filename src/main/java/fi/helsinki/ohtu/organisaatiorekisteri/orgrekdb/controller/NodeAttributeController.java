@@ -48,8 +48,8 @@ public class NodeAttributeController {
 
     @PutMapping("/attributes/{nodeId}/{skipValidation}")
     public ResponseEntity<List<Attribute>> updateAttributes(@PathVariable("nodeId") String nodeId,
-                                            @PathVariable("skipValidation") boolean skipValidation,
-                                            @RequestBody List<Attribute> attributes) throws IOException {
+                                                            @PathVariable("skipValidation") boolean skipValidation,
+                                                            @RequestBody List<Attribute> attributes) throws IOException {
         List<Attribute> conflictingAttributes = new ArrayList<>();
         if(!skipValidation) {
             conflictingAttributes = validate(attributes, skipValidation);
@@ -79,8 +79,8 @@ public class NodeAttributeController {
 
     @PostMapping("/attributes/{nodeId}/{skipValidation}")
     public ResponseEntity<Attribute> insertAttribute(@PathVariable("nodeId") String nodeId,
-                                            @PathVariable("skipValidation") boolean skipValidation,
-                                            @RequestBody Attribute attribute) throws IOException {
+                                                     @PathVariable("skipValidation") boolean skipValidation,
+                                                     @RequestBody Attribute attribute) throws IOException {
         Attribute existingAttribute = null;
         if(!skipValidation || !isFullnameAttribute(attribute)) {
             existingAttribute = attributeDao.getExistingAttribute(attribute);
@@ -100,4 +100,13 @@ public class NodeAttributeController {
     }
 
 
+    @PutMapping("/name/attributes")
+    public ResponseEntity<List<Attribute>> updateNameAttributes(@RequestBody List<Attribute> attributes) {
+        try {
+            attributeDao.updateAttributes(attributes);
+            return new ResponseEntity<>(attributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
