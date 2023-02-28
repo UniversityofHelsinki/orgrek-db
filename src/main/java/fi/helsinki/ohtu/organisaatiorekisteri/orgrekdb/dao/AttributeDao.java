@@ -40,6 +40,15 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return attributes;
     }
 
+    public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("nameAttributesByNodeId.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("node_id", nodeId);
+        List<Attribute> attributes = getNamedParameterJdbcTemplate()
+                .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return attributes;
+    }
+
     public Attribute insertAttribute(Attribute attribute) throws IOException {
 
         String sql = ReadSqlFiles.sqlString("insertAttributes.sql");
