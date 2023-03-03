@@ -94,6 +94,19 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
 
     }
 
+    @Transactional
+    public int[] deleteNameAttributes(List<Attribute> attributes) throws IOException {
+        String sql = ReadSqlFiles.sqlString("deleteAttributes.sql");
+
+        MapSqlParameterSource[] paramMaps = attributes.stream().map(attribute -> {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("node_id", attribute.getNodeId());
+            params.addValue("id", attribute.getId());
+            return params;
+        }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
+        return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
+    }
+
     public Attribute getExistingAttribute(Attribute attribute) throws IOException {
         String sql = ReadSqlFiles.sqlString("isSameAttributeAlreadyExisting.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
