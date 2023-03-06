@@ -102,15 +102,12 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
     }
 
-    @Transactional
-    public int[] deleteNameAttributes(List<Attribute> attributes) throws IOException {
-        String sql = ReadSqlFiles.sqlString("deleteAttributes.sql");
 
+    public int[] deleteAttributes(List<Attribute> attributes) throws IOException {
+        String sql = ReadSqlFiles.sqlString("deleteAttributes.sql");
         MapSqlParameterSource[] paramMaps = attributes.stream().map(attribute -> {
             MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("node_id", attribute.getNodeId());
-            params.addValue("id", attribute.getId());
-            return params;
+            return getMapSqlParameterSource(attribute, params);
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
     }

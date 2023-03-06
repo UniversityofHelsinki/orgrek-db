@@ -26,7 +26,7 @@ public class NodeAttributeService {
                 attributeDao.updateAttributes(nameAttributesListEntry.getValue());
             }
             if (nameAttributesListEntry.getKey().equals("deletedAttributes") && !nameAttributesListEntry.getValue().isEmpty()) {
-                //attributeDao.deleteAttributes(nameAttributesListEntry.getValue());
+                attributeDao.deleteAttributes(nameAttributesListEntry.getValue());
             }
         }
 

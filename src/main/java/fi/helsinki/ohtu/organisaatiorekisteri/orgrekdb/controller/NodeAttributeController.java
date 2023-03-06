@@ -111,16 +111,6 @@ public class NodeAttributeController {
         }
     }
 
-    @DeleteMapping("/name/attributes")
-    public ResponseEntity<List<Attribute>> deleteNameAttributes(@RequestBody List<Attribute> attributes) {
-        try {
-            attributeDao.deleteNameAttributes(attributes);
-            return new ResponseEntity<>(attributes, HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @GetMapping("/name/attributes/{id}")
     public ResponseEntity<List<Attribute>> getNodeNameAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
