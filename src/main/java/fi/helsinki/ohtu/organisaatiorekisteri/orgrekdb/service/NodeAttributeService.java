@@ -20,7 +20,7 @@ public class NodeAttributeService {
     public void updateDeleteOrSaveNodeNameAttributes(Map<String, List<Attribute>> nameAttributesMap) throws IOException {
         for (Map.Entry<String, List<Attribute>> nameAttributesListEntry : nameAttributesMap.entrySet()) {
             if (nameAttributesListEntry.getKey().equals("newAttributes") && !nameAttributesListEntry.getValue().isEmpty()) {
-                //attributeDao.addAttributes(nameAttributesListEntry.getValue());
+                attributeDao.addAttributes(nameAttributesListEntry.getValue());
             }
             if (nameAttributesListEntry.getKey().equals("updatedAttributes") && !nameAttributesListEntry.getValue().isEmpty()) {
                 attributeDao.updateAttributes(nameAttributesListEntry.getValue());
