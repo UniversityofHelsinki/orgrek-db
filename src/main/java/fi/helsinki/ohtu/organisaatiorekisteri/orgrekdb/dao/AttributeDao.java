@@ -95,27 +95,11 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
 
     public int[] updateAttributes(List<Attribute> attributes) throws IOException {
         String sql = ReadSqlFiles.sqlString("updateAttributes.sql");
-
         MapSqlParameterSource[] paramMaps = attributes.stream().map(attribute -> {
             MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("node_id", attribute.getNodeId());
-            params.addValue("key", attribute.getKey());
-            params.addValue("value", attribute.getValue());
-            String start = null;
-            String end = null;
-            if (attribute.getStartDate() != null) {
-                start = yearMonthDay.format(attribute.getStartDate());
-            }
-            if (attribute.getEndDate() != null) {
-                end = yearMonthDay.format(attribute.getEndDate());
-            }
-            params.addValue("start_date", start);
-            params.addValue("end_date", end);
-            params.addValue("id", attribute.getId());
-            return params;
+            return getMapSqlParameterSource(attribute, params);
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
-
     }
 
     @Transactional
