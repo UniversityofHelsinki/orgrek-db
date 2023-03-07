@@ -4,6 +4,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.NodeAttributeService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/node")
@@ -25,6 +23,9 @@ public class NodeAttributeController {
 
     @Autowired
     private AttributeDao attributeDao;
+
+    @Autowired
+    private NodeAttributeService nodeAttributeService;
 
     @GetMapping("/{id}/{date}/attributes")
     public List<Attribute> getAttributes(@PathVariable("id") int id, @PathVariable("date") String date) throws IOException {
@@ -101,10 +102,10 @@ public class NodeAttributeController {
 
 
     @PutMapping("/name/attributes")
-    public ResponseEntity<List<Attribute>> updateNameAttributes(@RequestBody List<Attribute> attributes) {
+    public ResponseEntity<Map<String, List<Attribute>>> updateNameAttributes(@RequestBody Map<String, List<Attribute>> attributesMap) {
         try {
-            attributeDao.updateAttributes(attributes);
-            return new ResponseEntity<>(attributes, HttpStatus.OK);
+            nodeAttributeService.updateDeleteOrSaveNodeNameAttributes(attributesMap);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
