@@ -84,7 +84,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
     public int[] addAttributes(List<Attribute> attributes) throws IOException {
         String sql = ReadSqlFiles.sqlString("insertAttributes.sql");
         MapSqlParameterSource[] paramMaps = attributes.stream().map(attribute -> {
-            Integer sequence = getJdbcTemplate().queryForObject("SELECT node_seq.nextval FROM dual", Integer.class);
+            Integer sequence = getJdbcTemplate().queryForObject("SELECT NODE_SEQ.nextval FROM dual", Integer.class);
             attribute.setId(sequence);
             MapSqlParameterSource params = new MapSqlParameterSource();
             return getMapSqlParameterSource(attribute, params);
