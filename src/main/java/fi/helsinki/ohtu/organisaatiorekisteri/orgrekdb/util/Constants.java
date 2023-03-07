@@ -35,4 +35,8 @@ public class Constants {
     public static final String FUTURE = "future";
     public static final String NOW = "now";
 
+    public static final String NEW_ATTRIBUTES = "newAttributes";
+    public static final String UPDATED_ATTRIBUTES = "updatedAttributes";
+    public static final String DELETED_ATTRIBUTES = "deletedAttributes";
+
 }
