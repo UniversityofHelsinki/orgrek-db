@@ -51,6 +51,13 @@ public class AttributeDaoTests {
         assertEquals("Nytt ändrat namn", attributeDao.getNameAttributesByNodeId("5283").get(2).getValue());
     }
 
-
-
+    @Test
+    public void testDeleteNameAttributes() throws IOException {
+        assertEquals(3, attributeDao.getNameAttributesByNodeId("5283").size());
+        List<Attribute> attributeList = attributeDao.getNameAttributesByNodeId("5283");
+        attributeList.remove(0);
+        attributeDao.deleteAttributes(attributeList);
+        assertEquals(1, attributeDao.getNameAttributesByNodeId("5283").size());
+        assertEquals("Uusi muokattu nimi", attributeDao.getNameAttributesByNodeId("5283").get(0).getValue());
+     }
 }
