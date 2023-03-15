@@ -28,8 +28,6 @@ with traversed(id, child_node_id, parent_node_id, start_date, end_date, hierarch
          child_node_id,
          parent_node.unique_id parent_node_unique_id,
          child_node.unique_id child_node_unique_id,
-         coalesce(p_talous_tunnus.value, p_oppiaine_tunnus.value) parent_code,
-         coalesce(c_talous_tunnus.value, c_oppiaine_tunnus.value) child_code,
          case when pfn.name is null then parent_node.name else pfn.name end as parent_name,
          case when cfn.name is null then child_node.name else cfn.name end as child_name,
          languages.language language,
