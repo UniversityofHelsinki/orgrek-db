@@ -49,16 +49,4 @@ from traversed
          join node child_node on traversed.child_node_id = child_node.id
     and (child_node.START_DATE is null or child_node.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
     and (child_node.END_DATE is null or child_node.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join NODE_ATTR p_talous_tunnus on ((not 'opetus' = any(:hierarchies)) or 'talous' = any(:hierarchies)) and traversed.parent_node_id = p_talous_tunnus.node_id and p_talous_tunnus.key='talous_tunnus' and
-                                      (p_talous_tunnus.start_date is null or p_talous_tunnus.start_date <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
-                                      (p_talous_tunnus.END_DATE is null or p_talous_tunnus.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join NODE_ATTR p_oppiaine_tunnus on ('opetus' = any(:hierarchies) and not 'talous' = any(:hierarchies)) and traversed.parent_node_id = p_oppiaine_tunnus.NODE_ID and p_oppiaine_tunnus.key='oppiaine_tunnus' and
-                                      (p_oppiaine_tunnus.START_DATE is null or p_oppiaine_tunnus.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
-                                      (p_oppiaine_tunnus.END_DATE is null or p_oppiaine_tunnus.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join NODE_ATTR c_talous_tunnus on ((not 'opetus' = any(:hierarchies)) or 'talous' = any(:hierarchies)) and traversed.child_node_id = c_talous_tunnus.node_id and c_talous_tunnus.key='talous_tunnus' and
-                                                (c_talous_tunnus.start_date is null or c_talous_tunnus.start_date <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
-                                                (c_talous_tunnus.END_DATE is null or c_talous_tunnus.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join NODE_ATTR c_oppiaine_tunnus on ('opetus' = any(:hierarchies) and not 'talous' = any(:hierarchies)) and traversed.child_node_id = c_oppiaine_tunnus.NODE_ID and c_oppiaine_tunnus.key='oppiaine_tunnus' and
-                                                  (c_oppiaine_tunnus.START_DATE is null or c_oppiaine_tunnus.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY'))) and
-                                                  (c_oppiaine_tunnus.END_DATE is null or c_oppiaine_tunnus.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-group by parent_node_id, child_node_id, parent_node.unique_id, child_node.unique_id, p_talous_tunnus.value, p_oppiaine_tunnus.value, c_talous_tunnus.value, c_oppiaine_tunnus.value, pfn.name, cfn.name, parent_node.name, child_node.name, languages.language order by parent_node_id, child_node_id
+group by parent_node_id, child_node_id, parent_node.unique_id, child_node.unique_id, pfn.name, cfn.name, parent_node.name, child_node.name, languages.language order by parent_node_id, child_node_id
