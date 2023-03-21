@@ -123,5 +123,14 @@ public class NodeAttributeController {
     }
 
 
+    @PutMapping("/type/attributes")
+    public ResponseEntity<Map<String, List<Attribute>>> updateTypeAttributes(@RequestBody Map<String, List<Attribute>> attributesMap) {
+        try {
+            nodeAttributeService.updateDeleteOrSaveNodeTypeAttributes(attributesMap);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }
