@@ -17,8 +17,7 @@ public class NodeAttributeService {
     @Autowired
     private AttributeDao attributeDao;
 
-    @Transactional
-    public void updateDeleteOrSaveNodeNameAttributes(Map<String, List<Attribute>> nameAttributesMap) throws IOException {
+    private void addUpdateOrDeleteAttributes(Map<String, List<Attribute>> nameAttributesMap) throws IOException {
         for (Map.Entry<String, List<Attribute>> nameAttributesListEntry : nameAttributesMap.entrySet()) {
             if (nameAttributesListEntry.getKey().equals(Constants.NEW_ATTRIBUTES) && !nameAttributesListEntry.getValue().isEmpty()) {
                 attributeDao.addAttributes(nameAttributesListEntry.getValue());
@@ -30,6 +29,15 @@ public class NodeAttributeService {
                 attributeDao.deleteAttributes(nameAttributesListEntry.getValue());
             }
         }
+    }
 
+    @Transactional
+    public void updateDeleteOrSaveNodeNameAttributes(Map<String, List<Attribute>> nameAttributesMap) throws IOException {
+        addUpdateOrDeleteAttributes(nameAttributesMap);
+    }
+
+    @Transactional
+    public void updateDeleteOrSaveNodeTypeAttributes(Map<String, List<Attribute>> typeAttributesMap) throws IOException {
+        addUpdateOrDeleteAttributes(typeAttributesMap);
     }
 }

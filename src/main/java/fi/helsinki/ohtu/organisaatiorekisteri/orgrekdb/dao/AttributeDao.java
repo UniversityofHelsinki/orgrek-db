@@ -78,9 +78,6 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return params;
     }
 
-
-
-
     public int[] addAttributes(List<Attribute> attributes) throws IOException {
         String sql = ReadSqlFiles.sqlString("insertAttributes.sql");
         MapSqlParameterSource[] paramMaps = attributes.stream().map(attribute -> {
