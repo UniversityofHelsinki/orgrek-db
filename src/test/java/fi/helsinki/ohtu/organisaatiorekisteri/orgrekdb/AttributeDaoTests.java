@@ -60,4 +60,33 @@ public class AttributeDaoTests {
         assertEquals(1, attributeDao.getNameAttributesByNodeId("5283").size());
         assertEquals("Uusi muokattu nimi", attributeDao.getNameAttributesByNodeId("5283").get(0).getValue());
      }
+
+    @Test
+    public void testAddTypeAttributes() throws IOException {
+        List<Attribute> attributeList = new ArrayList<>();
+        Attribute typeAttributeToBeAdded = new Attribute( "5283", 555, "type", "Uusi nimi", null, null);
+        attributeList.add(typeAttributeToBeAdded);
+
+        assertEquals(0, attributeDao.getTypeAttributesByNodeId("5283").size());
+        attributeDao.addAttributes(attributeList);
+        assertEquals(1, attributeDao.getTypeAttributesByNodeId("5283").size());
+    }
+
+    @Test
+    public void testUpdateTypeAttributes() throws IOException {
+        assertEquals(1, attributeDao.getTypeAttributesByNodeId("5283").size());
+        List<Attribute> attributeList = attributeDao.getTypeAttributesByNodeId("5283");
+        attributeList.get(0).setValue("Uusi muokattu nimi");
+        attributeDao.updateAttributes(attributeList);
+        assertEquals(1, attributeDao.getTypeAttributesByNodeId("5283").size());
+        assertEquals("Uusi muokattu nimi", attributeDao.getTypeAttributesByNodeId("5283").get(0).getValue());
+    }
+
+    @Test
+    public void testDeleteTypeAttributes() throws IOException {
+        assertEquals(1, attributeDao.getTypeAttributesByNodeId("5283").size());
+        List<Attribute> attributeList = attributeDao.getTypeAttributesByNodeId("5283");
+        attributeDao.deleteAttributes(attributeList);
+        assertEquals(0, attributeDao.getTypeAttributesByNodeId("5283").size());
+    }
 }

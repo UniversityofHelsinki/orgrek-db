@@ -133,4 +133,15 @@ public class NodeAttributeController {
         }
     }
 
+    @GetMapping("/type/attributes/{id}")
+    public ResponseEntity<List<Attribute>> getNodeTypeAttributes(@PathVariable("id") int nodeUniqueId) {
+        try {
+            Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
+            List<Attribute> nodeTypeAttributes = attributeDao.getTypeAttributesByNodeId(node.getId());
+            return new ResponseEntity<>(nodeTypeAttributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
