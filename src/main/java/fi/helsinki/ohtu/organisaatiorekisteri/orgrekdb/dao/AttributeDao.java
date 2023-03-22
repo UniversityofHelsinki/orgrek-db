@@ -31,13 +31,22 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         setDataSource(dataSource);
     }
 
-    public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
-        String sql = ReadSqlFiles.sqlString("nameAttributesByNodeId.sql");
+    private List<Attribute> getAttributeList(String nodeId, String sql) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("node_id", nodeId);
         List<Attribute> attributes = getNamedParameterJdbcTemplate()
                 .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
+    }
+
+    public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("nameAttributesByNodeId.sql");
+        return getAttributeList(nodeId, sql);
+    }
+
+    public List<Attribute> getTypeAttributesByNodeId(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("typeAttributesByNodeId.sql");
+        return getAttributeList(nodeId, sql);
     }
 
     public Attribute insertAttribute(Attribute attribute) throws IOException {
