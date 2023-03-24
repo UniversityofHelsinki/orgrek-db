@@ -152,7 +152,6 @@ public class NodeAttributeController {
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping("/code/attributes/{id}")
@@ -164,6 +163,5 @@ public class NodeAttributeController {
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 }
