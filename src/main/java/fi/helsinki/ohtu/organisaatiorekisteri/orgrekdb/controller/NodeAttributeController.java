@@ -144,4 +144,26 @@ public class NodeAttributeController {
         }
     }
 
+    @PutMapping("/code/attributes")
+    public ResponseEntity<Map<String, List<Attribute>>> updateCodeAttributes(@RequestBody Map<String, List<Attribute>> attributesMap) {
+        try {
+            nodeAttributeService.updateDeleteOrSaveNodeCodeAttributes(attributesMap);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("/code/attributes/{id}")
+    public ResponseEntity<List<Attribute>> getNodeCodeAttributes(@PathVariable("id") int nodeUniqueId) {
+        try {
+            Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
+            List<Attribute> nodeCodeAttributes = attributeDao.getCodeAttributesByNodeId(node.getId());
+            return new ResponseEntity<>(nodeCodeAttributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }
