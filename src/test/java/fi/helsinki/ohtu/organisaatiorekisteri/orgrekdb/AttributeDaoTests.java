@@ -94,7 +94,7 @@ public class AttributeDaoTests {
     public void testAddCodeAttributes() throws IOException {
         List<Attribute> attributeList = new ArrayList<>();
         Attribute codeAttributeToBeAdded = new Attribute("5283", 888, "tutkimus_tunnus", "TST", null, null);
-        attributeList.add((codeAttributeToBeAdded));
+        attributeList.add(codeAttributeToBeAdded);
 
         assertEquals(0, attributeDao.getCodeAttributesByNodeId("5283").size());
         attributeDao.addAttributes(attributeList);
