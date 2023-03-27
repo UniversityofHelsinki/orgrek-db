@@ -1,10 +1,3 @@
-SELECT * FROM NODE_ATTR WHERE NODE_ID = :node_id AND (KEY = 'lyhenne' OR
-                                                      KEY = 'emo_lyhenne' OR
-                                                      KEY = 'hr_lyhenne' OR
-                                                      KEY = 'iam_ryhma' OR
-                                                      KEY = 'hr_tunnus' OR
-                                                      KEY = 'laskutus_tunnus' OR
-                                                      KEY = 'mainari_tunnus' OR
-                                                      KEY = 'oppiaine_tunnus' OR
-                                                      KEY = 'talous_tunnus' OR
-                                                      KEY = 'tutkimus_tunnus')
+SELECT * FROM NODE_ATTR WHERE NODE_ID = :node_id AND KEY
+    IN ('lyhenne', 'emo_lyhenne','hr_lyhenne','iam_ryhma', 'hr_tunnus', 'laskutus_tunnus',
+        'mainari_tunnus','oppiaine_tunnus','talous_tunnus','tutkimus_tunnus')
