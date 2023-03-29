@@ -5,6 +5,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -107,6 +108,13 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         int[] result = getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
         return result;
+    }
+
+    public List<String> getAttributeKeys(List<String> hierarchies) throws IOException {
+        String sql = ReadSqlFiles.sqlString("attributeKeys.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("hierarchies", hierarchies);
+        return getNamedParameterJdbcTemplate().queryForList(sql, params, String.class);
     }
 }
 
