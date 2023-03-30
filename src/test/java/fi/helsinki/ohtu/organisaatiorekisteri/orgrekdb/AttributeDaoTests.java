@@ -2,7 +2,10 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -15,11 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations="classpath:application.properties")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AttributeDaoTests {
     @Autowired
     private AttributeDao attributeDao;
 
     @Test
+    @Order(1)
     public void testAddNameAttributes() throws IOException {
         List<Attribute> attributeList = new ArrayList<>();
         Attribute nameFiAttributeToBeAdded = new Attribute( "5283", 555, "name_fi", "Uusi nimi", null, null);
@@ -35,6 +40,7 @@ public class AttributeDaoTests {
     }
 
     @Test
+    @Order(2)
     public void testUpdateNameAttributes() throws IOException {
         assertEquals(3, attributeDao.getNameAttributesByNodeId("5283").size());
 
@@ -52,6 +58,7 @@ public class AttributeDaoTests {
     }
 
     @Test
+    @Order(3)
     public void testDeleteNameAttributes() throws IOException {
         assertEquals(3, attributeDao.getNameAttributesByNodeId("5283").size());
         List<Attribute> attributeList = attributeDao.getNameAttributesByNodeId("5283");
@@ -62,6 +69,7 @@ public class AttributeDaoTests {
      }
 
     @Test
+    @Order(4)
     public void testAddTypeAttributes() throws IOException {
         List<Attribute> attributeList = new ArrayList<>();
         Attribute typeAttributeToBeAdded = new Attribute( "5283", 555, "type", "Uusi nimi", null, null);
@@ -73,6 +81,7 @@ public class AttributeDaoTests {
     }
 
     @Test
+    @Order(5)
     public void testUpdateTypeAttributes() throws IOException {
         assertEquals(1, attributeDao.getTypeAttributesByNodeId("5283").size());
         List<Attribute> attributeList = attributeDao.getTypeAttributesByNodeId("5283");
@@ -83,10 +92,43 @@ public class AttributeDaoTests {
     }
 
     @Test
+    @Order(6)
     public void testDeleteTypeAttributes() throws IOException {
         assertEquals(1, attributeDao.getTypeAttributesByNodeId("5283").size());
         List<Attribute> attributeList = attributeDao.getTypeAttributesByNodeId("5283");
         attributeDao.deleteAttributes(attributeList);
         assertEquals(0, attributeDao.getTypeAttributesByNodeId("5283").size());
+    }
+
+    @Test
+    @Order(7)
+    public void testAddCodeAttributes() throws IOException {
+        List<Attribute> attributeList = new ArrayList<>();
+        Attribute codeAttributeToBeAdded = new Attribute("5283", 888, "tutkimus_tunnus", "TST", null, null);
+        attributeList.add(codeAttributeToBeAdded);
+
+        assertEquals(0, attributeDao.getCodeAttributesByNodeId("5283").size());
+        attributeDao.addAttributes(attributeList);
+        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283").size());
+    }
+
+    @Test
+    @Order(8)
+    public void testUpdateCodeAttributes() throws IOException {
+        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283").size());
+        List<Attribute> attributeList = attributeDao.getCodeAttributesByNodeId("5283");
+        attributeList.get(0).setValue("TT-TST");
+        attributeDao.updateAttributes(attributeList);
+        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283").size());
+        assertEquals("TT-TST", attributeDao.getCodeAttributesByNodeId("5283").get(0).getValue());
+    }
+
+    @Test
+    @Order(9)
+    public void testDeleteCodeAttributes() throws IOException {
+        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283").size());
+        List<Attribute> attributeList = attributeDao.getCodeAttributesByNodeId("5283");
+        attributeDao.deleteAttributes(attributeList);
+        assertEquals(0, attributeDao.getCodeAttributesByNodeId("5283").size());
     }
 }

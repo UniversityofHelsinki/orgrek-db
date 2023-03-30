@@ -1,5 +1,6 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.HierarchyFilterDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
@@ -11,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -25,6 +23,9 @@ public class HierarchyFilterController {
 
     @Autowired
     private HierarchyFilterDao hierarchyFilterDao;
+
+    @Autowired
+    private EdgeDao edgeDao;
 
     @RequestMapping(method = GET, value = "/{date}/{whichtime}")
     public List<HierarchyFilter> getAllHierarchyFilters(@PathVariable("date") String date, @PathVariable("whichtime") String whichtime) {
@@ -68,5 +69,21 @@ public class HierarchyFilterController {
         return hierarchyFilterDao.getHierarchyFilters().stream().filter(hierarchyFilter ->
                 beforeSave.stream().noneMatch(b -> b.getId() == hierarchyFilter.getId())
         ).collect(Collectors.toList());
+    }
+
+    private boolean inputContainsAllHierarchies(List<String> hierarchies) throws IOException {
+        List<String> allHierarchies = edgeDao.getHierarchyTypes();
+        allHierarchies.remove("history");
+        return hierarchies.containsAll(allHierarchies);
+    }
+    @RequestMapping(method = GET, value = "/{selectedHierarchies}/attributes/keys")
+    public List<String> getAttributeKeys(@PathVariable("selectedHierarchies") String selectedHierarchies) throws IOException {
+        List<String> hierarchies = Arrays.asList(selectedHierarchies.split(","));
+        List<String> attributeKeys = hierarchyFilterDao.getAttributeKeys(hierarchies);
+        if (inputContainsAllHierarchies(hierarchies)) {
+            attributeKeys.add(Constants.MINER);
+            attributeKeys.add(Constants.ACCOUNTING);
+        }
+        return attributeKeys;
     }
 }
