@@ -3,6 +3,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -150,7 +151,7 @@ public class AttributeDaoTests {
     @Test
     @Order(10)
     public void testGetCodeAttributes() throws IOException {
-        List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionCodeAttributes();
+        List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionAttributesBySection(Constants.CODE_SECTION);
         assertEquals(10, sectionCodeAttributes.size());
         sectionCodeAttributes.stream().forEach(sectionAttribute -> {
             assertEquals("codes", sectionAttribute.getSection());
