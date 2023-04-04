@@ -112,9 +112,9 @@ public class AttributeDaoTests {
         SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
         sectionAttributeList.add(sectionAttribute);
 
-        assertEquals(0, attributeDao.getAttributesByNodeId("5283", sectionAttributeList).size());
+        assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
         attributeDao.addAttributes(attributeList);
-        assertEquals(1, attributeDao.getAttributesByNodeId("5283", sectionAttributeList).size());
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
     }
 
 
@@ -124,12 +124,12 @@ public class AttributeDaoTests {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
         SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
         sectionAttributeList.add(sectionAttribute);
-        assertEquals(1, attributeDao.getAttributesByNodeId("5283", sectionAttributeList).size());
-        List<Attribute> attributeList = attributeDao.getAttributesByNodeId("5283", sectionAttributeList);
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        List<Attribute> attributeList = attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
         attributeList.get(0).setValue("TT-TST");
         attributeDao.updateAttributes(attributeList);
-        assertEquals(1, attributeDao.getAttributesByNodeId("5283", sectionAttributeList).size());
-        assertEquals("TT-TST", attributeDao.getAttributesByNodeId("5283", sectionAttributeList).get(0).getValue());
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        assertEquals("TT-TST", attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).get(0).getValue());
     }
 
 
@@ -141,10 +141,10 @@ public class AttributeDaoTests {
         SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
         sectionAttributeList.add(sectionAttribute);
 
-        assertEquals(1, attributeDao.getAttributesByNodeId("5283", sectionAttributeList).size());
-        List<Attribute> attributeList = attributeDao.getAttributesByNodeId("5283", sectionAttributeList);
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        List<Attribute> attributeList = attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
         attributeDao.deleteAttributes(attributeList);
-        assertEquals(0, attributeDao.getAttributesByNodeId("5283", sectionAttributeList).size());
+        assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
     }
 
     @Test

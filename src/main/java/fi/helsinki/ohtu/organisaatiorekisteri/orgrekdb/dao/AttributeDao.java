@@ -60,10 +60,10 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return sectionCodeAttributes;
     }
 
-    public List<Attribute> getAttributesByNodeId(String nodeId, List<SectionAttribute> sectionAttributes) throws IOException {
+    public List<Attribute> getSectionAttributesByNodeId(String nodeId, List<SectionAttribute> sectionAttributes) throws IOException {
         List<String> attributeList = new ArrayList<>();
         sectionAttributes.stream().forEach(sectionAttribute -> attributeList.add(sectionAttribute.getAttr()));
-        String sql = ReadSqlFiles.sqlString("attributesByNodeId.sql");
+        String sql = ReadSqlFiles.sqlString("sectionAttributesByNodeId.sql");
         return getAttributeList(nodeId, sql, attributeList);
     }
 
