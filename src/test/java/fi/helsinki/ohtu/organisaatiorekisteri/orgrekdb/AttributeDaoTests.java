@@ -147,5 +147,15 @@ public class AttributeDaoTests {
         assertEquals(0, attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList).size());
     }
 
+    @Test
+    @Order(10)
+    public void testGetCodeAttributes() throws IOException {
+        List<SectionAttribute> sectionCodeAttributes = attributeDao.getCodes();
+        assertEquals(10, sectionCodeAttributes.size());
+        sectionCodeAttributes.stream().forEach(sectionAttribute -> {
+            assertEquals("codes", sectionAttribute.getSection());
+        });
+    }
+
 
 }
