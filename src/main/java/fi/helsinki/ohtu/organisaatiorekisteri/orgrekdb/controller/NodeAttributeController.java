@@ -166,4 +166,14 @@ public class NodeAttributeController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/section/{sectiontType}/attributes")
+    public ResponseEntity<List<SectionAttribute>> getSectionAttributes(@PathVariable("sectiontType") String sectionType) {
+        try {
+            List<SectionAttribute> sectionAttributes = attributeDao.getSectionAttributesBySection(sectionType);
+            return new ResponseEntity<>(sectionAttributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
