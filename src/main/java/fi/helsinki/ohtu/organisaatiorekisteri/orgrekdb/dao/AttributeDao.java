@@ -32,9 +32,12 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         setDataSource(dataSource);
     }
 
-    private List<Attribute> getAttributeList(String nodeId, String sql) {
+    private List<Attribute> getAttributeList(String nodeId, String sql, List<String> attributeList) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("node_id", nodeId);
+        if (attributeList != null) {
+            params.addValue("attributes", attributeList);
+        }
         List<Attribute> attributes = getNamedParameterJdbcTemplate()
                 .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
@@ -42,12 +45,12 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
 
     public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
         String sql = ReadSqlFiles.sqlString("nameAttributesByNodeId.sql");
-        return getAttributeList(nodeId, sql);
+        return getAttributeList(nodeId, sql, null);
     }
 
     public List<Attribute> getTypeAttributesByNodeId(String nodeId) throws IOException {
         String sql = ReadSqlFiles.sqlString("typeAttributesByNodeId.sql");
-        return getAttributeList(nodeId, sql);
+        return getAttributeList(nodeId, sql, null);
     }
 
     public List<SectionAttribute> getCodes() throws IOException {
@@ -61,12 +64,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         List<String> codeAttributeList = new ArrayList<>();
         sectionCodeAttributes.stream().forEach(sectionCodeAttribute -> codeAttributeList.add(sectionCodeAttribute.getAttr()));
         String sql = ReadSqlFiles.sqlString("codeAttributesByNodeId.sql");
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("node_id", nodeId);
-        params.addValue("codes", codeAttributeList);
-        List<Attribute> attributes = getNamedParameterJdbcTemplate()
-                .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
-        return attributes;
+        return getAttributeList(nodeId, sql, codeAttributeList);
     }
 
     public Attribute insertAttribute(Attribute attribute) throws IOException {
