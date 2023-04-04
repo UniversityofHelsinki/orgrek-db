@@ -8,6 +8,14 @@ public class SectionAttribute {
     private Date startDate;
     private Date endDate;
 
+    public SectionAttribute(int id, String section, String attr, Date startDate, Date endDate) {
+        this.id = id;
+        this.section = section;
+        this.attr = attr;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public int getId() {
         return id;
     }

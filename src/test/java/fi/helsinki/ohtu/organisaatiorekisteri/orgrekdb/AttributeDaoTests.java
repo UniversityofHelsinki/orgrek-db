@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -107,28 +108,44 @@ public class AttributeDaoTests {
         Attribute codeAttributeToBeAdded = new Attribute("5283", 888, "tutkimus_tunnus", "TST", null, null);
         attributeList.add(codeAttributeToBeAdded);
 
-        assertEquals(0, attributeDao.getCodeAttributesByNodeId("5283").size());
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
+        sectionAttributeList.add(sectionAttribute);
+
+        assertEquals(0, attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList).size());
         attributeDao.addAttributes(attributeList);
-        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283").size());
+        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList).size());
     }
+
 
     @Test
     @Order(8)
     public void testUpdateCodeAttributes() throws IOException {
-        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283").size());
-        List<Attribute> attributeList = attributeDao.getCodeAttributesByNodeId("5283");
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
+        sectionAttributeList.add(sectionAttribute);
+        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList).size());
+        List<Attribute> attributeList = attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList);
         attributeList.get(0).setValue("TT-TST");
         attributeDao.updateAttributes(attributeList);
-        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283").size());
-        assertEquals("TT-TST", attributeDao.getCodeAttributesByNodeId("5283").get(0).getValue());
+        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList).size());
+        assertEquals("TT-TST", attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList).get(0).getValue());
     }
+
+
 
     @Test
     @Order(9)
     public void testDeleteCodeAttributes() throws IOException {
-        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283").size());
-        List<Attribute> attributeList = attributeDao.getCodeAttributesByNodeId("5283");
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
+        sectionAttributeList.add(sectionAttribute);
+
+        assertEquals(1, attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList).size());
+        List<Attribute> attributeList = attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList);
         attributeDao.deleteAttributes(attributeList);
-        assertEquals(0, attributeDao.getCodeAttributesByNodeId("5283").size());
+        assertEquals(0, attributeDao.getCodeAttributesByNodeId("5283", sectionAttributeList).size());
     }
+
+
 }

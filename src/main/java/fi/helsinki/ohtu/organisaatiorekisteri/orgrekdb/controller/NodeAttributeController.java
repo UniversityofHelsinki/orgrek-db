@@ -160,7 +160,6 @@ public class NodeAttributeController {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
             List<SectionAttribute> sectionCodeAttributes = attributeDao.getCodes();
-            System.out.println(sectionCodeAttributes);
             List<Attribute> nodeCodeAttributes = attributeDao.getCodeAttributesByNodeId(node.getId(), sectionCodeAttributes);
             return new ResponseEntity<>(nodeCodeAttributes, HttpStatus.OK);
         } catch (IOException e) {
