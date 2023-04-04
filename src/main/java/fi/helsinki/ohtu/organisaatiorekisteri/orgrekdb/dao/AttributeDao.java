@@ -1,19 +1,20 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -49,9 +50,23 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return getAttributeList(nodeId, sql);
     }
 
-    public List<Attribute> getCodeAttributesByNodeId(String nodeId) throws IOException {
+    public List<SectionAttribute> getCodes() throws IOException {
+        String sql = ReadSqlFiles.sqlString("sectionCodeAttributes.sql");
+        List<SectionAttribute> sectionCodeAttributes = getNamedParameterJdbcTemplate()
+                .query(sql, BeanPropertyRowMapper.newInstance(SectionAttribute.class));
+        return sectionCodeAttributes;
+    }
+
+    public List<Attribute> getCodeAttributesByNodeId(String nodeId, List<SectionAttribute> sectionCodeAttributes) throws IOException {
+        List<String> codeAttributeList = new ArrayList<>();
+        sectionCodeAttributes.stream().forEach(sectionCodeAttribute -> codeAttributeList.add(sectionCodeAttribute.getAttr()));
         String sql = ReadSqlFiles.sqlString("codeAttributesByNodeId.sql");
-        return getAttributeList(nodeId, sql);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("node_id", nodeId);
+        params.addValue("codes", codeAttributeList);
+        List<Attribute> attributes = getNamedParameterJdbcTemplate()
+                .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return attributes;
     }
 
     public Attribute insertAttribute(Attribute attribute) throws IOException {
