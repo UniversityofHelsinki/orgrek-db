@@ -150,7 +150,7 @@ public class AttributeDaoTests {
     @Test
     @Order(10)
     public void testGetCodeAttributes() throws IOException {
-        List<SectionAttribute> sectionCodeAttributes = attributeDao.getCodes();
+        List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionCodeAttributes();
         assertEquals(10, sectionCodeAttributes.size());
         sectionCodeAttributes.stream().forEach(sectionAttribute -> {
             assertEquals("codes", sectionAttribute.getSection());
