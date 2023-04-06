@@ -42,4 +42,6 @@ public class Constants {
     public static final String MINER = "mainari_tunnus";
     public static final String ACCOUNTING = "laskutus_tunnus";
 
+    public static final String CODE_SECTION = "codes";
+
 }
