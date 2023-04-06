@@ -4,7 +4,9 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.NodeAttributeService;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -158,8 +160,19 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeCodeAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<Attribute> nodeCodeAttributes = attributeDao.getCodeAttributesByNodeId(node.getId());
+            List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionAttributesBySection(Constants.CODE_SECTION);
+            List<Attribute> nodeCodeAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionCodeAttributes);
             return new ResponseEntity<>(nodeCodeAttributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/section/{sectiontType}/attributes")
+    public ResponseEntity<List<SectionAttribute>> getSectionAttributes(@PathVariable("sectiontType") String sectionType) {
+        try {
+            List<SectionAttribute> sectionAttributes = attributeDao.getSectionAttributesBySection(sectionType);
+            return new ResponseEntity<>(sectionAttributes, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

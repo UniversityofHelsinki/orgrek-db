@@ -1,19 +1,20 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -31,9 +32,12 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         setDataSource(dataSource);
     }
 
-    private List<Attribute> getAttributeList(String nodeId, String sql) {
+    private List<Attribute> getAttributeList(String nodeId, String sql, List<String> attributeList) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("node_id", nodeId);
+        if (attributeList != null) {
+            params.addValue("attributes", attributeList);
+        }
         List<Attribute> attributes = getNamedParameterJdbcTemplate()
                 .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
@@ -41,17 +45,19 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
 
     public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
         String sql = ReadSqlFiles.sqlString("nameAttributesByNodeId.sql");
-        return getAttributeList(nodeId, sql);
+        return getAttributeList(nodeId, sql, null);
     }
 
     public List<Attribute> getTypeAttributesByNodeId(String nodeId) throws IOException {
         String sql = ReadSqlFiles.sqlString("typeAttributesByNodeId.sql");
-        return getAttributeList(nodeId, sql);
+        return getAttributeList(nodeId, sql, null);
     }
 
-    public List<Attribute> getCodeAttributesByNodeId(String nodeId) throws IOException {
-        String sql = ReadSqlFiles.sqlString("codeAttributesByNodeId.sql");
-        return getAttributeList(nodeId, sql);
+    public List<Attribute> getSectionAttributesByNodeId(String nodeId, List<SectionAttribute> sectionAttributes) throws IOException {
+        List<String> attributeList = new ArrayList<>();
+        sectionAttributes.stream().forEach(sectionAttribute -> attributeList.add(sectionAttribute.getAttr()));
+        String sql = ReadSqlFiles.sqlString("sectionAttributesByNodeId.sql");
+        return getAttributeList(nodeId, sql, attributeList);
     }
 
     public Attribute insertAttribute(Attribute attribute) throws IOException {
@@ -170,5 +176,14 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         else params.addValue("startDate", df.format(attribute.getStartDate()));
         if(attribute.getEndDate()==null) params.addValue("endDate", "12.12.9999");
         else params.addValue("endDate", df.format(attribute.getEndDate()));
+    }
+
+    public List<SectionAttribute> getSectionAttributesBySection(String sectionType) throws IOException {
+        String sql = ReadSqlFiles.sqlString("sectionAttributes.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("section", sectionType);
+        List<SectionAttribute> sectionAttributes = getNamedParameterJdbcTemplate()
+                .query(sql, params, BeanPropertyRowMapper.newInstance(SectionAttribute.class));
+        return sectionAttributes;
     }
 }
