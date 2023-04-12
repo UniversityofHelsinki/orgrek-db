@@ -43,5 +43,6 @@ public class Constants {
     public static final String ACCOUNTING = "laskutus_tunnus";
 
     public static final String CODE_SECTION = "codes";
+    public static final String NAME_SECTION = "names";
 
 }
