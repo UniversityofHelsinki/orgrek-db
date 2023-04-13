@@ -117,7 +117,8 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeNameAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<Attribute> nodeNameAttributes = attributeDao.getNameAttributesByNodeId(node.getId());
+            List<SectionAttribute> sectionTypeAttributes = attributeDao.getSectionAttributesBySection(Constants.NAME_SECTION);
+            List<Attribute> nodeNameAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionTypeAttributes);
             return new ResponseEntity<>(nodeNameAttributes, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

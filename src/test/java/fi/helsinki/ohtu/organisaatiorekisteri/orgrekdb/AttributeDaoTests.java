@@ -36,46 +36,67 @@ public class AttributeDaoTests {
         attributeList.add(nameEnAttributeToBeAdded);
         attributeList.add(nameSvAttributeToBeAdded);
 
-        assertEquals(0, attributeDao.getNameAttributesByNodeId("5283").size());
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null);
+        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null);
+        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null);
+        sectionAttributeList.add(sectionAttribute_fi);
+        sectionAttributeList.add(sectionAttribute_sv);
+        sectionAttributeList.add(sectionAttribute_en);
+
+        assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
         attributeDao.addAttributes(attributeList);
-        assertEquals(3, attributeDao.getNameAttributesByNodeId("5283").size());
+        assertEquals(3, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
     }
 
     @Test
     @Order(2)
     public void testUpdateNameAttributes() throws IOException {
-        assertEquals(3, attributeDao.getNameAttributesByNodeId("5283").size());
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null);
+        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null);
+        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null);
+        sectionAttributeList.add(sectionAttribute_fi);
+        sectionAttributeList.add(sectionAttribute_sv);
+        sectionAttributeList.add(sectionAttribute_en);
+        assertEquals(3, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
 
-        List<Attribute> attributeList = attributeDao.getNameAttributesByNodeId("5283");
-
+        List<Attribute> attributeList = attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
         attributeList.get(0).setValue("Uusi muokattu nimi");
         attributeList.get(1).setValue("New modified name");
         attributeList.get(2).setValue("Nytt ändrat namn");
-
         attributeDao.updateAttributes(attributeList);
-        assertEquals(3, attributeDao.getNameAttributesByNodeId("5283").size());
-        assertEquals("Uusi muokattu nimi", attributeDao.getNameAttributesByNodeId("5283").get(0).getValue());
-        assertEquals("New modified name", attributeDao.getNameAttributesByNodeId("5283").get(1).getValue());
-        assertEquals("Nytt ändrat namn", attributeDao.getNameAttributesByNodeId("5283").get(2).getValue());
+        assertEquals(3, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        assertEquals("Uusi muokattu nimi", attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).get(0).getValue());
+        assertEquals("New modified name", attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).get(1).getValue());
+        assertEquals("Nytt ändrat namn", attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).get(2).getValue());
     }
 
     @Test
     @Order(3)
     public void testDeleteNameAttributes() throws IOException {
-        assertEquals(3, attributeDao.getNameAttributesByNodeId("5283").size());
-        List<Attribute> attributeList = attributeDao.getNameAttributesByNodeId("5283");
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null);
+        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null);
+        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null);
+        sectionAttributeList.add(sectionAttribute_fi);
+        sectionAttributeList.add(sectionAttribute_sv);
+        sectionAttributeList.add(sectionAttribute_en);
+        assertEquals(3, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+
+        List<Attribute> attributeList =  attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
         attributeList.remove(0);
         attributeDao.deleteAttributes(attributeList);
-        assertEquals(1, attributeDao.getNameAttributesByNodeId("5283").size());
-        assertEquals("Uusi muokattu nimi", attributeDao.getNameAttributesByNodeId("5283").get(0).getValue());
-     }
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        assertEquals("Uusi muokattu nimi", attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).get(0).getValue());
+    }
 
     @Test
     @Order(4)
     public void testAddTypeAttributes() throws IOException {
         List<Attribute> attributeList = new ArrayList<>();
-        Attribute codeAttributeToBeAdded = new Attribute("5283", 888, "type", "koontiyksikko", null, null);
-        attributeList.add(codeAttributeToBeAdded);
+        Attribute typeAttributeToBeAdded = new Attribute("5283", 555, "type", "Uusi nimi", null, null);
+        attributeList.add(typeAttributeToBeAdded);
 
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
         SectionAttribute sectionAttribute = new SectionAttribute(1, "types", "type", null, null);
