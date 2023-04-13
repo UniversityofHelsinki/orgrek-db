@@ -43,6 +43,11 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return attributes;
     }
 
+    public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("nameAttributesByNodeId.sql");
+        return getAttributeList(nodeId, sql, null);
+    }
+
     public List<Attribute> getTypeAttributesByNodeId(String nodeId) throws IOException {
         String sql = ReadSqlFiles.sqlString("typeAttributesByNodeId.sql");
         return getAttributeList(nodeId, sql, null);
