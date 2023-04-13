@@ -44,4 +44,5 @@ public class Constants {
 
     public static final String CODE_SECTION = "codes";
 
+    public static final String OTHER_SECTION = "other_attributes";
 }

@@ -168,6 +168,28 @@ public class NodeAttributeController {
         }
     }
 
+    @PutMapping("/other/attributes")
+    public ResponseEntity<Map<String, List<Attribute>>> updateOtherAttributes(@RequestBody Map<String, List<Attribute>> attributesMap) {
+        try {
+            nodeAttributeService.updateDeleteOrSaveNodeOtherAttributes(attributesMap);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/other/attributes/{id}")
+    public ResponseEntity<List<Attribute>> getNodeOtherAttributes(@PathVariable("id") int nodeUniqueId) {
+        try {
+            Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
+            List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionAttributesBySection(Constants.OTHER_SECTION);
+            List<Attribute> nodeOtherAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionCodeAttributes);
+            return new ResponseEntity<>(nodeOtherAttributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/section/{sectiontType}/attributes")
     public ResponseEntity<List<SectionAttribute>> getSectionAttributes(@PathVariable("sectiontType") String sectionType) {
         try {
