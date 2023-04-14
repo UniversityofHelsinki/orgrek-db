@@ -45,4 +45,9 @@ public class NodeAttributeService {
     public void updateDeleteOrSaveNodeCodeAttributes(Map<String, List<Attribute>> codeAttributesMap) throws IOException {
         addUpdateOrDeleteAttributes(codeAttributesMap);
     }
+
+    @Transactional
+    public void updateDeleteOrSaveNodeOtherAttributes(Map<String, List<Attribute>> codeAttributesMap) throws IOException {
+        addUpdateOrDeleteAttributes(codeAttributesMap);
+    }
 }
