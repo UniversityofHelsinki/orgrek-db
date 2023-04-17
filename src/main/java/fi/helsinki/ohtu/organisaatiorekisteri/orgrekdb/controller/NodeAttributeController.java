@@ -192,8 +192,8 @@ public class NodeAttributeController {
         }
     }
 
-    @GetMapping("/section/{sectiontType}/attributes")
-    public ResponseEntity<List<SectionAttribute>> getSectionAttributes(@PathVariable("sectiontType") String sectionType) {
+    @GetMapping("/section/{sectionType}/attributes")
+    public ResponseEntity<List<SectionAttribute>> getSectionAttributes(@PathVariable("sectionType") String sectionType) {
         try {
             List<SectionAttribute> sectionAttributes = attributeDao.getSectionAttributesBySection(sectionType);
             return new ResponseEntity<>(sectionAttributes, HttpStatus.OK);
