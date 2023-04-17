@@ -179,7 +179,6 @@ public class AttributeDaoTests {
         attributeDao.deleteAttributes(attributeList);
         assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
     }
-
     @Test
     @Order(10)
     public void testGetCodeAttributes() throws IOException {
@@ -190,5 +189,46 @@ public class AttributeDaoTests {
         });
     }
 
+    @Test
+    @Order(7)
+    public void testAddOtherAttributes() throws IOException {
+        List<Attribute> attributeList = new ArrayList<>();
+        Attribute codeAttributeToBeAdded = new Attribute("5283", 888, "iam-johtoryhma", "hy-ypa-talous", null, null);
+        attributeList.add(codeAttributeToBeAdded);
 
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null);
+        sectionAttributeList.add(sectionAttribute);
+
+        assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        attributeDao.addAttributes(attributeList);
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+    }
+
+    @Test
+    @Order(8)
+    public void testUpdateOtherAttributes() throws IOException {
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null);
+        sectionAttributeList.add(sectionAttribute);
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        List<Attribute> attributeList = attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
+        attributeList.get(0).setValue("hy-mmtdk-mikro");
+        attributeDao.updateAttributes(attributeList);
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        assertEquals("hy-mmtdk-mikro", attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).get(0).getValue());
+    }
+
+    @Test
+    @Order(9)
+    public void testDeleteOtherAttributes() throws IOException {
+        List<SectionAttribute> sectionAttributeList = new ArrayList<>();
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null);
+        sectionAttributeList.add(sectionAttribute);
+
+        assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+        List<Attribute> attributeList = attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
+        attributeDao.deleteAttributes(attributeList);
+        assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+    }
 }
