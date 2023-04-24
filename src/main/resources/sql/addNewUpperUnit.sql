@@ -1,1 +1,1 @@
-INSERT INTO EDGE(ID, PARENT_NODE_ID, CHILD_NODE_ID, START_DATE, END_DATE, HIERARCHY) VALUES (:id, :parentNodeId, :childNodeId, :startDate, :endDate, :hierarchy)
+INSERT INTO EDGE(ID, PARENT_NODE_ID, CHILD_NODE_ID, START_DATE, END_DATE, HIERARCHY) VALUES (:id, :parent_node_id, :child_node_id, TO_DATE(:start_date, 'DD.MM.YYYY'), TO_DATE(:end_date, 'DD.MM.YYYY'), :hierarchy)
