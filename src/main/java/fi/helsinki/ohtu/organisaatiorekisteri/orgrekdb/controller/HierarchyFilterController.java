@@ -76,10 +76,14 @@ public class HierarchyFilterController {
         allHierarchies.remove("history");
         return hierarchies.containsAll(allHierarchies);
     }
-    @RequestMapping(method = GET, value = "/{selectedHierarchies}/attributes/keys")
-    public List<String> getAttributeKeys(@PathVariable("selectedHierarchies") String selectedHierarchies) throws IOException {
+    @RequestMapping(method = GET, value = "/{selectedHierarchies}/{sections}/attributes/keys")
+    public List<String> getAttributeKeys(
+            @PathVariable("selectedHierarchies") String selectedHierarchies,
+            @PathVariable("sections") String rawSections
+    ) throws IOException {
         List<String> hierarchies = Arrays.asList(selectedHierarchies.split(","));
-        List<String> attributeKeys = hierarchyFilterDao.getAttributeKeys(hierarchies);
+        List<String> sections = List.of(rawSections.split(","));
+        List<String> attributeKeys = hierarchyFilterDao.getAttributeKeys(hierarchies, sections);
         if (inputContainsAllHierarchies(hierarchies)) {
             attributeKeys.add(Constants.MINER);
             attributeKeys.add(Constants.ACCOUNTING);
