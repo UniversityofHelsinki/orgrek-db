@@ -110,10 +110,11 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         return result;
     }
 
-    public List<String> getAttributeKeys(List<String> hierarchies) throws IOException {
+    public List<String> getAttributeKeys(List<String> hierarchies, List<String> sections) throws IOException {
         String sql = ReadSqlFiles.sqlString("attributeKeys.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("hierarchies", hierarchies);
+        params.addValue("sections", sections);
         return getNamedParameterJdbcTemplate().queryForList(sql, params, String.class);
     }
 }
