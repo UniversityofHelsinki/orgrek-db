@@ -4,6 +4,8 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -34,9 +36,14 @@ public class NodeController {
     }
 
     @PutMapping("/properties/{id}")
-    public Node updateNodeProperties(@PathVariable("id") int nodeId, @RequestBody Node node) throws IOException {
-        orgUnitDao.updateNodeProperties(node);
-        return orgUnitDao.getNodeByUniqueId(nodeId);
+    public ResponseEntity<Node> updateNodeProperties(@PathVariable("id") int uniqueId, @RequestBody Node node) throws IOException {
+        try {
+            orgUnitDao.updateNodeProperties(node);
+            Node foundNode = orgUnitDao.getNodeByUniqueId(uniqueId);
+            return new ResponseEntity<>(foundNode, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
