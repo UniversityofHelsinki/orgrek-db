@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class OrgUnitDaoTest {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.1.2021");
-        List<Attribute> attributeList =  orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
+        List<Attribute> attributeList = orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
         assertEquals(10, attributeList.size());
         assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_fi") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_FI)));
         assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_sv") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_SV)));
@@ -46,7 +47,7 @@ public class OrgUnitDaoTest {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.1.2018");
-        List<Attribute> attributeList =  orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
+        List<Attribute> attributeList = orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
         assertEquals(16, attributeList.size());
         assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_fi") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_FI)));
         assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_sv") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_SV)));
@@ -58,7 +59,7 @@ public class OrgUnitDaoTest {
         Node node = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
         assertEquals(ConstantsTest.ROOT_UNIT_NODE_ID, node.getId());
         Date dateObj = DateUtil.parseDate("1.8.2018");
-        List<Attribute> attributeList =  orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
+        List<Attribute> attributeList = orgUnitDao.getAttributeListByDate(node.getId(), dateObj);
         assertEquals(14, attributeList.size());
         assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_fi") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_FI)));
         assertTrue(attributeList.stream().anyMatch(a -> a.getKey().equals("name_sv") && a.getValue().equals(ConstantsTest.ROOT_UNIT_NAME_SV)));
@@ -133,7 +134,7 @@ public class OrgUnitDaoTest {
         assertEquals("6777", children.get(1).getId());
 
         children = orgUnitDao.getCurrentChildrenByParentNodeId(ConstantsTest.ROOT_UNIT_NODE_ID, "01.01.2015");
-        assertEquals(5 , children.size());
+        assertEquals(5, children.size());
         assertEquals("3201", children.get(0).getId());
         assertEquals("3288", children.get(1).getId());
         assertEquals("3459", children.get(2).getId());
@@ -279,6 +280,7 @@ public class OrgUnitDaoTest {
         assertEquals(steeringGroups.size(), 1);
         assertTrue(steeringGroups.get("19063").stream().map(SteeringGroup::getIamGroup).collect(Collectors.toList()).contains("hy-humtdk-spt-jory"));
     }
+
     @Test
     public void testSteeringGroupHasNamesInThreeLanguages() throws IOException {
         Map<String, List<SteeringGroup>> steeringGroups = orgUnitDao.getSteeringGroups();
@@ -298,9 +300,36 @@ public class OrgUnitDaoTest {
     @Test
     public void testDegreeProgrammeHasNamesInThreeLanguages() throws IOException {
         List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
-        assertEquals("Master's Programme in International Business Law", programmes.get(0).getProgrammeNameEn() );
+        assertEquals("Master's Programme in International Business Law", programmes.get(0).getProgrammeNameEn());
         assertEquals("Magisterprogramme", programmes.get(0).getProgrammeNameSv());
         assertEquals("Kansainvalisen liikejuridiikan maisteriohjelma", programmes.get(0).getProgrammeNameFi());
     }
 
+    @Test
+    public void testUpdateNodePropertiesShouldUpdateNodeDates() throws IOException {
+        Node rootNode = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
+        assertEquals(null, rootNode.getStartDate());
+        assertEquals(null, rootNode.getEndDate());
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.MONTH, 1);
+        c.set(Calendar.DATE, 15);
+        c.set(Calendar.YEAR, 2022);
+        Date startDate = c.getTime();
+
+        c.set(Calendar.MONTH, 1);
+        c.set(Calendar.DATE, 5);
+        c.set(Calendar.YEAR, 2022);
+        Date endDate = c.getTime();
+
+        rootNode.setStartDate(startDate);
+        rootNode.setEndDate(endDate);
+
+        orgUnitDao.updateNodeProperties(rootNode);
+
+        Node updatedRootNode = orgUnitDao.getNodeByUniqueId(ConstantsTest.ROOT_UNIT_UNIQUE_ID);
+        assertEquals(startDate, updatedRootNode.getStartDate());
+        assertEquals(endDate, updatedRootNode.getEndDate());
+
+    }
 }
