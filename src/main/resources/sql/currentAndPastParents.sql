@@ -7,6 +7,7 @@ WITH LANGUAGES(LANGUAGE) as (
 ) SELECT N.ID, N.UNIQUE_ID,
        N.START_DATE, N.END_DATE,
        E.HIERARCHY,
+       E.ID AS EDGE_ID,
        E.START_DATE edge_start_date, E.END_DATE edge_end_date,
        COALESCE(FUTURE.NAME, PAST.NAME, CURR.NAME, N.NAME) as full_name, LANGUAGES.LANGUAGE as language
 FROM EDGE E
