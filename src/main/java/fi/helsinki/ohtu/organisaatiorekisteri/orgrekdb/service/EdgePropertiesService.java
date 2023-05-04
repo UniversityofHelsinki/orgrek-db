@@ -1,13 +1,18 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,23 +20,46 @@ import java.util.Map;
 public class EdgePropertiesService {
     @Autowired
     private EdgeDao edgeDao;
+    @Autowired
+    public OrgUnitDao orgUnitDao;
 
-    private void addUpdateOrDeleteUpperUnit(Map<String, List<EdgeWrapper>> parentUnitPropertiesMap) throws IOException {
-        for (Map.Entry<String, List<EdgeWrapper>> parentUnitListEntry : parentUnitPropertiesMap.entrySet()) {
-            if (parentUnitListEntry.getKey().equals(Constants.NEW_ATTRIBUTES) && !parentUnitListEntry.getValue().isEmpty()) {
-                edgeDao.addNewUpperUnits(parentUnitListEntry.getValue());
-            }
-            if (parentUnitListEntry.getKey().equals(Constants.UPDATED_ATTRIBUTES) && !parentUnitListEntry.getValue().isEmpty()) {
-                edgeDao.updateUpperUnits(parentUnitListEntry.getValue());
-            }
-            if (parentUnitListEntry.getKey().equals(Constants.DELETED_ATTRIBUTES) && !parentUnitListEntry.getValue().isEmpty()) {
-                edgeDao.deleteUpperUnits(parentUnitListEntry.getValue());
-            }
+    private int nodeByUniqueId(int uniqueId) throws IOException{
+        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return Integer.parseInt(node.getId());
+    }
+
+    private void extracted(List<EdgeWrapper> edgeWrapperList, List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList) throws IOException {
+        for (EdgeWithChildUniqueId edgeChild : edgeWithChildUniqueIdList) {
+            int childNodeId = nodeByUniqueId(edgeChild.getChildUniqueId());
+            edgeChild.setChildUniqueId(childNodeId); //using field for childnodeId.
+            edgeWrapperList.add(new EdgeWrapper(edgeChild));
+        }
+    }
+
+    private void addUpdateOrDeleteUpperUnit(Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) throws IOException {
+
+        if (edgeWithChildUniqueIdMap.containsKey(Constants.NEW_ATTRIBUTES) && !edgeWithChildUniqueIdMap.get(Constants.NEW_ATTRIBUTES).isEmpty()) {
+            List<EdgeWrapper> edgeWrapperList = new ArrayList<>();
+            List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList = edgeWithChildUniqueIdMap.get(Constants.NEW_ATTRIBUTES);
+            extracted(edgeWrapperList, edgeWithChildUniqueIdList);
+            edgeDao.addNewUpperUnits(edgeWrapperList);
+        }
+        if (edgeWithChildUniqueIdMap.containsKey(Constants.UPDATED_ATTRIBUTES) && !edgeWithChildUniqueIdMap.get(Constants.UPDATED_ATTRIBUTES).isEmpty()) {
+            List<EdgeWrapper> edgeWrapperList = new ArrayList<>();
+            List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList = edgeWithChildUniqueIdMap.get(Constants.UPDATED_ATTRIBUTES);
+            extracted(edgeWrapperList, edgeWithChildUniqueIdList);
+            edgeDao.updateUpperUnits(edgeWrapperList);
+        }
+        if (edgeWithChildUniqueIdMap.containsKey(Constants.DELETED_ATTRIBUTES) && !edgeWithChildUniqueIdMap.get(Constants.DELETED_ATTRIBUTES).isEmpty()) {
+            List<EdgeWrapper> edgeWrapperList = new ArrayList<>();
+            List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList = edgeWithChildUniqueIdMap.get(Constants.DELETED_ATTRIBUTES);
+            extracted(edgeWrapperList, edgeWithChildUniqueIdList);
+            edgeDao.deleteUpperUnits(edgeWrapperList);
         }
     }
 
     @Transactional
-    public void updateDeleteOrSaveUpperUnit(Map<String, List<EdgeWrapper>> parentUnitPropertiesMap) throws IOException {
-        addUpdateOrDeleteUpperUnit(parentUnitPropertiesMap);
+    public void updateDeleteOrSaveUpperUnit(Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) throws IOException {
+        addUpdateOrDeleteUpperUnit(edgeWithChildUniqueIdMap);
     }
 }
