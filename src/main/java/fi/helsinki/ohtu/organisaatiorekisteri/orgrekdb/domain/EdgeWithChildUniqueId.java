@@ -2,21 +2,24 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
 import java.util.Date;
 
-public class EdgeWrapper {
+public class EdgeWithChildUniqueId {
+
     private Integer id;
     private String parentNodeId;
-    private String childNodeId;
+    private int childUniqueId;
     private Date startDate;
     private Date endDate;
     private String hierarchy;
-    public EdgeWrapper(EdgeWithChildUniqueId input) {
-        this.id = input.getId();
-        this.parentNodeId = input.getParentNodeId();
-        this.childNodeId = String.valueOf(input.getChildUniqueId());
-        this.startDate = input.getStartDate();
-        this.endDate = input.getEndDate();
-        this.hierarchy = input.getHierarchy();
+
+    public EdgeWithChildUniqueId(Integer id, String parentNodeId, int childUniqueId, Date startDate, Date endDate, String hierarchy) {
+        this.id = id;
+        this.parentNodeId = parentNodeId;
+        this.childUniqueId = childUniqueId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.hierarchy = hierarchy;
     }
+
     public Integer getId() {
         return id;
     }
@@ -33,12 +36,12 @@ public class EdgeWrapper {
         this.parentNodeId = parentNodeId;
     }
 
-    public String getChildNodeId() {
-        return childNodeId;
+    public int getChildUniqueId() {
+        return childUniqueId;
     }
 
-    public void setChildNodeId(String childNodeId) {
-        this.childNodeId = childNodeId;
+    public void setChildUniqueId(int childUniqueId) {
+        this.childUniqueId = childUniqueId;
     }
 
     public Date getStartDate() {
@@ -64,4 +67,5 @@ public class EdgeWrapper {
     public void setHierarchy(String hierarchy) {
         this.hierarchy = hierarchy;
     }
+
 }
