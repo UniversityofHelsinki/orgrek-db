@@ -1,4 +1,5 @@
 UPDATE EDGE
-SET START_DATE= :startDate, END_DATE= :endDate
-WHERE PARENT_NODE_ID= :parentNodeId AND CHILD_NODE_ID =:childNodeId
-AND HIERARCHY= :hierarchy
+SET ID =:id, START_DATE = TO_DATE(:start_date, 'DD.MM.YYYY'), END_DATE = TO_DATE(:end_date, 'DD.MM.YYYY'), HIERARCHY= :hierarchy
+WHERE PARENT_NODE_ID= :parent_node_id AND CHILD_NODE_ID= :child_node_id AND ID =:id
+
+

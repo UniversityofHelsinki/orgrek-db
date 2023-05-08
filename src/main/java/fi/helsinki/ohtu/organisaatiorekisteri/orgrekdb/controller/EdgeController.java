@@ -1,7 +1,10 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgePropertiesService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgeService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ public class EdgeController {
 
     @Autowired
     private EdgeDao edgeDao;
+    @Autowired
+    private EdgePropertiesService edgePropertiesService;
 
     @Autowired
     private EdgeService edgeService;
@@ -30,6 +35,16 @@ public class EdgeController {
     @RequestMapping("/types")
     public List<String> getHierarchyTypes() throws IOException {
         return edgeDao.getHierarchyTypes();
+    }
+
+    @PutMapping("/parents")
+    public ResponseEntity<Map<String, List<EdgeWrapper>>> updateParents(@RequestBody Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) {
+        try {
+            edgePropertiesService.updateDeleteOrSaveUpperUnit(edgeWithChildUniqueIdMap);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/")
