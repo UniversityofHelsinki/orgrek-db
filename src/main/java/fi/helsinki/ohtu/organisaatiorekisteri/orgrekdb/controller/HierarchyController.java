@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -169,6 +170,24 @@ public class HierarchyController {
     public List<EdgeWrapper> updateParentUnitProperties(@RequestBody List<EdgeWrapper> parentUnitProperties) throws IOException {
         int[] i = edgeDao.updateParentUnitProperties(parentUnitProperties);
         return parentUnitProperties;
+    }
+
+    @PutMapping("/edge")
+    public List<EdgeWrapper> updateEdges(@RequestBody List<EdgeWrapper> edges) throws IOException {
+        int[] i = edgeDao.updateEdges(edges);
+        return edges;
+    }
+
+    @PostMapping("/edge")
+    public List<EdgeWrapper> insertEdges(@RequestBody List<EdgeWrapper> edges) throws IOException {
+        int[] i = edgeDao.insertEdges(edges);
+        return edges;
+    }
+
+    @DeleteMapping("/edge")
+    public List<EdgeWrapper> deleteEdges(@RequestBody List<EdgeWrapper> edges) throws IOException {
+        int i = edgeDao.deleteEdges(edges);
+        return edges;
     }
 
 }
