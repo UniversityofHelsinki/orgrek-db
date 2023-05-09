@@ -39,6 +39,9 @@ public class Constants {
     public static final String UPDATED_ATTRIBUTES = "updatedAttributes";
     public static final String DELETED_ATTRIBUTES = "deletedAttributes";
 
+    public static final String NEW_EDGES = "NEW";
+    public static final String UPDATED_EDGES = "UPDATED";
+    public static final String DELETED_EDGES = "DELETED";
     public static final String MINER = "mainari_tunnus";
     public static final String ACCOUNTING = "laskutus_tunnus";
 
