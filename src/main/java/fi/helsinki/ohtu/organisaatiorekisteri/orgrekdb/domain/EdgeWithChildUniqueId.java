@@ -5,15 +5,15 @@ import java.util.Date;
 public class EdgeWithChildUniqueId {
 
     private Integer id;
-    private String parentNodeId;
+    private int parentUniqueId;
     private int childUniqueId;
     private Date startDate;
     private Date endDate;
     private String hierarchy;
 
-    public EdgeWithChildUniqueId(Integer id, String parentNodeId, int childUniqueId, Date startDate, Date endDate, String hierarchy) {
+    public EdgeWithChildUniqueId(Integer id, int parentUniqueId, int childUniqueId, Date startDate, Date endDate, String hierarchy) {
         this.id = id;
-        this.parentNodeId = parentNodeId;
+        this.parentUniqueId = parentUniqueId;
         this.childUniqueId = childUniqueId;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -28,12 +28,12 @@ public class EdgeWithChildUniqueId {
         this.id = id;
     }
 
-    public String getParentNodeId() {
-        return parentNodeId;
+    public int getParentUniqueId() {
+        return parentUniqueId;
     }
 
-    public void setParentNodeId(String parentNodeId) {
-        this.parentNodeId = parentNodeId;
+    public void setParentUniqueId(int parentUniqueId) {
+        this.parentUniqueId = parentUniqueId;
     }
 
     public int getChildUniqueId() {
