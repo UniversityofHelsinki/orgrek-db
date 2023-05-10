@@ -23,16 +23,19 @@ public class EdgePropertiesService {
     @Autowired
     public OrgUnitDao orgUnitDao;
 
-    private int nodeByUniqueId(int uniqueId) throws IOException{
+    private String nodeByUniqueId(int uniqueId) throws IOException{
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return Integer.parseInt(node.getId());
+        return node.getId();
     }
 
     private void extracted(List<EdgeWrapper> edgeWrapperList, List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList) throws IOException {
         for (EdgeWithChildUniqueId edgeChild : edgeWithChildUniqueIdList) {
-            int childNodeId = nodeByUniqueId(edgeChild.getChildUniqueId());
-            edgeChild.setChildUniqueId(childNodeId); //using field for childnodeId.
-            edgeWrapperList.add(new EdgeWrapper(edgeChild));
+            String childNodeId = nodeByUniqueId(edgeChild.getChildUniqueId());
+            String parentNodeId = nodeByUniqueId(edgeChild.getParentUniqueId());
+            EdgeWrapper edgeWrapper = new EdgeWrapper(edgeChild);
+            edgeWrapper.setChildNodeId(childNodeId);
+            edgeWrapper.setParentNodeId(parentNodeId);
+            edgeWrapperList.add(edgeWrapper);
         }
     }
 
