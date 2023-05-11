@@ -84,10 +84,21 @@ public class HierarchyFilterController {
         List<String> hierarchies = Arrays.asList(selectedHierarchies.split(","));
         List<String> sections = List.of(rawSections.split(","));
         List<String> attributeKeys = hierarchyFilterDao.getAttributeKeys(hierarchies, sections);
+        if (sections.contains(Constants.CODE_SECTION)) {
+            attributeKeys.add(Constants.PARENT_ABBREVIATION);
+            attributeKeys.add(Constants.ABBREVIATION);
+        }
         if (inputContainsAllHierarchies(hierarchies)) {
             attributeKeys.add(Constants.MINER);
             attributeKeys.add(Constants.ACCOUNTING);
         }
         return attributeKeys;
+    }
+
+
+    @RequestMapping(method = GET, value = "/hierarchyFiltersByKey/{keys}")
+    public List<HierarchyFilter> getHierarchyFiltersByKey(@PathVariable("keys") String keys) throws IOException {
+        List<String> keysList = Arrays.asList(keys.split(","));
+        return  hierarchyFilterDao.getHierarchyFiltersByKeys(keysList);
     }
 }
