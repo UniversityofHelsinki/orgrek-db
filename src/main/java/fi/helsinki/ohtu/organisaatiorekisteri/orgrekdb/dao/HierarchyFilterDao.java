@@ -117,5 +117,13 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         params.addValue("sections", sections);
         return getNamedParameterJdbcTemplate().queryForList(sql, params, String.class);
     }
+
+    public List<HierarchyFilter> getHierarchyFiltersByKeys(List<String> keys) throws IOException {
+        String sql = ReadSqlFiles.sqlString("hierarchyFiltersByKeys.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("keys", keys);
+        List<HierarchyFilter> hierarchyFiltersByKey = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(HierarchyFilter.class));
+        return hierarchyFiltersByKey;
+    }
 }
 
