@@ -231,6 +231,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return groups;
     }
 
+    public List<SteeringGroup1> getSteeringGroups1() throws IOException {
+        String sql = ReadSqlFiles.sqlString("steeringGroups1.sql");
+
+        List<SteeringGroup1> queryResults = getNamedParameterJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SteeringGroup1.class));
+        return queryResults;
+    }
+
 
     public List<DegreeProgrammeDTO> getDegreeProgrammesAndAttributes() throws IOException {
         String sql = ReadSqlFiles.sqlString("degreeProgrammesAndAttributes.sql");

@@ -5,6 +5,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.DegreeProgrammeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup1;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,11 @@ public class SteeringGroupController {
             }
         });
         return dtos;
+    }
+
+    @RequestMapping(method = GET, value="/steeringGroups1")
+    public List<SteeringGroup1> getSteeringGroups1() throws IOException {
+        return orgUnitDao.getSteeringGroups1();
     }
 
     @RequestMapping("/degreeTitles")
