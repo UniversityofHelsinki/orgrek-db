@@ -18,8 +18,6 @@ import java.time.Instant;
 import java.util.*;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
-import static fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil.extractSteeringProgrammes;
-
 @Repository(value = "orgUnitDao")
 public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
@@ -219,22 +217,10 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return attributes;
     }
 
-    public Map<String, List<SteeringGroup>> getSteeringGroups() throws IOException {
+    public List<SteeringGroup> getSteeringGroups() throws IOException {
         String sql = ReadSqlFiles.sqlString("steeringGroups.sql");
 
-        Timestamp ts = Timestamp.from(Instant.now());
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("today", ts);
-
-        List<Map<String, Object>> rows = getNamedParameterJdbcTemplate().queryForList(sql, params);
-        Map<String, List<SteeringGroup>> groups = extractSteeringProgrammes(rows);
-        return groups;
-    }
-
-    public List<SteeringGroup1> getSteeringGroups1() throws IOException {
-        String sql = ReadSqlFiles.sqlString("steeringGroups1.sql");
-
-        List<SteeringGroup1> queryResults = getNamedParameterJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SteeringGroup1.class));
+        List<SteeringGroup> queryResults = getNamedParameterJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SteeringGroup.class));
         return queryResults;
     }
 
