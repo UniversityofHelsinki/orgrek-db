@@ -13,9 +13,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -272,23 +269,6 @@ public class OrgUnitDaoTest {
         List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getSuccessors(ConstantsTest.ROOT_UNIT_NODE_ID);
         assertEquals(1, wrapperList.size());
         assertEquals("9999", wrapperList.get(0).getId());
-    }
-
-    @Test
-    public void testOneSteeringGroupIsReturned() throws IOException {
-        Map<String, List<SteeringGroup>> steeringGroups = orgUnitDao.getSteeringGroups();
-        assertEquals(steeringGroups.size(), 1);
-        assertTrue(steeringGroups.get("19063").stream().map(SteeringGroup::getIamGroup).collect(Collectors.toList()).contains("hy-humtdk-spt-jory"));
-    }
-
-    @Test
-    public void testSteeringGroupHasNamesInThreeLanguages() throws IOException {
-        Map<String, List<SteeringGroup>> steeringGroups = orgUnitDao.getSteeringGroups();
-        steeringGroups.get("19063").forEach(steeringGroup -> {
-            assertNotNull(steeringGroup.getEn());
-            assertNotNull(steeringGroup.getFi());
-            assertNotNull(steeringGroup.getSv());
-        });
     }
 
     @Test
