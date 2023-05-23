@@ -29,11 +29,15 @@ public class NodeService {
 
     @Transactional
     public NewNodeDTO insertNode(NewNodeDTO newNodeDTO) throws IOException {
+        String parentAbbreviation = attributeDao.getAttributeAbbreviationByNodeId(newNodeDTO.getParentNodeId());
         newNodeDTO = orgUnitDao.insertNode(newNodeDTO);
         List<Attribute> attributeList = new ArrayList<>();
         attributeList.add(addAttribute(newNodeDTO, Constants.NAME_FI_FIELD, newNodeDTO.getNameFi()));
         attributeList.add(addAttribute(newNodeDTO, Constants.NAME_SV_FIELD, newNodeDTO.getNameSv()));
         attributeList.add(addAttribute(newNodeDTO, Constants.NAME_EN_FIELD, newNodeDTO.getNameEn()));
+        if (parentAbbreviation != null && !parentAbbreviation.isEmpty()) {
+            attributeList.add(addAttribute(newNodeDTO, Constants.PARENT_ABBREVIATION, parentAbbreviation));
+        }
         attributeDao.addAttributes(attributeList);
         List<EdgeWrapper> edgeWrappers = getEdgeWrappers(newNodeDTO);
         edgeDao.insertEdges(edgeWrappers);
@@ -42,12 +46,16 @@ public class NodeService {
 
     private static List<EdgeWrapper> getEdgeWrappers(NewNodeDTO newNodeDTO) {
         List<EdgeWrapper> edgeWrappers = new ArrayList<>();
-        EdgeWrapper edgeWrapper = new EdgeWrapper();
-        edgeWrapper.setParentNodeId(newNodeDTO.getParentNodeId());
-        edgeWrapper.setChildNodeId(newNodeDTO.getChildNodeId());
-        edgeWrapper.setStartDate(newNodeDTO.getStartDate());
-        edgeWrapper.setEndDate(newNodeDTO.getEndDate());
-        edgeWrappers.add(edgeWrapper);
+        if (newNodeDTO.getHierarchies() != null && newNodeDTO.getHierarchies().size() > 0)
+            for (String hierarchy : newNodeDTO.getHierarchies()) {
+                EdgeWrapper edgeWrapper = new EdgeWrapper();
+                edgeWrapper.setParentNodeId(newNodeDTO.getParentNodeId());
+                edgeWrapper.setChildNodeId(newNodeDTO.getChildNodeId());
+                edgeWrapper.setStartDate(newNodeDTO.getStartDate());
+                edgeWrapper.setEndDate(newNodeDTO.getEndDate());
+                edgeWrapper.setHierarchy(hierarchy);
+                edgeWrappers.add(edgeWrapper);
+            }
         return edgeWrappers;
     }
 
@@ -56,8 +64,8 @@ public class NodeService {
         attribute.setNodeId(newNodeDTO.getChildNodeId());
         attribute.setValue(value);
         attribute.setKey(key);
-        attribute.setStartDate(new Date());
-        attribute.setEndDate(new Date());
+        attribute.setStartDate(newNodeDTO.getStartDate());
+        attribute.setEndDate(newNodeDTO.getEndDate());
         return attribute;
     }
 
