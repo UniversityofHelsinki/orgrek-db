@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -422,5 +423,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         newNodeDTO.setChildNodeId(String.valueOf(sequence));
         getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(newNodeDTO));
         return newNodeDTO;
+    }
+
+    public void updateFullNameView() {
+        SimpleJdbcCall spCall = new SimpleJdbcCall(getJdbcTemplate());
+        spCall.withProcedureName(Constants.UPDATE_FULL_NAME_VIEW_PROCEDURE_NAME);
+        spCall.execute();
     }
 }

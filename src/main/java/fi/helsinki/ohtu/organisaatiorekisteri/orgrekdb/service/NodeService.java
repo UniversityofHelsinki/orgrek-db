@@ -41,6 +41,7 @@ public class NodeService {
         attributeDao.addAttributes(attributeList);
         List<EdgeWrapper> edgeWrappers = getEdgeWrappers(newNodeDTO);
         edgeDao.insertEdges(edgeWrappers);
+        orgUnitDao.updateFullNameView();
         return newNodeDTO;
     }
 
