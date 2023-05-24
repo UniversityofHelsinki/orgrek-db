@@ -231,4 +231,11 @@ public class AttributeDaoTests {
         attributeDao.deleteAttributes(attributeList);
         assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
     }
+
+    @Test
+    @Order(10)
+    public void testGetAttributeAbbreviation() throws IOException {
+        String abbreviation = attributeDao.getAttributeAbbreviationByNodeId("a1");
+        assertEquals("HY", abbreviation);
+    }
 }

@@ -418,7 +418,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public NewNodeDTO insertNode(NewNodeDTO newNodeDTO) throws IOException{
         String sql = ReadSqlFiles.sqlString("insertNode.sql");
-        String sqlSequence = "select node_seq.nextval from dual";
+        String sqlSequence = "select NODE_SEQ.nextval from dual";
         int sequence = getJdbcTemplate().queryForObject(sqlSequence, Integer.class);
         newNodeDTO.setChildNodeId(String.valueOf(sequence));
         getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(newNodeDTO));
