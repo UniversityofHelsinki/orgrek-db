@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.junit.jupiter.api.MethodOrderer;
@@ -14,6 +15,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -237,5 +240,42 @@ public class AttributeDaoTests {
     public void testGetAttributeAbbreviation() throws IOException {
         String abbreviation = attributeDao.getAttributeAbbreviationByNodeId("a1");
         assertEquals("HY", abbreviation);
+    }
+
+    @Test
+    @Order(11)
+    public void testAddAttributes() throws IOException {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.MONTH, 1);
+        c.set(Calendar.DATE, 15);
+        c.set(Calendar.YEAR, 2022);
+        Date startDate = c.getTime();
+
+
+        List<Attribute> attributeList = new ArrayList<>();
+        NewNodeDTO newNodeDTO = new NewNodeDTO();
+        newNodeDTO.setChildNodeId("5283");
+        newNodeDTO.setStartDate(startDate);
+        newNodeDTO.setNameFi("uusi yksikko");
+        newNodeDTO.setNameSv("ny enhet");
+        newNodeDTO.setNameEn("new unit");
+
+        attributeList.add(addAttribute(newNodeDTO, Constants.NAME_FI_FIELD, newNodeDTO.getNameFi()));
+        attributeList.add(addAttribute(newNodeDTO, Constants.NAME_SV_FIELD, newNodeDTO.getNameSv()));
+        attributeList.add(addAttribute(newNodeDTO, Constants.NAME_EN_FIELD, newNodeDTO.getNameEn()));
+
+        int[]count = attributeDao.addAttributes(attributeList);
+
+        assertEquals(3, count.length);
+    }
+
+    private static Attribute addAttribute(NewNodeDTO newNodeDTO, String key, String value) {
+        Attribute attribute = new Attribute();
+        attribute.setNodeId(newNodeDTO.getChildNodeId());
+        attribute.setValue(value);
+        attribute.setKey(key);
+        attribute.setStartDate(newNodeDTO.getStartDate());
+        attribute.setEndDate(newNodeDTO.getEndDate());
+        return attribute;
     }
 }
