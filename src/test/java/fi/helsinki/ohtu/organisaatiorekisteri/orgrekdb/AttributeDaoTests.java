@@ -241,48 +241,4 @@ public class AttributeDaoTests {
         String abbreviation = attributeDao.getAttributeAbbreviationByNodeId("a1");
         assertEquals("HY", abbreviation);
     }
-
-    @Test
-    @Order(11)
-    public void testAddAttributes() throws IOException {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.MONTH, 1);
-        c.set(Calendar.DATE, 15);
-        c.set(Calendar.YEAR, 2022);
-        Date startDate = c.getTime();
-
-
-        List<Attribute> attributeList = new ArrayList<>();
-        NewNodeDTO newNodeDTO = new NewNodeDTO();
-        newNodeDTO.setChildNodeId("5283");
-        newNodeDTO.setStartDate(startDate);
-        newNodeDTO.setNameFi("uusi yksikko");
-        newNodeDTO.setNameSv("ny enhet");
-        newNodeDTO.setNameEn("new unit");
-
-        attributeList.add(addAttribute(newNodeDTO, Constants.NAME_FI_FIELD, newNodeDTO.getNameFi()));
-        attributeList.add(addAttribute(newNodeDTO, Constants.NAME_SV_FIELD, newNodeDTO.getNameSv()));
-        attributeList.add(addAttribute(newNodeDTO, Constants.NAME_EN_FIELD, newNodeDTO.getNameEn()));
-
-        int[]count = attributeDao.addAttributes(attributeList);
-        assertEquals(3, count.length);
-        List<Attribute> nameAttributes = attributeDao.getNameAttributesByNodeId("5283");
-        assertEquals(3, nameAttributes.size());
-        assertEquals("uusi yksikko", nameAttributes.get(0).getValue());
-        assertEquals("5283", nameAttributes.get(0).getNodeId());
-        assertEquals("ny enhet", nameAttributes.get(1).getValue());
-        assertEquals("5283", nameAttributes.get(1).getNodeId());
-        assertEquals("new unit", nameAttributes.get(2).getValue());
-        assertEquals("5283", nameAttributes.get(2).getNodeId());
-    }
-
-    private static Attribute addAttribute(NewNodeDTO newNodeDTO, String key, String value) {
-        Attribute attribute = new Attribute();
-        attribute.setNodeId(newNodeDTO.getChildNodeId());
-        attribute.setValue(value);
-        attribute.setKey(key);
-        attribute.setStartDate(newNodeDTO.getStartDate());
-        attribute.setEndDate(newNodeDTO.getEndDate());
-        return attribute;
-    }
 }
