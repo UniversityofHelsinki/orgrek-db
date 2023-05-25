@@ -265,8 +265,15 @@ public class AttributeDaoTests {
         attributeList.add(addAttribute(newNodeDTO, Constants.NAME_EN_FIELD, newNodeDTO.getNameEn()));
 
         int[]count = attributeDao.addAttributes(attributeList);
-
         assertEquals(3, count.length);
+        List<Attribute> nameAttributes = attributeDao.getNameAttributesByNodeId("5283");
+        assertEquals(3, nameAttributes.size());
+        assertEquals("uusi yksikko", nameAttributes.get(0).getValue());
+        assertEquals("5283", nameAttributes.get(0).getNodeId());
+        assertEquals("ny enhet", nameAttributes.get(1).getValue());
+        assertEquals("5283", nameAttributes.get(1).getNodeId());
+        assertEquals("new unit", nameAttributes.get(2).getValue());
+        assertEquals("5283", nameAttributes.get(2).getNodeId());
     }
 
     private static Attribute addAttribute(NewNodeDTO newNodeDTO, String key, String value) {
