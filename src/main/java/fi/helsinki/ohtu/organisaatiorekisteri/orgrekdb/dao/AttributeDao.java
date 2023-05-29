@@ -186,13 +186,4 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         if(attribute.getEndDate()==null) params.addValue("endDate", "12.12.9999");
         else params.addValue("endDate", df.format(attribute.getEndDate()));
     }
-
-    public List<SectionAttribute> getSectionAttributesBySection(String sectionType) throws IOException {
-        String sql = ReadSqlFiles.sqlString("sectionAttributes.sql");
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("section", sectionType);
-        List<SectionAttribute> sectionAttributes = getNamedParameterJdbcTemplate()
-                .query(sql, params, BeanPropertyRowMapper.newInstance(SectionAttribute.class));
-        return sectionAttributes;
-    }
 }

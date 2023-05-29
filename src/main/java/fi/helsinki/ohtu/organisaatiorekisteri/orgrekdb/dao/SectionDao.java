@@ -31,4 +31,13 @@ public class SectionDao extends NamedParameterJdbcDaoSupport {
         return sectionAttributes;
     }
 
+    public List<SectionAttribute> getSectionAttributesBySection(String sectionType) throws IOException {
+        String sql = ReadSqlFiles.sqlString("sectionAttributes.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("section", sectionType);
+        List<SectionAttribute> sectionAttributes = getNamedParameterJdbcTemplate()
+                .query(sql, params, BeanPropertyRowMapper.newInstance(SectionAttribute.class));
+        return sectionAttributes;
+    }
+
 }
