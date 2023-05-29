@@ -43,6 +43,15 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return attributes;
     }
 
+    public String getAttributeAbbreviationByNodeId(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("getAbbreviationAttributeByNodeId.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("node_id", nodeId);
+        Attribute abbreviationAttribute = getNamedParameterJdbcTemplate()
+                .queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return abbreviationAttribute.getValue();
+    }
+
     public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
         String sql = ReadSqlFiles.sqlString("nameAttributesByNodeId.sql");
         return getAttributeList(nodeId, sql, null);
