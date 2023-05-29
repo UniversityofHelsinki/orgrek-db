@@ -93,3 +93,6 @@ CREATE SEQUENCE NODE_SEQ
     CACHE 8
     NOCYCLE;
 
+create sequence UNIQUE_ID_SEQ
+    minvalue 100000000
+    nocache

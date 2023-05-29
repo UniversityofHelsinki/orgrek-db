@@ -55,4 +55,6 @@ public class Constants {
     public static final String PARENT_ABBREVIATION = "emo_lyhenne";
 
     public static final String ABBREVIATION = "lyhenne";
+
+    public static final String UPDATE_FULL_NAME_VIEW_PROCEDURE_NAME = "UPDATE_FULL_NAME_TEMP";
 }
