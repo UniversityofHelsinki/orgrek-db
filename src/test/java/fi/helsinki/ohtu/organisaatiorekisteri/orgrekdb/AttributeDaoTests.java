@@ -1,6 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
@@ -27,6 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AttributeDaoTests {
     @Autowired
     private AttributeDao attributeDao;
+
+    @Autowired
+    private SectionDao sectionDao;
 
     @Test
     @Order(1)
@@ -185,7 +189,7 @@ public class AttributeDaoTests {
     @Test
     @Order(10)
     public void testGetCodeAttributes() throws IOException {
-        List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionAttributesBySection(Constants.CODE_SECTION);
+        List<SectionAttribute> sectionCodeAttributes = sectionDao.getSectionAttributesBySection(Constants.CODE_SECTION);
         assertEquals(10, sectionCodeAttributes.size());
         sectionCodeAttributes.stream().forEach(sectionAttribute -> {
             assertEquals("codes", sectionAttribute.getSection());
