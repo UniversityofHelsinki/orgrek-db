@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
@@ -25,6 +26,9 @@ public class NodeAttributeController {
 
     @Autowired
     private AttributeDao attributeDao;
+
+    @Autowired
+    private SectionDao sectionDao;
 
     @Autowired
     private NodeAttributeService nodeAttributeService;
@@ -117,7 +121,7 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeNameAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<SectionAttribute> sectionTypeAttributes = attributeDao.getSectionAttributesBySection(Constants.NAME_SECTION);
+            List<SectionAttribute> sectionTypeAttributes = sectionDao.getSectionAttributesBySection(Constants.NAME_SECTION);
             List<Attribute> nodeNameAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionTypeAttributes);
             return new ResponseEntity<>(nodeNameAttributes, HttpStatus.OK);
         } catch (IOException e) {
@@ -140,7 +144,7 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeTypeAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<SectionAttribute> sectionTypeAttributes = attributeDao.getSectionAttributesBySection(Constants.TYPE_SECTION);
+            List<SectionAttribute> sectionTypeAttributes = sectionDao.getSectionAttributesBySection(Constants.TYPE_SECTION);
             List<Attribute> nodeTypeAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionTypeAttributes);
             return new ResponseEntity<>(nodeTypeAttributes, HttpStatus.OK);
         } catch (IOException e) {
@@ -162,7 +166,7 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeCodeAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionAttributesBySection(Constants.CODE_SECTION);
+            List<SectionAttribute> sectionCodeAttributes = sectionDao.getSectionAttributesBySection(Constants.CODE_SECTION);
             List<Attribute> nodeCodeAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionCodeAttributes);
             return new ResponseEntity<>(nodeCodeAttributes, HttpStatus.OK);
         } catch (IOException e) {
@@ -184,7 +188,7 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeOtherAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionAttributesBySection(Constants.OTHER_SECTION);
+            List<SectionAttribute> sectionCodeAttributes = sectionDao.getSectionAttributesBySection(Constants.OTHER_SECTION);
             List<Attribute> nodeOtherAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionCodeAttributes);
             return new ResponseEntity<>(nodeOtherAttributes, HttpStatus.OK);
         } catch (IOException e) {
@@ -195,7 +199,7 @@ public class NodeAttributeController {
     @GetMapping("/section/{sectionType}/attributes")
     public ResponseEntity<List<SectionAttribute>> getSectionAttributes(@PathVariable("sectionType") String sectionType) {
         try {
-            List<SectionAttribute> sectionAttributes = attributeDao.getSectionAttributesBySection(sectionType);
+            List<SectionAttribute> sectionAttributes = sectionDao.getSectionAttributesBySection(sectionType);
             return new ResponseEntity<>(sectionAttributes, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
