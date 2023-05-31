@@ -6,6 +6,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqu
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgePropertiesService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgeService;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +50,10 @@ public class EdgeController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Map<String, List<EdgeWrapper>>> modifyEdges(@RequestBody Map<String, List<EdgeWrapper>> edges) throws IOException {
+    public ResponseEntity<Map<String, List<EdgeWithChildUniqueId>>> modifyEdges(@RequestBody Map<String, List<EdgeWithChildUniqueId>> edges) throws IOException {
         try {
-            edgeService.modifyEdges(edges);
+            List<EdgeWrapper>edgeWrappers = new ArrayList<>();
+            edgePropertiesService.addUpdateOrDeleteEdge(edges);
             return new ResponseEntity<>(edges, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
