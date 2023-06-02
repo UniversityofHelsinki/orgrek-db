@@ -3,6 +3,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.HierarchyFilterDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OtherAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,13 +89,30 @@ public class HierarchyFilterController {
             attributeKeys.add(Constants.PARENT_ABBREVIATION);
             attributeKeys.add(Constants.ABBREVIATION);
         }
-        if (inputContainsAllHierarchies(hierarchies)) {
+        /*if (sections.contains(Constants.OTHER_SECTION)) {
+            attributeKeys.add(Constants.IAM_HENKILOSTORYHMA);
+            //attributeKeys.add(Constants.IAM_JOHTORYHMA);
+        }*/
+        if (inputContainsAllHierarchies(hierarchies) && !sections.contains(Constants.OTHER_SECTION)) {
             attributeKeys.add(Constants.MINER);
             attributeKeys.add(Constants.ACCOUNTING);
         }
         return attributeKeys;
     }
 
+    @RequestMapping(method = GET, value = "/{selectedHierarchies}/{sections}/{attributes}/attributes/hierarchies")
+    public List<OtherAttribute> getHierarchiesBySections(
+            @PathVariable("selectedHierarchies") String selectedHierarchies,
+            @PathVariable("sections") String rawSections,
+            @PathVariable("attributes") String selectedAttributes
+    ) throws IOException {
+        List<String> hierarchies = Arrays.asList(selectedHierarchies.split(","));
+        List<String> sections = List.of(rawSections.split(","));
+        List<String> attributes = Arrays.asList(selectedAttributes.split(","));
+        List<OtherAttribute> otherAttributes = hierarchyFilterDao.getHierarchiesBySections(attributes, hierarchies, sections);
+
+        return otherAttributes;
+    }
 
     @RequestMapping(method = GET, value = "/hierarchyFiltersByKey/{keys}")
     public List<HierarchyFilter> getHierarchyFiltersByKey(@PathVariable("keys") String keys) throws IOException {
