@@ -48,10 +48,10 @@ public class SectionController {
         }
     }
 
-    @DeleteMapping("/delete")
-    ResponseEntity deleteSectionAttribute(@RequestParam int sectionId) {
+    @DeleteMapping("/{id}/delete")
+    ResponseEntity deleteSectionAttribute(@PathVariable int id) {
         try {
-            int deleteOk = sectionService.deleteSectionAttribute(sectionId);
+            int deleteOk = sectionService.deleteSectionAttribute(id);
             if (deleteOk > 0) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
