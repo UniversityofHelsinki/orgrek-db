@@ -5,10 +5,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +19,16 @@ public class SectionController {
         try {
             List<SectionAttribute> sectionAttributeList = sectionService.getAllSectionAttributes();
             return new ResponseEntity<>(sectionAttributeList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/insert")
+    ResponseEntity<SectionAttribute> insertSectionAttribute(@RequestBody SectionAttribute sectionAttribute) {
+        try {
+            SectionAttribute insertedSectionAttribute = sectionService.insertSectionAttribute(sectionAttribute);
+            return new ResponseEntity<>(insertedSectionAttribute, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

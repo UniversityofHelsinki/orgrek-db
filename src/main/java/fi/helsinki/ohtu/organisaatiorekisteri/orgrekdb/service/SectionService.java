@@ -20,8 +20,11 @@ public class SectionService {
         return sectionAttributeList;
     }
 
-    @Transactional
     public int updateSectionAttribute(SectionAttribute sectionAttribute) throws IOException {
         return sectionDao.updateSectionAttribute(sectionAttribute);
+    }
+
+    public SectionAttribute insertSectionAttribute(SectionAttribute sectionAttribute) throws IOException {
+        return sectionDao.insertSectionAttribute(sectionAttribute);
     }
 }
