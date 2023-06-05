@@ -47,4 +47,18 @@ public class SectionController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/delete")
+    ResponseEntity deleteSectionAttribute(@RequestParam int sectionId) {
+        try {
+            int deleteOk = sectionService.deleteSectionAttribute(sectionId);
+            if (deleteOk > 0) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

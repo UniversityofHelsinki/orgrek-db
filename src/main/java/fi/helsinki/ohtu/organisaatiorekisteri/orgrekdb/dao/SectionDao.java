@@ -56,4 +56,11 @@ public class SectionDao extends NamedParameterJdbcDaoSupport {
         getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(sectionAttribute));
         return sectionAttribute;
     }
+
+    public int deleteSectionAttribute(int sectionId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("deleteSectionAttribute.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("sectionId", sectionId);
+        return getNamedParameterJdbcTemplate().update(sql, params);
+    }
 }
