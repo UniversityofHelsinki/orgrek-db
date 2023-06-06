@@ -62,6 +62,13 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         return hierarchyFilters;
     }
 
+    public List<String> getDistinctHierarchyFilterKeys() throws IOException {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        String sql = ReadSqlFiles.sqlString("distinctHierarchyFilterKeys.sql");
+        List<String> distinctHierarchyFilterKeys = jdbcTemplate.queryForList(sql, String.class);
+        return distinctHierarchyFilterKeys;
+    }
+
     public List<HierarchyFilter> getHierarchyFilters() throws IOException  {
         String sql = ReadSqlFiles.sqlString("hierarchyFilters.sql");
 
