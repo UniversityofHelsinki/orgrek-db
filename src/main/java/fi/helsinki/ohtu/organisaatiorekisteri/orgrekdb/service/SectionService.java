@@ -30,4 +30,8 @@ public class SectionService {
     public int deleteSectionAttribute(int sectionId) throws IOException {
         return sectionDao.deleteSectionAttribute(sectionId);
     }
+
+    public SectionAttribute getSectionAttributeById(int id) throws IOException {
+        return sectionDao.getSectionAttributeById(id);
+    }
 }
