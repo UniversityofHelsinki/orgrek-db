@@ -4,6 +4,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -47,9 +48,13 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("getAbbreviationAttributeByNodeId.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("node_id", nodeId);
-        Attribute abbreviationAttribute = getNamedParameterJdbcTemplate()
-                .queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
-        return abbreviationAttribute.getValue();
+        try {
+            Attribute abbreviationAttribute = getNamedParameterJdbcTemplate()
+                    .queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+            return abbreviationAttribute.getValue();
+        } catch (EmptyResultDataAccessException notFoundException) {
+            return null;
+        }
     }
 
     public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
