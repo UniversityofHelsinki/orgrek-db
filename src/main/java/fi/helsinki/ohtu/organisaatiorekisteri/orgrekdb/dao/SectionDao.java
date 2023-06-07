@@ -63,4 +63,13 @@ public class SectionDao extends NamedParameterJdbcDaoSupport {
         params.addValue("sectionId", sectionId);
         return getNamedParameterJdbcTemplate().update(sql, params);
     }
+
+    public SectionAttribute getSectionAttributeById(int id) throws IOException {
+        String sql = ReadSqlFiles.sqlString("getSectionAttributeById.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        SectionAttribute sectionAttribute = getNamedParameterJdbcTemplate()
+                .queryForObject(sql, params,  BeanPropertyRowMapper.newInstance(SectionAttribute.class));
+        return sectionAttribute;
+    }
 }
