@@ -4,7 +4,6 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,8 +19,15 @@ public class SectionService {
         return sectionAttributeList;
     }
 
-    @Transactional
     public int updateSectionAttribute(SectionAttribute sectionAttribute) throws IOException {
         return sectionDao.updateSectionAttribute(sectionAttribute);
+    }
+
+    public SectionAttribute insertSectionAttribute(SectionAttribute sectionAttribute) throws IOException {
+        return sectionDao.insertSectionAttribute(sectionAttribute);
+    }
+
+    public int deleteSectionAttribute(int sectionId) throws IOException {
+        return sectionDao.deleteSectionAttribute(sectionId);
     }
 }
