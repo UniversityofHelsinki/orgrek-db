@@ -14,7 +14,7 @@ import java.util.List;
 public class SectionController {
     @Autowired
     private SectionService sectionService;
-    @RequestMapping("/all")
+    @GetMapping("/all")
     ResponseEntity<List<SectionAttribute>> getAllSectionAttributes() {
         try {
             List<SectionAttribute> sectionAttributeList = sectionService.getAllSectionAttributes();
@@ -61,4 +61,15 @@ public class SectionController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/{id}/get")
+    ResponseEntity<SectionAttribute> getSectionAttributeById(@PathVariable int id) {
+        try {
+            SectionAttribute sectionAttribute = sectionService.getSectionAttributeById(id);
+            return new ResponseEntity<>(sectionAttribute, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
