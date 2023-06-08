@@ -1,5 +1,3 @@
-SELECT DISTINCT KEY FROM HIERARCHY_FILTER
-                    JOIN SECTION_ATTR ON SECTION IN (:sections) AND KEY=ATTR
-                    WHERE KEY != 'type' AND HIERARCHY in (:hierarchies)
-                    UNION (select 'lyhenne' from dual)
-                    UNION (select 'emo_lyhenne' from dual)
+SELECT DISTINCT ATTR FROM SECTION_ATTR
+JOIN HIERARCHY_FILTER ON ATTR=KEY AND HIERARCHY IN (:hierarchies) AND key != 'type'
+WHERE SECTION IN (:sections)

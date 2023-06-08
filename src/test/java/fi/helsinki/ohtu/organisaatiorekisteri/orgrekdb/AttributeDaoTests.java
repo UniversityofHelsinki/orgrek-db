@@ -1,7 +1,9 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.junit.jupiter.api.MethodOrderer;
@@ -14,6 +16,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,6 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AttributeDaoTests {
     @Autowired
     private AttributeDao attributeDao;
+
+    @Autowired
+    private SectionDao sectionDao;
 
     @Test
     @Order(1)
@@ -182,7 +189,7 @@ public class AttributeDaoTests {
     @Test
     @Order(10)
     public void testGetCodeAttributes() throws IOException {
-        List<SectionAttribute> sectionCodeAttributes = attributeDao.getSectionAttributesBySection(Constants.CODE_SECTION);
+        List<SectionAttribute> sectionCodeAttributes = sectionDao.getSectionAttributesBySection(Constants.CODE_SECTION);
         assertEquals(10, sectionCodeAttributes.size());
         sectionCodeAttributes.stream().forEach(sectionAttribute -> {
             assertEquals("codes", sectionAttribute.getSection());
@@ -230,5 +237,12 @@ public class AttributeDaoTests {
         List<Attribute> attributeList = attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
         attributeDao.deleteAttributes(attributeList);
         assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
+    }
+
+    @Test
+    @Order(10)
+    public void testGetAttributeAbbreviation() throws IOException {
+        String abbreviation = attributeDao.getAttributeAbbreviationByNodeId("a1");
+        assertEquals("HY", abbreviation);
     }
 }

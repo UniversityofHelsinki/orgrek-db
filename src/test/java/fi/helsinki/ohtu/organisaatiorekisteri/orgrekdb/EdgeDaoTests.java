@@ -1,6 +1,8 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ConstantsTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,33 @@ public class EdgeDaoTests {
         List<String> hierarchyTypes = edgeDao.getHierarchyTypes();
         assertEquals(6, hierarchyTypes.size());
         assertEquals(expectedTypes, hierarchyTypes);
+    }
+
+    @Test
+    public void testAddHierarchies() throws IOException {
+        NewNodeDTO newNodeDTO = new NewNodeDTO();
+        List<String> hierarchies = new ArrayList<>();
+        hierarchies.add("talous");
+        hierarchies.add("tutkimus");
+        newNodeDTO.setHierarchies(hierarchies);
+        List<EdgeWrapper> edgeWrappers = getEdgeWrappers(newNodeDTO);
+        int[] hierarchySize = edgeDao.insertEdges(edgeWrappers);
+        assertEquals(2, hierarchySize.length);
+    }
+
+    private static List<EdgeWrapper> getEdgeWrappers(NewNodeDTO newNodeDTO) {
+        List<EdgeWrapper> edgeWrappers = new ArrayList<>();
+        if (newNodeDTO.getHierarchies() != null && newNodeDTO.getHierarchies().size() > 0)
+            for (String hierarchy : newNodeDTO.getHierarchies()) {
+                EdgeWrapper edgeWrapper = new EdgeWrapper();
+                edgeWrapper.setParentNodeId(newNodeDTO.getParentNodeId());
+                edgeWrapper.setChildNodeId(newNodeDTO.getChildNodeId());
+                edgeWrapper.setStartDate(newNodeDTO.getStartDate());
+                edgeWrapper.setEndDate(newNodeDTO.getEndDate());
+                edgeWrapper.setHierarchy(hierarchy);
+                edgeWrappers.add(edgeWrapper);
+            }
+        return edgeWrappers;
     }
 
 }

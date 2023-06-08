@@ -22,10 +22,12 @@ public class EdgeWrapper {
     private Date startDate;
     private Date endDate;
     private String hierarchy;
+
+    public EdgeWrapper() {
+    }
+
     public EdgeWrapper(EdgeWithChildUniqueId input) {
         this.id = input.getId();
-        this.parentNodeId = input.getParentNodeId();
-        this.childNodeId = String.valueOf(input.getChildUniqueId());
         this.startDate = input.getStartDate();
         this.endDate = input.getEndDate();
         this.hierarchy = input.getHierarchy();
