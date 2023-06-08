@@ -374,12 +374,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
 
-    public List<Relative> getSuccessors1(String nodeId, String date)  throws IOException {
+    public List<Relative> getSuccessors1(String nodeId)  throws IOException {
         String sql = ReadSqlFiles.sqlString("successors1.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
-        params.addValue("date", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
     public List<TreeNode> getTreeNodes(String start, Set<String> hierarchies, String date) throws IOException {
