@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -99,11 +98,11 @@ public class HierarchyController {
         return orgUnitDao.getPredecessors(node.getId());
     }
 
-    @RequestMapping(method = GET, value = "/successors/{id}")
+   /* @RequestMapping(method = GET, value = "/successors/{id}")
     public List<NodeEdgeHistoryWrapper> getSuccessors(@PathVariable("id") int uniqueId) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getSuccessors(node.getId());
-    }
+    }*/
 
     @RequestMapping(method = GET, value = "/predecessors1/{id}/{date}")
     public List<Relative> getPredecessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
