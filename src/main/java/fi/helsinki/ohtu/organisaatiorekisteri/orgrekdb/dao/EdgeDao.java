@@ -1,6 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -129,5 +130,4 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         int rowsAffected = getNamedParameterJdbcTemplate().update(sql, mapping);
         return rowsAffected;
     }
-
 }

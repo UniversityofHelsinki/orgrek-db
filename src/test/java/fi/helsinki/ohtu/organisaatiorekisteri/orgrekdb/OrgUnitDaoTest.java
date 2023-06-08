@@ -312,4 +312,23 @@ public class OrgUnitDaoTest {
         assertEquals(endDate, updatedRootNode.getEndDate());
 
     }
+
+    @Test
+    public void testAddingNewOrganisationUnitShouldInsertItToNodeTable() throws IOException {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.MONTH, 1);
+        c.set(Calendar.DATE, 15);
+        c.set(Calendar.YEAR, 2022);
+        Date startDate = c.getTime();
+
+        NewNodeDTO newNodeDTO = new NewNodeDTO();
+        newNodeDTO.setParentNodeId("a1");
+        newNodeDTO.setStartDate(startDate);
+        newNodeDTO.setEndDate(null);
+        newNodeDTO.setNameFi("uusi yksikko");
+
+        newNodeDTO = orgUnitDao.insertNode(newNodeDTO);
+        assertEquals("uusi yksikko", newNodeDTO.getNameFi());
+        assertNotNull(newNodeDTO.getChildNodeId());
+    }
 }

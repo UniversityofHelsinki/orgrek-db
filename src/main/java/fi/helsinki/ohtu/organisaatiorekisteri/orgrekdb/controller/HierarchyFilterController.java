@@ -6,10 +6,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -100,5 +97,11 @@ public class HierarchyFilterController {
     public List<HierarchyFilter> getHierarchyFiltersByKey(@PathVariable("keys") String keys) throws IOException {
         List<String> keysList = Arrays.asList(keys.split(","));
         return  hierarchyFilterDao.getHierarchyFiltersByKeys(keysList);
+    }
+
+    @GetMapping("/distinctHierarchyFilterKeys")
+    public List<String> getDistinctHierarchyFilterKeys() throws IOException {
+        List<String> distinctHierarchyFilterKeys = hierarchyFilterDao.getDistinctHierarchyFilterKeys();
+        return distinctHierarchyFilterKeys;
     }
 }

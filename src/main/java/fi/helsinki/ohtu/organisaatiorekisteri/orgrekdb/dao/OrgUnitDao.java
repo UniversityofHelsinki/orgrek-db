@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -406,5 +407,23 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("updateNodeProperties.sql");
         getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(node));
         return node;
+    }
+
+    public NewNodeDTO insertNode(NewNodeDTO newNodeDTO) throws IOException{
+        String sql = ReadSqlFiles.sqlString("insertNode.sql");
+        String nodeIdSequence = "select NODE_SEQ.nextval from dual";
+        String uniqueIdSequence = "select UNIQUE_ID_SEQ.nextval from dual";
+        Integer nodeId = getJdbcTemplate().queryForObject(nodeIdSequence, Integer.class);
+        Integer uniqueId = getJdbcTemplate().queryForObject(uniqueIdSequence, Integer.class);
+        newNodeDTO.setChildNodeId(nodeId.toString());
+        newNodeDTO.setChildUniqueId(uniqueId.toString());
+        getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(newNodeDTO));
+        return newNodeDTO;
+    }
+
+    public void updateFullNameView() {
+        SimpleJdbcCall spCall = new SimpleJdbcCall(getJdbcTemplate());
+        spCall.withProcedureName(Constants.UPDATE_FULL_NAME_VIEW_PROCEDURE_NAME);
+        spCall.execute();
     }
 }
