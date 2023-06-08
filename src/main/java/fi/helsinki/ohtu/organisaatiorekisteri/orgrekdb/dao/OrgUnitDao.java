@@ -381,12 +381,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
 
-    public List<Relative> getSuccessors1(String nodeId, String date)  throws IOException {
+    public List<Relative> getSuccessors1(String nodeId)  throws IOException {
         String sql = ReadSqlFiles.sqlString("successors1.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
-        params.addValue("date", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
     public List<TreeNode> getTreeNodes(String start, Set<String> hierarchies, String date) throws IOException {
@@ -418,9 +417,12 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public NewNodeDTO insertNode(NewNodeDTO newNodeDTO) throws IOException{
         String sql = ReadSqlFiles.sqlString("insertNode.sql");
-        String sqlSequence = "select NODE_SEQ.nextval from dual";
-        int sequence = getJdbcTemplate().queryForObject(sqlSequence, Integer.class);
-        newNodeDTO.setChildNodeId(String.valueOf(sequence));
+        String nodeIdSequence = "select NODE_SEQ.nextval from dual";
+        String uniqueIdSequence = "select UNIQUE_ID_SEQ.nextval from dual";
+        Integer nodeId = getJdbcTemplate().queryForObject(nodeIdSequence, Integer.class);
+        Integer uniqueId = getJdbcTemplate().queryForObject(uniqueIdSequence, Integer.class);
+        newNodeDTO.setChildNodeId(nodeId.toString());
+        newNodeDTO.setChildUniqueId(uniqueId.toString());
         getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(newNodeDTO));
         return newNodeDTO;
     }

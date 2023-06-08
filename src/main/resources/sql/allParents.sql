@@ -18,7 +18,7 @@ FROM EDGE E
                                        ((N.START_DATE is not null and N.START_DATE > trunc(to_date(:date, 'DD.MM.YYYY')) AND
                                          (FUTURE.START_DATE IS NULL OR FUTURE.START_DATE <= N.START_DATE) AND
                                          (FUTURE.END_DATE IS NULL OR FUTURE.END_DATE >= N.START_DATE)))
-         LEFT JOIN FULL_NAME PAST ON FUTURE.NODE_ID IS NULL AND E.CHILD_NODE_ID = PAST.NODE_ID AND LANGUAGES.LANGUAGE = PAST.LANGUAGE AND
+         LEFT JOIN FULL_NAME PAST ON FUTURE.NODE_ID IS NULL AND E.PARENT_NODE_ID = PAST.NODE_ID AND LANGUAGES.LANGUAGE = PAST.LANGUAGE AND
                                      ((N.END_DATE is not null and N.END_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')) AND
                                        (PAST.START_DATE IS NULL OR PAST.START_DATE <= N.END_DATE) AND
                                        (PAST.END_DATE IS NULL OR PAST.END_DATE >= N.END_DATE)))

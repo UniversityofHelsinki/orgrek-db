@@ -1,0 +1,1 @@
+UPDATE SECTION_ATTR SET SECTION = :section, ATTR = :attr WHERE ID = :id

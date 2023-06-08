@@ -113,7 +113,7 @@ public class HierarchyController {
     @RequestMapping(method = GET, value = "/successors1/{id}/{date}")
     public List<Relative> getSuccessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getSuccessors1(node.getId(), date);
+        return orgUnitDao.getSuccessors1(node.getId());
     }
 
     @RequestMapping(method = GET, value = "/parents1/{id}/{date}")

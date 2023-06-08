@@ -19,4 +19,19 @@ public class SectionService {
         return sectionAttributeList;
     }
 
+    public int updateSectionAttribute(SectionAttribute sectionAttribute) throws IOException {
+        return sectionDao.updateSectionAttribute(sectionAttribute);
+    }
+
+    public SectionAttribute insertSectionAttribute(SectionAttribute sectionAttribute) throws IOException {
+        return sectionDao.insertSectionAttribute(sectionAttribute);
+    }
+
+    public int deleteSectionAttribute(int sectionId) throws IOException {
+        return sectionDao.deleteSectionAttribute(sectionId);
+    }
+
+    public SectionAttribute getSectionAttributeById(int id) throws IOException {
+        return sectionDao.getSectionAttributeById(id);
+    }
 }
