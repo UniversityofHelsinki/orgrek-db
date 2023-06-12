@@ -7,7 +7,6 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,7 +1,6 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgePropertiesService;
