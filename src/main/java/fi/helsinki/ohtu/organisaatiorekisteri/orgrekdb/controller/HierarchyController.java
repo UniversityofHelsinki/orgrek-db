@@ -98,11 +98,11 @@ public class HierarchyController {
         return orgUnitDao.getPredecessors(node.getId());
     }
 
-    @RequestMapping(method = GET, value = "/successors/{id}")
+   /* @RequestMapping(method = GET, value = "/successors/{id}")
     public List<NodeEdgeHistoryWrapper> getSuccessors(@PathVariable("id") int uniqueId) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getSuccessors(node.getId());
-    }
+    }*/
 
     @RequestMapping(method = GET, value = "/predecessors1/{id}/{date}")
     public List<Relative> getPredecessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
