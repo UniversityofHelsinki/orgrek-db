@@ -1,6 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OtherAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -123,6 +124,15 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         params.addValue("hierarchies", hierarchies);
         params.addValue("sections", sections);
         return getNamedParameterJdbcTemplate().queryForList(sql, params, String.class);
+    }
+
+    public List<OtherAttribute> getHierarchiesBySections(List<String> attributes, List<String> hierarchies, List<String> sections) throws IOException {
+        String sql = ReadSqlFiles.sqlString("hierarchiesBySections.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("attributes", attributes);
+        params.addValue("hierarchies", hierarchies);
+        params.addValue("sections", sections);
+        return getNamedParameterJdbcTemplate().query(sql, params,  BeanPropertyRowMapper.newInstance(OtherAttribute.class));
     }
 
     public List<HierarchyFilter> getHierarchyFiltersByKeys(List<String> keys) throws IOException {

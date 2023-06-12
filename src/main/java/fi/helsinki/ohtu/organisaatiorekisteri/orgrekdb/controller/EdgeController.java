@@ -1,12 +1,10 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgePropertiesService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgeService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
