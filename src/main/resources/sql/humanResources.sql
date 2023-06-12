@@ -1,3 +1,36 @@
+/*
+Human resources API
+This should produce equivalent results as UUSI_HENKILOSTO_VOIMASSA_OLEVAT_YKSIKOT_API view.
+
+This clause selects all nodes that are valid today in 'uusi_henkilosto' hierarchy.
+Node is in 'uusi_henkilosto' hierarchy if there is a row in EDGE table having
+its CHILD_NODE_ID column value equal to the node's id and the row is 
+valid today.
+
+In this context node is valid if it's valid today, has a valid type in hierarchy 'johto'
+and has the following attributes valid today: 
+name_fi, hr_lyhenne. 
+
+name_en and name_sv are replaced by name_fi + ' EN' or ' SV' respectively.
+There is a comment in the view describing this:
+"--ASHA:a varten tuotetaan näkymässä SV, kunnes tieto on olemassa"
+
+Object is valid today if its start_date is less than or equal to today and 
+end_date is greater than or equal to today. 
+NULL value in the columns start_date or end_date 
+indicates -INFINITY and INFINITY respectively.
+
+Node has a valid type in 'uusi_henkilosto' hierarchy if there is a row
+in the table HIERARCY_FILTER that is valid today 
+with 'uusi_henkilosto' as the value of the column 
+HIERARCHY and 'type' as the value of the column KEY.
+
+Node's parent is set to NULL if hr_lyhenne is 'H01'.
+
+tl;dr selects all valid nodes in 'uusi_henkilosto' hierarchy 
+having type='uusi_henkilosto' OR has an hr_lyhenne attribute.
+
+*/
 SELECT 
 	NODE.UNIQUE_ID AS UNIQUE_ID,
 	CODE.VALUE AS CODE,
@@ -31,3 +64,4 @@ FROM NODE
 	 	AND (PARENT.END_DATE IS NULL OR PARENT.END_DATE >= TRUNC(CURRENT_DATE))
 	 WHERE (NODE.START_DATE IS NULL OR NODE.START_DATE <= TRUNC(CURRENT_DATE))
 	 	AND (NODE.END_DATE IS NULL OR NODE.END_DATE >= TRUNC(CURRENT_DATE))
+    ORDER BY NODE.UNIQUE_ID ASC
