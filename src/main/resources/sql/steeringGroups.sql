@@ -1,3 +1,33 @@
+/*
+Steering group API
+This should produce equivalent results as JOHTO_VOIMASSA_OLEVAT_YKSIKOT_API view.
+
+This clause selects all nodes that are valid today in 'johto' hierarchy.
+Node is in 'johto' hierarchy if there is a row in EDGE table having
+its CHILD_NODE_ID column value equal to the node's id and the row is 
+valid today.
+
+In this context node is valid if it's valid today, has a valid type in hierarchy 'johto'
+and has the following attributes valid today: 
+name_fi, name_en, name_sv, iam_ryhma. 
+Exception: If node's type is 'kansio', then the iam_ryhma isn't required.
+
+Object is valid today if its start_date is less than or equal to today and 
+end_date is greater than or equal to today. 
+NULL value in the columns start_date or end_date 
+indicates -INFINITY and INFINITY respectively.
+
+Node has a valid type in 'johto' hierarchy if there is a row
+in the table HIERARCY_FILTER that is valid today 
+with 'johto' as the value of the column 
+HIERARCHY and 'type' as the value of the column KEY.
+
+Node's parent is set to NULL if node's type is 'kansio'.
+
+tl;dr selects all valid nodes in 'johto' hierarchy 
+having type='kansio' OR has an iam_ryhma attribute.
+
+*/
 SELECT 
 	NODE.UNIQUE_ID,
 	OTHER_REQUIRED_ATTR.VALUE CODE,

@@ -42,4 +42,10 @@ public class SteeringGroupController {
     public List<Node> getDegreeProgrammes(@PathVariable("id") int uniqueId) throws IOException {
         return orgUnitDao.getDegreeProgrammes(uniqueId);
     }
+
+    @RequestMapping("/humanResources")
+    public List<SteeringGroup> getHumanResources() throws IOException {
+        return orgUnitDao.getHumanResources();
+    }
+
 }
