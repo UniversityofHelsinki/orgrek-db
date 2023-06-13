@@ -225,7 +225,6 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return queryResults;
     }
 
-
     public List<DegreeProgrammeDTO> getDegreeProgrammesAndAttributes() throws IOException {
         String sql = ReadSqlFiles.sqlString("degreeProgrammesAndAttributes.sql");
 
@@ -247,6 +246,17 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue(Constants.NODE_ID_FIELD, node.getId());
         params.addValue("today", Timestamp.from(Instant.now()));
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(Node.class));
+    }
+
+    public List<SteeringGroup> getHumanResources() throws IOException {
+        String sql = ReadSqlFiles.sqlString("humanResources.sql");
+        List<SteeringGroup> queryResults = 
+            getNamedParameterJdbcTemplate().query(
+                sql, 
+                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+        );
+
+        return queryResults;
     }
 
     public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
