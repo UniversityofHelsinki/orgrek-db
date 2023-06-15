@@ -41,7 +41,7 @@ test :
   artifacts:
     paths:
       - target/site/jacoco
-    expire_in: 1 mos
+    expire_in: 1 week
 
   # Define the process for deploy stage to development environment
 deploy_dev:
