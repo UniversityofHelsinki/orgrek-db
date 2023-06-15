@@ -41,6 +41,7 @@ test :
   artifacts:
     paths:
       - target/site/jacoco/jacoco.xml
+      - target/site/jacoco/index.html
     expire_in: 1 mos
 
   # Define the process for deploy stage to development environment
