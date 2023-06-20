@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -17,8 +18,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
-
-import static fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.OrgUnitDbUtil.extractSteeringProgrammes;
 
 @Repository(value = "orgUnitDao")
 public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
@@ -219,18 +218,12 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return attributes;
     }
 
-    public Map<String, List<SteeringGroup>> getSteeringGroups() throws IOException {
+    public List<SteeringGroup> getSteeringGroups() throws IOException {
         String sql = ReadSqlFiles.sqlString("steeringGroups.sql");
 
-        Timestamp ts = Timestamp.from(Instant.now());
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("today", ts);
-
-        List<Map<String, Object>> rows = getNamedParameterJdbcTemplate().queryForList(sql, params);
-        Map<String, List<SteeringGroup>> groups = extractSteeringProgrammes(rows);
-        return groups;
+        List<SteeringGroup> queryResults = getNamedParameterJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SteeringGroup.class));
+        return queryResults;
     }
-
 
     public List<DegreeProgrammeDTO> getDegreeProgrammesAndAttributes() throws IOException {
         String sql = ReadSqlFiles.sqlString("degreeProgrammesAndAttributes.sql");
@@ -253,6 +246,17 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue(Constants.NODE_ID_FIELD, node.getId());
         params.addValue("today", Timestamp.from(Instant.now()));
         return getNamedParameterJdbcTemplate().query(sql, params , BeanPropertyRowMapper.newInstance(Node.class));
+    }
+
+    public List<SteeringGroup> getHumanResources() throws IOException {
+        String sql = ReadSqlFiles.sqlString("humanResources.sql");
+        List<SteeringGroup> queryResults = 
+            getNamedParameterJdbcTemplate().query(
+                sql, 
+                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+        );
+
+        return queryResults;
     }
 
     public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
@@ -380,12 +384,11 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
 
-    public List<Relative> getSuccessors1(String nodeId, String date)  throws IOException {
+    public List<Relative> getSuccessors1(String nodeId)  throws IOException {
         String sql = ReadSqlFiles.sqlString("successors1.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
-        params.addValue("date", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
     public List<TreeNode> getTreeNodes(String start, Set<String> hierarchies, String date) throws IOException {
@@ -413,5 +416,23 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("updateNodeProperties.sql");
         getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(node));
         return node;
+    }
+
+    public NewNodeDTO insertNode(NewNodeDTO newNodeDTO) throws IOException{
+        String sql = ReadSqlFiles.sqlString("insertNode.sql");
+        String nodeIdSequence = "select NODE_SEQ.nextval from dual";
+        String uniqueIdSequence = "select UNIQUE_ID_SEQ.nextval from dual";
+        Integer nodeId = getJdbcTemplate().queryForObject(nodeIdSequence, Integer.class);
+        Integer uniqueId = getJdbcTemplate().queryForObject(uniqueIdSequence, Integer.class);
+        newNodeDTO.setChildNodeId(nodeId.toString());
+        newNodeDTO.setChildUniqueId(uniqueId.toString());
+        getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(newNodeDTO));
+        return newNodeDTO;
+    }
+
+    public void updateFullNameView() {
+        SimpleJdbcCall spCall = new SimpleJdbcCall(getJdbcTemplate());
+        spCall.withProcedureName(Constants.UPDATE_FULL_NAME_VIEW_PROCEDURE_NAME);
+        spCall.execute();
     }
 }

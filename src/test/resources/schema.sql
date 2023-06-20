@@ -76,3 +76,23 @@ create view NODE_TYPE as
 select "ID","NODE_ID","KEY","VALUE","START_DATE","END_DATE" from NODE_ATTR
 where KEY='type';
 
+create table SECTION_ATTR
+(
+    ID NUMBER not null,
+    SECTION VARCHAR2(255) not null,
+    ATTR VARCHAR2(255) not null,
+    START_DATE TIMESTAMP(6),
+    END_DATE TIMESTAMP(6)
+);
+
+CREATE SEQUENCE NODE_SEQ
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    START WITH 1
+    INCREMENT BY 1
+    CACHE 8
+    NOCYCLE;
+
+create sequence UNIQUE_ID_SEQ
+    minvalue 100000000
+    nocache

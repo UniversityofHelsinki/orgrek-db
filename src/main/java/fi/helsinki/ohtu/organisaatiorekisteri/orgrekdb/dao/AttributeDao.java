@@ -1,10 +1,11 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -31,13 +33,45 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         setDataSource(dataSource);
     }
 
-    public List<Attribute> getAttributesByNodeId(String nodeId) throws IOException {
-        String sql = ReadSqlFiles.sqlString("getAttributesByNodeId.sql");
+    private List<Attribute> getAttributeList(String nodeId, String sql, List<String> attributeList) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("node_id", nodeId);
+        if (attributeList != null) {
+            params.addValue("attributes", attributeList);
+        }
         List<Attribute> attributes = getNamedParameterJdbcTemplate()
                 .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
+    }
+
+    public String getAttributeAbbreviationByNodeId(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("getAbbreviationAttributeByNodeId.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("node_id", nodeId);
+        try {
+            Attribute abbreviationAttribute = getNamedParameterJdbcTemplate()
+                    .queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+            return abbreviationAttribute.getValue();
+        } catch (EmptyResultDataAccessException notFoundException) {
+            return null;
+        }
+    }
+
+    public List<Attribute> getNameAttributesByNodeId(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("nameAttributesByNodeId.sql");
+        return getAttributeList(nodeId, sql, null);
+    }
+
+    public List<Attribute> getTypeAttributesByNodeId(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("typeAttributesByNodeId.sql");
+        return getAttributeList(nodeId, sql, null);
+    }
+
+    public List<Attribute> getSectionAttributesByNodeId(String nodeId, List<SectionAttribute> sectionAttributes) throws IOException {
+        List<String> attributeList = new ArrayList<>();
+        sectionAttributes.stream().forEach(sectionAttribute -> attributeList.add(sectionAttribute.getAttr()));
+        String sql = ReadSqlFiles.sqlString("sectionAttributesByNodeId.sql");
+        return getAttributeList(nodeId, sql, attributeList);
     }
 
     public Attribute insertAttribute(Attribute attribute) throws IOException {
@@ -59,25 +93,54 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return attribute;
     }
 
-    public int[] updateAttributes(List<Attribute> attributes) throws IOException {
-        String sql = ReadSqlFiles.sqlString("updateAttributes.sql");
 
+    private MapSqlParameterSource getMapSqlParameterSource(Attribute attribute, MapSqlParameterSource params) {
+        params.addValue("node_id", attribute.getNodeId());
+        params.addValue("key", attribute.getKey());
+        params.addValue("value", attribute.getValue());
+        String start = null;
+        String end = null;
+        if (attribute.getStartDate() != null) {
+            start = yearMonthDay.format(attribute.getStartDate());
+        }
+        if (attribute.getEndDate() != null) {
+            end = yearMonthDay.format(attribute.getEndDate());
+        }
+        params.addValue("start_date", start);
+        params.addValue("end_date", end);
+        params.addValue("id", attribute.getId());
+        return params;
+    }
+
+    public int[] addAttributes(List<Attribute> attributes) throws IOException {
+        String sql = ReadSqlFiles.sqlString("insertAttributes.sql");
         MapSqlParameterSource[] paramMaps = attributes.stream().map(attribute -> {
+            Integer sequence = getJdbcTemplate().queryForObject("SELECT NODE_SEQ.nextval FROM dual", Integer.class);
+            attribute.setId(sequence);
             MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("node_id", attribute.getNodeId());
-            params.addValue("key", attribute.getKey());
-            params.addValue("value", attribute.getValue());
-
-            String start = yearMonthDay.format(attribute.getStartDate());
-            String end = yearMonthDay.format(attribute.getEndDate());
-
-            params.addValue("start_date", start);
-            params.addValue("end_date", end);
-            params.addValue("id", attribute.getId());
-            return params;
+            return getMapSqlParameterSource(attribute, params);
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
+    }
 
+
+    public int[] updateAttributes(List<Attribute> attributes) throws IOException {
+        String sql = ReadSqlFiles.sqlString("updateAttributes.sql");
+        MapSqlParameterSource[] paramMaps = attributes.stream().map(attribute -> {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            return getMapSqlParameterSource(attribute, params);
+        }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
+        return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
+    }
+
+
+    public int[] deleteAttributes(List<Attribute> attributes) throws IOException {
+        String sql = ReadSqlFiles.sqlString("deleteAttributes.sql");
+        MapSqlParameterSource[] paramMaps = attributes.stream().map(attribute -> {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            return getMapSqlParameterSource(attribute, params);
+        }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
+        return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
     }
 
     public Attribute getExistingAttribute(Attribute attribute) throws IOException {

@@ -2,8 +2,12 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -17,6 +21,9 @@ public class NodeController {
 
     @Autowired
     private OrgUnitDao orgUnitDao;
+
+    @Autowired
+    private NodeService nodeService;
 
     @RequestMapping(method = GET, value = "/{id}")
     public Node getNodeById(@PathVariable("id") int uniqueId) throws IOException {
@@ -34,9 +41,24 @@ public class NodeController {
     }
 
     @PutMapping("/properties/{id}")
-    public Node updateNodeProperties(@PathVariable("id") int nodeId, @RequestBody Node node) throws IOException {
-        orgUnitDao.updateNodeProperties(node);
-        return orgUnitDao.getNodeByUniqueId(nodeId);
+    public ResponseEntity<Node> updateNodeProperties(@PathVariable("id") int uniqueId, @RequestBody Node node) throws IOException {
+        try {
+            orgUnitDao.updateNodeProperties(node);
+            Node foundNode = orgUnitDao.getNodeByUniqueId(uniqueId);
+            return new ResponseEntity<>(foundNode, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/insert")
+    public ResponseEntity<NewNodeDTO> insertNode(@RequestBody NewNodeDTO newNodeDTO) throws Exception {
+        try {
+            newNodeDTO = nodeService.insertNode(newNodeDTO);
+            return new ResponseEntity<>(newNodeDTO, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 

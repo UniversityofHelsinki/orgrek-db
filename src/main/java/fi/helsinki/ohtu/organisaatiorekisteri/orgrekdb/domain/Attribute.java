@@ -10,6 +10,8 @@ public class Attribute {
     private Date endDate;
     private String nodeId;
     private Integer id;
+    private boolean isNew;
+    private boolean deleted;
 
     public Attribute() {
         this(null, null);
@@ -80,6 +82,22 @@ public class Attribute {
         this.id = id;
     }
 
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "Attribute{" +
@@ -89,6 +107,8 @@ public class Attribute {
                 ", endDate=" + endDate +
                 ", nodeId='" + nodeId + '\'' +
                 ", id=" + id +
+                ", isNew=" + isNew +
+                ", deleted=" + deleted +
                 '}';
     }
 }

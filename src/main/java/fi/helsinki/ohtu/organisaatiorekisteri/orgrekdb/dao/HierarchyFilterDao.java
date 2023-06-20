@@ -1,10 +1,12 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OtherAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -61,6 +63,13 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         return hierarchyFilters;
     }
 
+    public List<String> getDistinctHierarchyFilterKeys() throws IOException {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        String sql = ReadSqlFiles.sqlString("distinctHierarchyFilterKeys.sql");
+        List<String> distinctHierarchyFilterKeys = jdbcTemplate.queryForList(sql, String.class);
+        return distinctHierarchyFilterKeys;
+    }
+
     public List<HierarchyFilter> getHierarchyFilters() throws IOException  {
         String sql = ReadSqlFiles.sqlString("hierarchyFilters.sql");
 
@@ -107,6 +116,31 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         int[] result = getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
         return result;
+    }
+
+    public List<String> getAttributeKeys(List<String> hierarchies, List<String> sections) throws IOException {
+        String sql = ReadSqlFiles.sqlString("attributeKeys.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("hierarchies", hierarchies);
+        params.addValue("sections", sections);
+        return getNamedParameterJdbcTemplate().queryForList(sql, params, String.class);
+    }
+
+    public List<OtherAttribute> getHierarchiesBySections(List<String> attributes, List<String> hierarchies, List<String> sections) throws IOException {
+        String sql = ReadSqlFiles.sqlString("hierarchiesBySections.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("attributes", attributes);
+        params.addValue("hierarchies", hierarchies);
+        params.addValue("sections", sections);
+        return getNamedParameterJdbcTemplate().query(sql, params,  BeanPropertyRowMapper.newInstance(OtherAttribute.class));
+    }
+
+    public List<HierarchyFilter> getHierarchyFiltersByKeys(List<String> keys) throws IOException {
+        String sql = ReadSqlFiles.sqlString("hierarchyFiltersByKeys.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("keys", keys);
+        List<HierarchyFilter> hierarchyFiltersByKey = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(HierarchyFilter.class));
+        return hierarchyFiltersByKey;
     }
 }
 

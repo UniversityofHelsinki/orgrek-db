@@ -1,61 +1,61 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller.SteeringGroupController;
-
 public class SteeringGroup {
 
-    private String nodeId;
+    private String uniqueId;
 
-    private String iamGroup;
-    private String fi;
-    private String sv;
-    private String en;
+    private String code;
 
-    public SteeringGroup(String fi, String sv, String en) {
-        this.fi=fi;
-        this.sv=sv;
-        this.en=en;
+    private String type;
+
+    private String nameFi;
+
+    private String nameEn;
+
+    private String nameSv;
+
+    private String parent;
+
+    public String getUniqueId() {
+        return uniqueId;
     }
-    public String getNodeId() {
-        return nodeId;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
-
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    public String getCode() {
+        return code;
     }
-
-
-    public SteeringGroup() {}
-
-    public String getFi() {
-        return fi;
+    public void setCode(String code) {
+        this.code = code;
     }
-
-    public void setFi(String fi) {
-        this.fi = fi;
+    public String getType() {
+        return type;
     }
-
-    public String getSv() {
-        return sv;
+    public void setType(String type) {
+        this.type = type;
     }
-
-    public void setSv(String sv) {
-        this.sv = sv;
+    public String getNameFi() {
+        return nameFi;
     }
-
-    public String getEn() {
-        return en;
+    public void setNameFi(String nameFi) {
+        this.nameFi = nameFi;
     }
-
-    public void setEn(String en) {
-        this.en = en;
+    public String getNameEn() {
+        return nameEn;
     }
-    public String getIamGroup() {
-        return iamGroup;
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
     }
-
-    public void setIamGroup(String iamGroup) {
-        this.iamGroup = iamGroup;
+    public String getNameSv() {
+        return nameSv;
     }
-
+    public void setNameSv(String nameSv) {
+        this.nameSv = nameSv;
+    }
+    public String getParent() {
+        return parent;
+    }
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
 }

@@ -35,4 +35,30 @@ public class Constants {
     public static final String FUTURE = "future";
     public static final String NOW = "now";
 
+    public static final String NEW_ATTRIBUTES = "newAttributes";
+    public static final String UPDATED_ATTRIBUTES = "updatedAttributes";
+    public static final String DELETED_ATTRIBUTES = "deletedAttributes";
+
+    public static final String NEW_EDGES = "NEW";
+    public static final String UPDATED_EDGES = "UPDATED";
+    public static final String DELETED_EDGES = "DELETED";
+    public static final String MINER = "mainari_tunnus";
+    public static final String ACCOUNTING = "laskutus_tunnus";
+
+    public static final String CODE_SECTION = "codes";
+    public static final String NAME_SECTION = "names";
+
+    public static final String TYPE_SECTION = "types";
+
+    public static final String OTHER_SECTION = "other_attributes";
+
+    public static final String PARENT_ABBREVIATION = "emo_lyhenne";
+
+    public static final String IAM_HENKILOSTORYHMA = "iam-henkilostoryhma";
+
+    //public static final String IAM_JOHTORYHMA = "iam-johtoryhma";
+
+    public static final String ABBREVIATION = "lyhenne";
+
+    public static final String UPDATE_FULL_NAME_VIEW_PROCEDURE_NAME = "UPDATE_FULL_NAME_TEMP";
 }

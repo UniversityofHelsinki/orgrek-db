@@ -25,7 +25,7 @@ public class TreeController {
     @Autowired
     private EdgeDao edgeDao;
 
-    @RequestMapping(method = GET, value = "/{hierarchyTypes:(?:[a-z]+,)*(?:[a-z]+)+}/{date}")
+    @RequestMapping(method = GET, value = "/{hierarchyTypes}/{date}")
     public ResponseEntity<?> getTreeNodes(@PathVariable("hierarchyTypes") String hierarchyTypes, @PathVariable("date") String date) throws IOException {
         Set<String> hierarchies = new HashSet<>(Arrays.asList(hierarchyTypes.split(",")));
         if (containsUnknownHierarchies(hierarchies)) {

@@ -98,11 +98,11 @@ public class HierarchyController {
         return orgUnitDao.getPredecessors(node.getId());
     }
 
-    @RequestMapping(method = GET, value = "/successors/{id}")
+   /* @RequestMapping(method = GET, value = "/successors/{id}")
     public List<NodeEdgeHistoryWrapper> getSuccessors(@PathVariable("id") int uniqueId) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return orgUnitDao.getSuccessors(node.getId());
-    }
+    }*/
 
     @RequestMapping(method = GET, value = "/predecessors1/{id}/{date}")
     public List<Relative> getPredecessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
@@ -113,7 +113,7 @@ public class HierarchyController {
     @RequestMapping(method = GET, value = "/successors1/{id}/{date}")
     public List<Relative> getSuccessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getSuccessors1(node.getId(), date);
+        return orgUnitDao.getSuccessors1(node.getId());
     }
 
     @RequestMapping(method = GET, value = "/parents1/{id}/{date}")
@@ -169,6 +169,24 @@ public class HierarchyController {
     public List<EdgeWrapper> updateParentUnitProperties(@RequestBody List<EdgeWrapper> parentUnitProperties) throws IOException {
         int[] i = edgeDao.updateParentUnitProperties(parentUnitProperties);
         return parentUnitProperties;
+    }
+
+    @PutMapping("/edge")
+    public List<EdgeWrapper> updateEdges(@RequestBody List<EdgeWrapper> edges) throws IOException {
+        int[] i = edgeDao.updateEdges(edges);
+        return edges;
+    }
+
+    @PostMapping("/edge")
+    public List<EdgeWrapper> insertEdges(@RequestBody List<EdgeWrapper> edges) throws IOException {
+        int[] i = edgeDao.insertEdges(edges);
+        return edges;
+    }
+
+    @DeleteMapping("/edge")
+    public List<EdgeWrapper> deleteEdges(@RequestBody List<EdgeWrapper> edges) throws IOException {
+        int i = edgeDao.deleteEdges(edges);
+        return edges;
     }
 
 }
