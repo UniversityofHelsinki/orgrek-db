@@ -38,6 +38,11 @@ public class EdgeController {
         return edgeDao.getHierarchyTypes();
     }
 
+    @RequestMapping("/edgehierarchies")
+    public List<String> getEdgeHierarchies() throws IOException {
+        return edgeDao.getEdgeHierarchies();
+    }
+
     @PutMapping("/parents")
     public ResponseEntity<Map<String, List<EdgeWrapper>>> updateParents(@RequestBody Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) {
         try {

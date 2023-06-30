@@ -24,9 +24,6 @@ HIERARCHY and 'type' as the value of the column KEY.
 
 Node's parent is set to NULL if node's type is 'kansio'.
 
-tl;dr selects all valid nodes in 'johto' hierarchy 
-having type='kansio' OR has an iam_ryhma attribute.
-
 */
 SELECT 
 	NODE.UNIQUE_ID,
