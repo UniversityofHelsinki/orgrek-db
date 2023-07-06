@@ -2,6 +2,9 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TreeNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +41,23 @@ public class TreeController {
                                 ).collect(Collectors.toList())
             );
         }
-        return ResponseEntity.status(HttpStatus.OK).body(orgUnitDao.getTreeNodes("a1", hierarchies, date));
+        List<EdgeWrapper> roots = edgeDao.getRoots();
+        List<List<TreeNode>> treeNodeLists = new ArrayList<>();
+        Set<String> processedRoots = new HashSet<>();
+        for (EdgeWrapper root : roots) {
+            String rootNodeId = root.getChildNodeId();
+            if (processedRoots.contains(rootNodeId)) {
+                continue;
+            }
+            List<TreeNode> nodes = orgUnitDao.getTreeNodes(rootNodeId, hierarchies, date);
+            for (TreeNode treeNode : nodes) {
+                treeNode.setIsRoot(treeNode.getParentNodeId().equals(rootNodeId));
+            }
+            treeNodeLists.add(nodes);
+            processedRoots.add(rootNodeId);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(treeNodeLists);
+
     }
 
     private boolean containsUnknownHierarchies(Set<String> hierarchies) throws IOException {
@@ -48,5 +67,6 @@ public class TreeController {
         copy.removeAll(validHierarchies);
         return copy.size() > 0;
     }
+
 
 }
