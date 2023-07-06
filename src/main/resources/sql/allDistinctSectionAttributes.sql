@@ -1,0 +1,1 @@
+select distinct attr from section_attr
