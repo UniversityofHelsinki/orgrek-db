@@ -40,8 +40,8 @@ test :
   coverage: "/Total.*?([0-9]{1,3})%/"
   artifacts:
     paths:
-      - target/site/jacoco/jacoco.xml
-    expire_in: 1 mos
+      - target/site/jacoco
+    expire_in: 1 week
 
   # Define the process for deploy stage to development environment
 deploy_dev:

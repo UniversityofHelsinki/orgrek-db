@@ -1,9 +1,11 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -129,5 +131,19 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         mapping.addValue("ids", ids);
         int rowsAffected = getNamedParameterJdbcTemplate().update(sql, mapping);
         return rowsAffected;
+    }
+
+    public List<String> getEdgeHierarchies() throws IOException  {
+        String sql = ReadSqlFiles.sqlString("allEdgeHierarchies.sql");
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        List<String> edghierarchieses = jdbcTemplate.queryForList(sql, String.class);
+        return edghierarchieses;
+        /*
+        String sql = ReadSqlFiles.sqlString("hierarchyTypes.sql");
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        List<String> hierarchies = jdbcTemplate.queryForList(sql, String.class);
+        return hierarchies;
+         */
     }
 }

@@ -27,9 +27,6 @@ HIERARCHY and 'type' as the value of the column KEY.
 
 Node's parent is set to NULL if hr_lyhenne is 'H01'.
 
-tl;dr selects all valid nodes in 'uusi_henkilosto' hierarchy 
-having type='uusi_henkilosto' OR has an hr_lyhenne attribute.
-
 */
 SELECT 
 	NODE.UNIQUE_ID AS UNIQUE_ID,

@@ -40,9 +40,9 @@ public class EdgePropertiesService {
 
     private void addUpdateOrDeleteUpperUnit(Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) throws IOException {
 
-        if (edgeWithChildUniqueIdMap.containsKey(Constants.NEW_ATTRIBUTES) && !edgeWithChildUniqueIdMap.get(Constants.NEW_ATTRIBUTES).isEmpty()) {
+        if (edgeWithChildUniqueIdMap.containsKey(Constants.NEW_EDGES) && !edgeWithChildUniqueIdMap.get(Constants.NEW_EDGES).isEmpty()) {
             List<EdgeWrapper> edgeWrapperList = new ArrayList<>();
-            List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList = edgeWithChildUniqueIdMap.get(Constants.NEW_ATTRIBUTES);
+            List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList = edgeWithChildUniqueIdMap.get(Constants.NEW_EDGES);
             extracted(edgeWrapperList, edgeWithChildUniqueIdList);
             edgeDao.addNewUpperUnits(edgeWrapperList);
         }
@@ -52,9 +52,9 @@ public class EdgePropertiesService {
             extracted(edgeWrapperList, edgeWithChildUniqueIdList);
             edgeDao.updateUpperUnits(edgeWrapperList);
         }
-        if (edgeWithChildUniqueIdMap.containsKey(Constants.DELETED_ATTRIBUTES) && !edgeWithChildUniqueIdMap.get(Constants.DELETED_ATTRIBUTES).isEmpty()) {
+        if (edgeWithChildUniqueIdMap.containsKey(Constants.DELETED_EDGES) && !edgeWithChildUniqueIdMap.get(Constants.DELETED_EDGES).isEmpty()) {
             List<EdgeWrapper> edgeWrapperList = new ArrayList<>();
-            List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList = edgeWithChildUniqueIdMap.get(Constants.DELETED_ATTRIBUTES);
+            List<EdgeWithChildUniqueId> edgeWithChildUniqueIdList = edgeWithChildUniqueIdMap.get(Constants.DELETED_EDGES);
             extracted(edgeWrapperList, edgeWithChildUniqueIdList);
             edgeDao.deleteUpperUnits(edgeWrapperList);
         }
