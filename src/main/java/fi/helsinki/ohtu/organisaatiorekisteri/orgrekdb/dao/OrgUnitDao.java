@@ -269,6 +269,16 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return queryResults;
     }
 
+    public List<SteeringGroup> getFinance() throws IOException {
+        String sql = ReadSqlFiles.sqlString("finance.sql");
+        List<SteeringGroup> queryResults =
+            getNamedParameterJdbcTemplate().query(
+                sql,
+                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+            );
+        return queryResults;
+    }
+
     public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
         String sql = ReadSqlFiles.sqlString("favorableFullNames.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();

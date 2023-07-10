@@ -53,4 +53,9 @@ public class SteeringGroupController {
         return orgUnitDao.getResearchGroups();
     }
 
+    @RequestMapping("/finance")
+    public List<SteeringGroup> getFinance() throws IOException {
+        return orgUnitDao.getFinance();
+    }
+
 }
