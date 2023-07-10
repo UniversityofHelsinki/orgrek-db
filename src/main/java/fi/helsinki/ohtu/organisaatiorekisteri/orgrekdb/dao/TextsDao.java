@@ -70,8 +70,6 @@ public class TextsDao extends NamedParameterJdbcDaoSupport {
     }
 
     public int[] insertTexts(List<Map<String, String>> texts) throws IOException {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
         String sql = ReadSqlFiles.sqlString("insertTexts.sql");
 
         MapSqlParameterSource[] paramMaps = texts.stream().map(text -> {

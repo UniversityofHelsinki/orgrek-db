@@ -1,6 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyPublicity;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewHierarchyPublicityDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,11 @@ public class HierarchyPublicityDao  extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("updateHierarchyPublicity.sql");
         getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(hierarchyPublicity));
         return hierarchyPublicity;
+    }
+
+    public NewHierarchyPublicityDTO insertHierarchyPublicity(NewHierarchyPublicityDTO newHierarchyPublicityDTO) throws IOException {
+        String sql = ReadSqlFiles.sqlString("insertHierarchyPublicity.sql");
+        getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(newHierarchyPublicityDTO));
+        return newHierarchyPublicityDTO;
     }
 }
