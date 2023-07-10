@@ -269,8 +269,18 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return queryResults;
     }
 
-    public List<SteeringGroup> getFinance() throws IOException {
-        String sql = ReadSqlFiles.sqlString("finance.sql");
+    public List<SteeringGroup> getFinanceUnits() throws IOException {
+        String sql = ReadSqlFiles.sqlString("financeUnits.sql");
+        List<SteeringGroup> queryResults =
+            getNamedParameterJdbcTemplate().query(
+                sql,
+                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+            );
+        return queryResults;
+    }
+
+    public List<SteeringGroup> getEducationUnits() throws IOException {
+        String sql = ReadSqlFiles.sqlString("educationUnits.sql");
         List<SteeringGroup> queryResults =
             getNamedParameterJdbcTemplate().query(
                 sql,
