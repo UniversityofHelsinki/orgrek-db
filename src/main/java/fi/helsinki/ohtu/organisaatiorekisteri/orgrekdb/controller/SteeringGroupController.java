@@ -63,4 +63,9 @@ public class SteeringGroupController {
         return orgUnitDao.getEducationUnits();
     }
 
+    @RequestMapping("/officialUnits")
+    public List<SteeringGroup> getOfficialUnits() throws IOException {
+        return orgUnitDao.getOfficialUnits();
+    }
+
 }
