@@ -48,4 +48,9 @@ public class SteeringGroupController {
         return orgUnitDao.getHumanResources();
     }
 
+    @RequestMapping("/researchGroups")
+    public List<SteeringGroup> getResearchGroups() throws IOException {
+        return orgUnitDao.getResearchGroups();
+    }
+
 }
