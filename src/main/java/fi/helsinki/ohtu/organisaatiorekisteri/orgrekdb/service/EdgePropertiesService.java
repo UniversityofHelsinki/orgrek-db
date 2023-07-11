@@ -38,7 +38,7 @@ public class EdgePropertiesService {
         }
     }
 
-    private void addUpdateOrDeleteUpperUnit(Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) throws IOException {
+    private void addUpdateOrDeleteUnits(Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) throws IOException {
 
         if (edgeWithChildUniqueIdMap.containsKey(Constants.NEW_EDGES) && !edgeWithChildUniqueIdMap.get(Constants.NEW_EDGES).isEmpty()) {
             List<EdgeWrapper> edgeWrapperList = new ArrayList<>();
@@ -84,7 +84,12 @@ public class EdgePropertiesService {
 
     @Transactional
     public void updateDeleteOrSaveUpperUnit(Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) throws IOException {
-        addUpdateOrDeleteUpperUnit(edgeWithChildUniqueIdMap);
+        addUpdateOrDeleteUnits(edgeWithChildUniqueIdMap);
+    }
+
+    @Transactional
+    public void updateDeleteOrSaveChildUnit(Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) throws IOException {
+        addUpdateOrDeleteUnits(edgeWithChildUniqueIdMap);
     }
 
     public void updateMapToEdgeWrapper(List<EdgeWrapper> edgeWrappers, List<EdgeWithChildUniqueId> edges) throws IOException {
