@@ -23,7 +23,15 @@ public class SectionController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
+    @GetMapping("/alldistinct")
+    ResponseEntity<List<String>> getAllDistinctSectionAttributes() {
+        try {
+            List<String> sectionAttributeList = sectionService.getAllDistinctSectionAttributes();
+            return new ResponseEntity<>(sectionAttributeList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
     @PostMapping("/insert")
     ResponseEntity<SectionAttribute> insertSectionAttribute(@RequestBody SectionAttribute sectionAttribute) {
         try {

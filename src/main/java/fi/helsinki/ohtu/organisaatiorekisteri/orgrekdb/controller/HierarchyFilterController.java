@@ -86,14 +86,6 @@ public class HierarchyFilterController {
             attributeKeys.add(Constants.PARENT_ABBREVIATION);
             attributeKeys.add(Constants.ABBREVIATION);
         }
-        /*if (sections.contains(Constants.OTHER_SECTION)) {
-            attributeKeys.add(Constants.IAM_HENKILOSTORYHMA);
-            //attributeKeys.add(Constants.IAM_JOHTORYHMA);
-        }*/
-        if (inputContainsAllHierarchies(hierarchies) && !sections.contains(Constants.OTHER_SECTION)) {
-            attributeKeys.add(Constants.MINER);
-            attributeKeys.add(Constants.ACCOUNTING);
-        }
         return attributeKeys;
     }
 
