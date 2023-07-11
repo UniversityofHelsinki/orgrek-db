@@ -2,10 +2,13 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.HierarchyPublicityDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NameLanguageWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewHierarchyPublicityDTO;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,9 @@ public class HierarchyPublicityService {
 
     @Autowired
     private TextsDao textsDao;
+
+    @Autowired
+    public OrgUnitDao orgUnitDao;
 
     @Transactional
     public NewHierarchyPublicityDTO insertHierarchyPublicity(NewHierarchyPublicityDTO newHierarchyPublicityDTO, String userName) throws IOException {
@@ -51,9 +57,10 @@ public class HierarchyPublicityService {
 
     private List<EdgeWrapper> getEdgeWrappers(NewHierarchyPublicityDTO newHierarchyPublicityDTO) throws IOException {
         List<EdgeWrapper> edgeWrapperList = new ArrayList<>();
+        Node unit = orgUnitDao.getNodeByUniqueId(Integer.parseInt(newHierarchyPublicityDTO.getChildId()));
         EdgeWrapper edgeWrapper = new EdgeWrapper();
         edgeWrapper.setParentNodeId(null);
-        edgeWrapper.setChildNodeId(newHierarchyPublicityDTO.getChildId());
+        edgeWrapper.setChildNodeId(unit.getId());
         edgeWrapper.setHierarchy(newHierarchyPublicityDTO.getHierarchy());
         edgeWrapper.setStartDate(null);
         edgeWrapper.setEndDate(null);
