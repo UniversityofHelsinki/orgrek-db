@@ -53,6 +53,16 @@ public class EdgeController {
         }
     }
 
+    @PutMapping("/children")
+    public ResponseEntity<Map<String, List<EdgeWrapper>>> updateChildren(@RequestBody Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) {
+        try {
+            edgePropertiesService.updateDeleteOrSaveChildUnit(edgeWithChildUniqueIdMap);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PutMapping("/")
     public ResponseEntity<Map<String, List<EdgeWithChildUniqueId>>> modifyEdges(@RequestBody Map<String, List<EdgeWithChildUniqueId>> edges) throws IOException {
         try {
