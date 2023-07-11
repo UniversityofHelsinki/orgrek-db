@@ -5,6 +5,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttributeKeyValueDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.NodeAttributeService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
@@ -146,6 +147,16 @@ public class NodeAttributeController {
     public ResponseEntity<List<SectionAttribute>> getSectionAttributes(@PathVariable("sectionType") String sectionType) {
         try {
             List<SectionAttribute> sectionAttributes = sectionDao.getSectionAttributesBySection(sectionType);
+            return new ResponseEntity<>(sectionAttributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/distinctattributes/")
+    public ResponseEntity<List<NodeAttributeKeyValueDTO>> getDistinctNodeAttrs() {
+        try {
+            List<NodeAttributeKeyValueDTO> sectionAttributes = attributeDao.getDistinctNodeAttrs();
             return new ResponseEntity<>(sectionAttributes, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

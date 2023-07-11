@@ -4,6 +4,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -29,6 +30,13 @@ public class SectionDao extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("allSectionAttributes.sql");
         List<SectionAttribute> sectionAttributes = getNamedParameterJdbcTemplate()
                 .query(sql, BeanPropertyRowMapper.newInstance(SectionAttribute.class));
+        return sectionAttributes;
+    }
+
+    public List<String> getAllDistinctSectionAttributes() throws IOException {
+        String sql = ReadSqlFiles.sqlString("allDistinctSectionAttributes.sql");
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        List<String> sectionAttributes = jdbcTemplate.queryForList(sql, String.class);
         return sectionAttributes;
     }
 
