@@ -79,4 +79,5 @@ public class EdgeWrapper {
     public void setHierarchy(String hierarchy) {
         this.hierarchy = hierarchy;
     }
+
 }

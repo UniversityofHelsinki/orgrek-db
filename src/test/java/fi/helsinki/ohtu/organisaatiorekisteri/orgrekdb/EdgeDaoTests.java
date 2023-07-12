@@ -30,9 +30,11 @@ public class EdgeDaoTests {
         expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_OPETUS);
         expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_TALOUS);
         expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_TOIMINNANOHJAUS);
+        expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_TREE_SPECIFIC_1);
+        expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_TREE_SPECIFIC_2);
         expectedTypes.add(ConstantsTest.HIERARCHY_TYPE_TUTKIMUS);
         List<String> hierarchyTypes = edgeDao.getHierarchyTypes();
-        assertEquals(6, hierarchyTypes.size());
+        assertEquals(expectedTypes.size(), hierarchyTypes.size());
         assertEquals(expectedTypes, hierarchyTypes);
     }
 
