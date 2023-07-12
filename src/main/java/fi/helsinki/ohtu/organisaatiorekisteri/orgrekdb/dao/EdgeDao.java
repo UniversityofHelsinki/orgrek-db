@@ -146,4 +146,11 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         return hierarchies;
          */
     }
+
+    public List<EdgeWrapper> getRoots() throws IOException {
+        String sql = ReadSqlFiles.sqlString("roots.sql");
+        List<EdgeWrapper> roots 
+            = getNamedParameterJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(EdgeWrapper.class));
+        return roots;
+    }
 }
