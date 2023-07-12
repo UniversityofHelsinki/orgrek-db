@@ -391,16 +391,15 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         params.addValue("nodeId", nodeId);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
-    public List<TreeNode> getTreeNodes(String start, Set<String> hierarchies, String date) throws IOException {
+
+    public List<TreeNode> getTreeNodes(Set<String> hierarchies, String date) throws IOException {
         String sql = ReadSqlFiles.sqlString("tree.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
         params.addValue("hierarchies", hierarchies);
         params.addValue("date", date);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(TreeNode.class));
     }
-
 
     public EdgeWrapper addNewUpperUnit(EdgeWrapper edgeWrapper) throws IOException {
         String sql = ReadSqlFiles.sqlString("addNewUpperUnit.sql");
