@@ -259,6 +259,46 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return queryResults;
     }
 
+    public List<SteeringGroup> getResearchGroups() throws IOException {
+        String sql = ReadSqlFiles.sqlString("researchGroups.sql");
+        List<SteeringGroup> queryResults =
+            getNamedParameterJdbcTemplate().query(
+                sql,
+                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+            );
+        return queryResults;
+    }
+
+    public List<SteeringGroup> getFinanceUnits() throws IOException {
+        String sql = ReadSqlFiles.sqlString("financeUnits.sql");
+        List<SteeringGroup> queryResults =
+            getNamedParameterJdbcTemplate().query(
+                sql,
+                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+            );
+        return queryResults;
+    }
+
+    public List<SteeringGroup> getEducationUnits() throws IOException {
+        String sql = ReadSqlFiles.sqlString("educationUnits.sql");
+        List<SteeringGroup> queryResults =
+            getNamedParameterJdbcTemplate().query(
+                sql,
+                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+            );
+        return queryResults;
+    }
+
+    public List<SteeringGroup> getOfficialUnits() throws IOException {
+        String sql = ReadSqlFiles.sqlString("officialUnits.sql");
+        List<SteeringGroup> queryResults =
+            getNamedParameterJdbcTemplate().query(
+                sql,
+                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+            );
+        return queryResults;
+    }
+
     public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
         String sql = ReadSqlFiles.sqlString("favorableFullNames.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -435,4 +475,5 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         spCall.withProcedureName(Constants.UPDATE_FULL_NAME_VIEW_PROCEDURE_NAME);
         spCall.execute();
     }
+
 }
