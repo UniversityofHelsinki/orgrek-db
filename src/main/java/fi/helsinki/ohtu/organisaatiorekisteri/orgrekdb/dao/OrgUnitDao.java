@@ -180,22 +180,6 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeWrapper.class));
     }
 
-    public List<NodeEdgeHistoryWrapper> getPredecessors(String startId) throws IOException {
-        String sql = ReadSqlFiles.sqlString("predecessors.sql");
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Constants.START_ID_FIELD, startId);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
-    }
-
-    public List<NodeEdgeHistoryWrapper> getSuccessors(String endId) throws IOException {
-        String sql = ReadSqlFiles.sqlString("successors.sql");
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Constants.END_ID_FIELD, endId);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(NodeEdgeHistoryWrapper.class));
-    }
-
     public List<Attribute> getHistoryAndCurrentAttributeListByDate(String id, Date date) throws IOException {
         Date attrstart = date;
         String sql = ReadSqlFiles.sqlString("historyAndCurrentAttributeListByDate.sql");
@@ -415,8 +399,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
     }
 
 
-    public List<Relative> getPredecessors1(String nodeId, String date) throws IOException {
-        String sql = ReadSqlFiles.sqlString("predecessors1.sql");
+    public List<Relative> getPredecessors(String nodeId, String date) throws IOException {
+        String sql = ReadSqlFiles.sqlString("predecessors.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
@@ -424,8 +408,8 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
     }
 
-    public List<Relative> getSuccessors1(String nodeId)  throws IOException {
-        String sql = ReadSqlFiles.sqlString("successors1.sql");
+    public List<Relative> getSuccessors(String nodeId)  throws IOException {
+        String sql = ReadSqlFiles.sqlString("successors.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);

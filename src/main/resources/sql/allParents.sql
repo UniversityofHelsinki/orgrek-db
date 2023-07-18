@@ -9,7 +9,7 @@ WITH LANGUAGES(LANGUAGE) as (
        E.HIERARCHY,
        E.ID AS EDGE_ID,
        E.START_DATE edge_start_date, E.END_DATE edge_end_date,
-       COALESCE(FUTURE.NAME, PAST.NAME, CURR.NAME) as full_name, LANGUAGES.LANGUAGE as language
+       COALESCE(FUTURE.NAME, PAST.NAME, CURR.NAME, N.NAME) as full_name, LANGUAGES.LANGUAGE as language
 FROM EDGE E
          JOIN NODE N ON
             E.PARENT_NODE_ID = N.ID AND E.CHILD_NODE_ID = :nodeId AND E.HIERARCHY != 'history'

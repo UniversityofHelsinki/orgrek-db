@@ -257,21 +257,6 @@ public class OrgUnitDaoTest {
     }
 
     @Test
-    public void testGetPredecessorsOfNode() throws IOException {
-        List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getPredecessors(ConstantsTest.ROOT_UNIT_NODE_ID);
-        assertEquals(2, wrapperList.size());
-        assertEquals("3337", wrapperList.get(0).getId());
-        assertEquals("3471", wrapperList.get(1).getId());
-    }
-
-    @Test
-    public void testGetSuccessorsOfNode() throws IOException {
-        List<NodeEdgeHistoryWrapper> wrapperList = orgUnitDao.getSuccessors(ConstantsTest.ROOT_UNIT_NODE_ID);
-        assertEquals(1, wrapperList.size());
-        assertEquals("9999", wrapperList.get(0).getId());
-    }
-
-    @Test
     public void testOneDegreeProgrammeIsReturned() throws IOException {
         List<DegreeProgrammeDTO> programmes = orgUnitDao.getDegreeProgrammesAndAttributes();
         assertEquals(programmes.size(), 1);
