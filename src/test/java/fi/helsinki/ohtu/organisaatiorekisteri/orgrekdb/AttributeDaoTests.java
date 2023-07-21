@@ -44,9 +44,9 @@ public class AttributeDaoTests {
         attributeList.add(nameSvAttributeToBeAdded);
 
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null);
-        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null);
-        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null);
+        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null, 1);
+        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null, 2);
+        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null, 3);
         sectionAttributeList.add(sectionAttribute_fi);
         sectionAttributeList.add(sectionAttribute_sv);
         sectionAttributeList.add(sectionAttribute_en);
@@ -60,9 +60,9 @@ public class AttributeDaoTests {
     @Order(2)
     public void testUpdateNameAttributes() throws IOException {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null);
-        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null);
-        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null);
+        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null, 1);
+        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null, 2);
+        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null,3);
         sectionAttributeList.add(sectionAttribute_fi);
         sectionAttributeList.add(sectionAttribute_sv);
         sectionAttributeList.add(sectionAttribute_en);
@@ -83,9 +83,9 @@ public class AttributeDaoTests {
     @Order(3)
     public void testDeleteNameAttributes() throws IOException {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null);
-        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null);
-        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null);
+        SectionAttribute sectionAttribute_fi = new SectionAttribute(1, "names", "name_fi", null, null, 1);
+        SectionAttribute sectionAttribute_sv = new SectionAttribute(1, "names", "name_sv", null, null,2);
+        SectionAttribute sectionAttribute_en = new SectionAttribute(1, "names", "name_en", null, null, 3);
         sectionAttributeList.add(sectionAttribute_fi);
         sectionAttributeList.add(sectionAttribute_sv);
         sectionAttributeList.add(sectionAttribute_en);
@@ -106,7 +106,7 @@ public class AttributeDaoTests {
         attributeList.add(typeAttributeToBeAdded);
 
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "types", "type", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "types", "type", null, null, 1);
         sectionAttributeList.add(sectionAttribute);
 
         assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
@@ -118,7 +118,7 @@ public class AttributeDaoTests {
     @Order(5)
     public void testUpdateTypeAttributes() throws IOException {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "types", "type", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "types", "type", null, null, 1);
         sectionAttributeList.add(sectionAttribute);
         assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
 
@@ -133,7 +133,7 @@ public class AttributeDaoTests {
     @Order(6)
     public void testDeleteTypeAttributes() throws IOException {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "types", "type", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "types", "type", null, null,1);
         sectionAttributeList.add(sectionAttribute);
         assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
 
@@ -150,7 +150,7 @@ public class AttributeDaoTests {
         attributeList.add(codeAttributeToBeAdded);
 
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null, 1);
         sectionAttributeList.add(sectionAttribute);
 
         assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
@@ -162,7 +162,7 @@ public class AttributeDaoTests {
     @Order(8)
     public void testUpdateCodeAttributes() throws IOException {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null, 1);
         sectionAttributeList.add(sectionAttribute);
         assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
         List<Attribute> attributeList = attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
@@ -178,7 +178,7 @@ public class AttributeDaoTests {
     @Order(9)
     public void testDeleteCodeAttributes() throws IOException {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "codes", "tutkimus_tunnus", null, null, 1);
         sectionAttributeList.add(sectionAttribute);
 
         assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
@@ -204,7 +204,7 @@ public class AttributeDaoTests {
         attributeList.add(codeAttributeToBeAdded);
 
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null, 1);
         sectionAttributeList.add(sectionAttribute);
 
         assertEquals(0, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
@@ -216,7 +216,7 @@ public class AttributeDaoTests {
     @Order(8)
     public void testUpdateOtherAttributes() throws IOException {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null, 1);
         sectionAttributeList.add(sectionAttribute);
         assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());
         List<Attribute> attributeList = attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList);
@@ -230,7 +230,7 @@ public class AttributeDaoTests {
     @Order(9)
     public void testDeleteOtherAttributes() throws IOException {
         List<SectionAttribute> sectionAttributeList = new ArrayList<>();
-        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null);
+        SectionAttribute sectionAttribute = new SectionAttribute(1, "other_attributes", "iam-johtoryhma", null, null, 1);
         sectionAttributeList.add(sectionAttribute);
 
         assertEquals(1, attributeDao.getSectionAttributesByNodeId("5283", sectionAttributeList).size());

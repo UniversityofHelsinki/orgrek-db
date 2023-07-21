@@ -8,15 +8,18 @@ public class SectionAttribute {
     private Date startDate;
     private Date endDate;
 
+    private int orderNro;
+
     public SectionAttribute() {
     }
 
-    public SectionAttribute(int id, String section, String attr, Date startDate, Date endDate) {
+    public SectionAttribute(int id, String section, String attr, Date startDate, Date endDate, int orderNro) {
         this.id = id;
         this.section = section;
         this.attr = attr;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.orderNro = orderNro;
     }
 
     public int getId() {
@@ -57,5 +60,13 @@ public class SectionAttribute {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public int getOrderNro() {
+        return orderNro;
+    }
+
+    public void setOrderNro(int orderNro) {
+        this.orderNro = orderNro;
     }
 }
