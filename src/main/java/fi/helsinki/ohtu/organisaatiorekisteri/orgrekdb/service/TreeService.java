@@ -135,6 +135,19 @@ public class TreeService {
       child.setChildren(convertedGrandChildren);
       constructTree(child, byParent);
     }
+    mergedChildren.sort(this::compareOrgUnitsByChildCountAndName);
+  }
+
+  private Integer compareOrgUnitsByChildCountAndName(OrgUnit a, OrgUnit b) {
+      Integer aCCount = a.getChildren().size();
+      Integer bCCount = b.getChildren().size();
+      Integer difference = bCCount - aCCount;
+      if (aCCount > 0 && bCCount == 0) {
+        return -1;
+      } else if (bCCount > 0 && aCCount == 0) {
+        return 1;
+      }
+      return a.getName().compareTo(b.getName());
   }
  
   public static class OrgUnit {
