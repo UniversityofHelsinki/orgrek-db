@@ -141,7 +141,6 @@ public class TreeService {
   private Integer compareOrgUnitsByChildCountAndName(OrgUnit a, OrgUnit b) {
       Integer aCCount = a.getChildren().size();
       Integer bCCount = b.getChildren().size();
-      Integer difference = bCCount - aCCount;
       if (aCCount > 0 && bCCount == 0) {
         return -1;
       } else if (bCCount > 0 && aCCount == 0) {
