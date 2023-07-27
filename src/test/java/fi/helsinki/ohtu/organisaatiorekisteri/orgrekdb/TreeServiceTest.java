@@ -37,26 +37,20 @@ public class TreeServiceTest {
 
   @Test
   public void multipleRoots() throws IOException {
-    Map<String, List<OrgUnit>> tree = treeService.getTree(hierarchies, today);
-    assertTrue(tree.keySet().size() > 0);
-    for (String language : tree.keySet()) {
-      List<OrgUnit> roots = tree.get(language);
-      assertTrue(roots.size() == 2);
-    }
+    List<OrgUnit> tree = treeService.getTree(hierarchies, today);
+    assertTrue(tree.size() > 0);
   }
 
   @Test
   public void hierarchiesMerged() throws IOException {
-    Map<String, List<OrgUnit>> tree = treeService.getTree(hierarchies, today);
+    List<OrgUnit> roots = treeService.getTree(hierarchies, today);
     Set<String> hierarchies = null;
-    for (String language : tree.keySet()) {
-      List<OrgUnit> roots = tree.get(language);
-      for (OrgUnit rootNode : roots) {
-        if (rootNode.getId().equals("treeTestRoot1")) {
-          hierarchies = rootNode.getHierarchies();
-        }
+    for (OrgUnit rootNode : roots) {
+      if (rootNode.getId().equals("treeTestRoot1")) {
+        hierarchies = rootNode.getHierarchies();
       }
     }
+    
     assertTrue(hierarchies != null);
     assertTrue(hierarchies.contains("treeTest"));
     assertTrue(hierarchies.contains("treeTest1"));
@@ -64,22 +58,19 @@ public class TreeServiceTest {
 
   @Test
   public void noDuplicatesIfMergedSamePaths() throws IOException {
-    Map<String, List<OrgUnit>> tree = treeService.getTree(hierarchies, today);
+    List<OrgUnit> tree = treeService.getTree(hierarchies, today);
     int timesFound = 0;
-    for (String language : tree.keySet()) {
-      for (OrgUnit unit : tree.get(language)) {
-        if (unit.getId().equals("treeTestRoot1")) {
-          timesFound++;
-        }
+    for (OrgUnit unit : tree) {
+      if (unit.getId().equals("treeTestRoot1")) {
+        timesFound++;
       }
     }
-    assertEquals(tree.keySet().size(), timesFound);
+    assertEquals(1, timesFound);
   };
 
   @Test
   public void generationsAreMade() throws IOException {
-    Map<String, List<OrgUnit>> tree = treeService.getTree(hierarchies, today);
-    List<OrgUnit> roots = tree.get("fi");
+    List<OrgUnit> roots = treeService.getTree(hierarchies, today);
     OrgUnit testSubject = null;
     for (OrgUnit root : roots) {
       if (root.getId().equals("treeTestRoot")) {
@@ -100,8 +91,4 @@ public class TreeServiceTest {
     assertTrue(found);
   }
 
-
-
-
-  
 }
