@@ -69,6 +69,16 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         return getAttributeList(nodeId, sql, null);
     }
 
+    public List<Attribute> getSectionAttributesBySectionAndNodeId(String section, String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("sectionAttributesBySectionAndNodeId.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nodeId", nodeId);
+        params.addValue("section", section);
+        List<Attribute> attributes = getNamedParameterJdbcTemplate()
+                .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return attributes;
+    }
+
     public List<Attribute> getSectionAttributesByNodeId(String nodeId, List<SectionAttribute> sectionAttributes) throws IOException {
         List<String> attributeList = new ArrayList<>();
         sectionAttributes.stream().forEach(sectionAttribute -> attributeList.add(sectionAttribute.getAttr()));
