@@ -1,5 +1,7 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
+import java.util.Map;
+
 public class TreeNode {
   private String parentNodeId;
   private String childNodeId;
@@ -7,6 +9,7 @@ public class TreeNode {
   private String hierarchy;
   private String language;
   private String nodeName;
+  private Map<String, String> names;
 
   public String getParentNodeId() {
     return parentNodeId;
@@ -45,6 +48,12 @@ public class TreeNode {
   }
   public void setNodeName(String nodeName) {
     this.nodeName = nodeName;
+  }
+  public Map<String, String> getNames() {
+    return names;
+  }
+  public void setNames(Map<String, String> names) {
+    this.names = names;
   }
   
 }
