@@ -19,29 +19,29 @@ public class TreeService {
   @Autowired
   private OrgUnitDao orgUnitDao;
 
-  public Map<String, List<OrgUnit>> getTree(Set<String> hierarchies, String date) throws IOException {
+  public List<OrgUnit> getTree(Set<String> hierarchies, String date) throws IOException {
     List<TreeNode> treeNodes = orgUnitDao.getTreeNodes(hierarchies, date);
-    Map<String, List<TreeNode>> byLanguage = groupByLanguage(treeNodes);
-    Map<String, List<OrgUnit>> results = new HashMap<>();
-    for (String language : byLanguage.keySet()) {
-      List<OrgUnit> tree = getMergedTree(byLanguage.get(language));
-      results.put(language, tree);
-    }
-    return results;
+    List<TreeNode> namedTreeNodes = gatherNames(treeNodes);
+    List<OrgUnit> trees = getMergedTree(namedTreeNodes);
+    return trees;
   }
 
-  
-  private Map<String, List<TreeNode>> groupByLanguage(List<TreeNode> nodes) {
-    Map<String, List<TreeNode>> results = new HashMap<>();
-    for (TreeNode node : nodes) {
-      if (!results.containsKey(node.getLanguage())) {
-        results.put(node.getLanguage(), new ArrayList<>());
+  private List<TreeNode> gatherNames(List<TreeNode> treeNodes) {
+    List<TreeNode> results = new ArrayList<>();
+    Map<String, Map<String, String>> names = new HashMap<>();
+    for (TreeNode node : treeNodes) {
+      if (!names.containsKey(node.getChildNodeId())) {
+        names.put(node.getChildNodeId(), new HashMap<>());
       }
-      results.get(node.getLanguage()).add(node);
+      names.get(node.getChildNodeId()).put(node.getLanguage(), node.getNodeName());
+      if (node.getLanguage().equals("fi")) {
+        node.setNames(names.get(node.getChildNodeId()));
+        results.add(node);
+      }
     }
     return results;
   }
-
+  
   private boolean isRootNode(TreeNode input) {
     return input.getParentNodeId() == null;
   }
@@ -68,7 +68,7 @@ public class TreeService {
     OrgUnit result = new OrgUnit();
     result.setId(node.getChildNodeId());
     result.setUniqueId(node.getUniqueId());
-    result.setName(node.getNodeName());
+    result.setNames(node.getNames());
     result.setChildren(new ArrayList<>());
     result.setHierarchies(new HashSet<>());
     result.getHierarchies().add(node.getHierarchy());
@@ -135,15 +135,36 @@ public class TreeService {
       child.setChildren(convertedGrandChildren);
       constructTree(child, byParent);
     }
+    mergedChildren.sort(this::compareOrgUnitsByChildCountAndName);
+  }
+
+  private Integer compareOrgUnitsByChildCountAndName(OrgUnit a, OrgUnit b) {
+      Integer aCCount = a.getChildren().size();
+      Integer bCCount = b.getChildren().size();
+      if (aCCount > 0 && bCCount == 0) {
+        return -1;
+      } else if (bCCount > 0 && aCCount == 0) {
+        return 1;
+      }
+      String defaultLanguage = "fi";
+      return a.getNames().get(defaultLanguage).compareTo(b.getNames().get(defaultLanguage));
   }
  
   public static class OrgUnit {
 
     private String id;
     private String uniqueId;
-    private String name;
     private Set<String> hierarchies;
     private List<OrgUnit> children;
+    private Map<String, String> names;
+
+    public Map<String, String> getNames() {
+      return names;
+    }
+
+    public void setNames(Map<String, String> names) {
+      this.names = names;
+    }
 
     public String getId() {
       return id;
@@ -159,14 +180,6 @@ public class TreeService {
 
     public void setUniqueId(String uniqueId) {
       this.uniqueId = uniqueId;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
     }
 
     public List<OrgUnit> getChildren() {
@@ -196,7 +209,10 @@ public class TreeService {
       Set<String> copyHierarchies = new HashSet<>();
       copyHierarchies.addAll(getHierarchies());
       copy.setHierarchies(copyHierarchies);
-      copy.setName(name);
+      copy.setNames(new HashMap<>());
+      for (String language : names.keySet()) {
+        copy.getNames().put(language, names.get(language));
+      }
       copy.setUniqueId(uniqueId);
       return copy;
     }
