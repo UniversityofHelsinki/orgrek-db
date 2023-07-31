@@ -7,9 +7,12 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttributeKeyValueDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionDecoratedAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.NodeAttributeService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
+
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -158,4 +161,21 @@ public class NodeAttributeController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/{id}/attributes/{section}/{hierarchies}/")
+    public ResponseEntity<?> getNodeAttributes(
+        @PathVariable("id") Integer uniqueId,
+        @PathVariable("section") String section,
+        @PathVariable("hierarchies") String commaSeparatedHierarchies) throws IOException {
+        Node target = orgUnitDao.getNodeByUniqueId(uniqueId);
+        if (target == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<String> hierarchies = Arrays.asList(commaSeparatedHierarchies.split(","));
+
+        Map<String, List<Attribute>> attributes = nodeAttributeService.getAttributes(target.getId(), hierarchies);
+        return ResponseEntity.ok(attributes);
+    }
+
 }
