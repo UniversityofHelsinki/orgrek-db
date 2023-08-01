@@ -12,6 +12,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
 
 public class AttributeFilter {
 
+  private String nodeId;
   private List<Attribute> attributes;
   private List<HierarchyFilter> filters;
 
@@ -22,7 +23,8 @@ public class AttributeFilter {
    * @param attributes 
    * @param filters
    */
-  public AttributeFilter(List<Attribute> attributes, List<HierarchyFilter> filters) {
+  public AttributeFilter(String nodeId, List<Attribute> attributes, List<HierarchyFilter> filters) {
+    this.nodeId = nodeId;
     this.attributes = attributes;
     this.filters = filters;
   }
@@ -39,7 +41,7 @@ public class AttributeFilter {
         results.add(attribute);
       }
     }
-    return new AttributeFilter(results, filters);
+    return new AttributeFilter(nodeId, results, filters);
   }
 
   private AttributeFilter byValue() {
@@ -53,7 +55,7 @@ public class AttributeFilter {
         }
       }
     }
-    return new AttributeFilter(results, filters);
+    return new AttributeFilter(nodeId, results, filters);
   }
 
   private AttributeFilter includeMetaInformation() {
@@ -62,11 +64,8 @@ public class AttributeFilter {
     for (Attribute attribute : attributes) {
       attribute.setMeta(valueFilters.get(attribute.getKey()));
       results.add(attribute);
-      if (valueFilters.get(attribute.getKey()) == null) {
-        System.out.println(attribute.getKey() + " valuefilter is null");
-      }
     }
-    return new AttributeFilter(results, filters);
+    return new AttributeFilter(nodeId, results, filters);
   }
 
   private AttributeFilter includeMissingAttributes() {
@@ -85,11 +84,12 @@ public class AttributeFilter {
         attribute.setDeleted(false);
         attribute.setKey(key);
         attribute.setValue(null);
+        attribute.setNodeId(nodeId);
         attribute.setMeta(valueFilters.get(key));
         results.add(attribute);
       }
     }
-    return new AttributeFilter(results, filters);
+    return new AttributeFilter(nodeId, results, filters);
   }
 
   private Set<String> getWantedKeySet() {

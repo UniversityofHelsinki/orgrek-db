@@ -137,10 +137,10 @@ public class NodeAttributeService {
         return attributesBySection;
     }
 
-    public Map<String, List<Attribute>> getAttributes(String nodeId, List<String> hierarchies) throws IOException {
+    public Map<String, List<Attribute>> getAttributes(String nodeId, List<String> hierarchies, String date) throws IOException {
         List<Attribute> allAttributes = attributeDao.getAttributes(nodeId);
-        List<HierarchyFilter> hierarchyFilters = hierarchyFilterDao.getHierarchyFiltersByHierarchies(hierarchies);
-        AttributeFilter attributeFilter = new AttributeFilter(allAttributes, hierarchyFilters);
+        List<HierarchyFilter> hierarchyFilters = hierarchyFilterDao.getHierarchyFiltersByHierarchies(hierarchies, date);
+        AttributeFilter attributeFilter = new AttributeFilter(nodeId, allAttributes, hierarchyFilters);
         List<Attribute> attributes = attributeFilter.getFilteredAttributes();
 
         List<SectionAttribute> sections = sectionDao.getSections();

@@ -162,10 +162,10 @@ public class NodeAttributeController {
         }
     }
 
-    @GetMapping("/{id}/attributes/{section}/{hierarchies}/")
+    @GetMapping("/{id}/{hierarchies}/{date}/attributes")
     public ResponseEntity<?> getNodeAttributes(
         @PathVariable("id") Integer uniqueId,
-        @PathVariable("section") String section,
+        @PathVariable("date") String date,
         @PathVariable("hierarchies") String commaSeparatedHierarchies) throws IOException {
         Node target = orgUnitDao.getNodeByUniqueId(uniqueId);
         if (target == null) {
@@ -174,7 +174,7 @@ public class NodeAttributeController {
 
         List<String> hierarchies = Arrays.asList(commaSeparatedHierarchies.split(","));
 
-        Map<String, List<Attribute>> attributes = nodeAttributeService.getAttributes(target.getId(), hierarchies);
+        Map<String, List<Attribute>> attributes = nodeAttributeService.getAttributes(target.getId(), hierarchies, date);
         return ResponseEntity.ok(attributes);
     }
 
