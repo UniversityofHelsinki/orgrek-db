@@ -137,6 +137,14 @@ public class NodeAttributeService {
         return attributesBySection;
     }
 
+    private void addEmptySections(Map<String, List<Attribute>> attributes, List<SectionAttribute> sections) {
+        for (SectionAttribute section : sections) {
+            if (!attributes.containsKey(section.getSection())) {
+                attributes.put(section.getSection(), new ArrayList<>());
+            }
+        }
+    }
+
     public Map<String, List<Attribute>> getAttributes(String nodeId, List<String> hierarchies, String date) throws IOException {
         List<Attribute> allAttributes = attributeDao.getAttributes(nodeId);
         List<HierarchyFilter> hierarchyFilters = hierarchyFilterDao.getHierarchyFiltersByHierarchies(hierarchies, date);
@@ -147,6 +155,7 @@ public class NodeAttributeService {
         Map<String, SectionAttribute> sectionsByAttributeKey = groupBySection(sections);
         Map<String, Integer> attributeOrder = getAttributeOrders(sections);
         Map<String, List<Attribute>> attributesBySection = groupBySection(attributes, sectionsByAttributeKey);
+        addEmptySections(attributesBySection, sections);
 
         Comparator<Attribute> orderNoComparator = new OrderNoComparator(attributeOrder, new DateComparator());
 

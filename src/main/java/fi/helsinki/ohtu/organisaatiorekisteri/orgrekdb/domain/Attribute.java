@@ -2,6 +2,8 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.AttributeFilter.Value;
 
 public class Attribute {
@@ -97,6 +99,7 @@ public class Attribute {
         this.id = id;
     }
 
+    @JsonProperty("isNew")
     public boolean isNew() {
         return isNew;
     }
