@@ -23,6 +23,9 @@ public class HierarchyController {
     private OrgUnitDao orgUnitDao;
 
     @Autowired
+    private EdgeDao edgeDao;
+
+    @Autowired
     private RelationService relationService;
 
     @RequestMapping(method = GET, value = "/{id}/{date}/predecessors")
