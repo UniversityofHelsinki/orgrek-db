@@ -2,6 +2,10 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.AttributeFilter.Value;
+
 public class Attribute {
 
     private String key;
@@ -12,6 +16,8 @@ public class Attribute {
     private Integer id;
     private boolean isNew;
     private boolean deleted;
+
+    private Value meta;
 
     public Attribute() {
         this(null, null);
@@ -32,6 +38,17 @@ public class Attribute {
         this.startDate = startDate;
         this.endDate = endDate;
         this.nodeId = nodeId;
+    }
+
+    public Attribute(SectionDecoratedAttribute input) {
+        this.id = input.getId();
+        this.key = input.getKey();
+        this.value = input.getValue();
+        this.startDate = input.getStartDate();
+        this.endDate = input.getEndDate();
+        this.nodeId = input.getNodeId();
+        this.isNew = false;
+        this.deleted = false;
     }
 
     public String getNodeId() {
@@ -82,6 +99,7 @@ public class Attribute {
         this.id = id;
     }
 
+    @JsonProperty("isNew")
     public boolean isNew() {
         return isNew;
     }
@@ -96,6 +114,14 @@ public class Attribute {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Value getMeta() {
+        return meta;
+    }
+
+    public void setMeta(Value meta) {
+        this.meta = meta;
     }
 
     @Override
