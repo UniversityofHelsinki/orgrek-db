@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -214,5 +215,12 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
             return nodeAttributeKeyValueDTO;
         });
         return query;
+    }
+
+    public List<Attribute> getAttributes(String nodeId) throws IOException {
+        String sql = ReadSqlFiles.sqlString("nodeAttributes.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", nodeId);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
     }
 }
