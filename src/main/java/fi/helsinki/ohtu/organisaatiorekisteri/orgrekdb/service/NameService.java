@@ -3,6 +3,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class NameService {
   }
 
   public void setFullNames(List<Node> targets, String date) throws IOException {
-    List<String> nodeIds = targets.stream().map(Node::getId).toList();
+    List<String> nodeIds = targets.stream().map(Node::getId).collect(Collectors.toList());
     Names fullNames = getFullNames(nodeIds, date);
     for (Node node : targets) {
       Name nodesName = fullNames.get(node, node.getName());

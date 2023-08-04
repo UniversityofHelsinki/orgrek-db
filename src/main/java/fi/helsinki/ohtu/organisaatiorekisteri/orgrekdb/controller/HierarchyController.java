@@ -23,45 +23,7 @@ public class HierarchyController {
     private OrgUnitDao orgUnitDao;
 
     @Autowired
-    private EdgeDao edgeDao;
-
-    @Autowired
     private RelationService relationService;
-
-    @RequestMapping(method = GET, value = "/parents/types/{id}/{date}")
-    public List<NodeWrapper> getParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getCurrentTypesByChildNodeId(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/parents/historyandcurrent/types/{id}/{date}")
-    public List<NodeWrapper> getHistoryAndCurrentParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getHistoryAndCurrentTypesByChildNodeId(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/parents/futureandcurrent/types/{id}/{date}")
-    public List<NodeWrapper> getFutureAndCurrentParentNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getFutureAndCurrentTypesByChildNodeId(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/children/types/{id}/{date}")
-    public List<NodeWrapper> getChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getCurrentTypesByParentNodeId(node.getId(), date);
-    }
-    @RequestMapping(method = GET, value = "/children/historyandcurrent/types/{id}/{date}")
-    public List<NodeWrapper> getHistoryAndCurrentChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getHistoryAndCurrentTypesByParentNodeId(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/children/futureandcurrent/types/{id}/{date}")
-    public List<NodeWrapper> getFutureAndCurrentChildNodeTypesByIdAndDate(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getFutureAndCurrentTypesByParentNodeId(node.getId(), date);
-    }
 
     @RequestMapping(method = GET, value = "/{id}/{date}/predecessors")
     public List<Cessor> getPredecessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
@@ -87,67 +49,6 @@ public class HierarchyController {
         List<String> hierarchies = Arrays.asList(commaSeparatedHierarchies.split(","));
         Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
         return relationService.getParents(node.getId(), hierarchies, date);
-    }
-
-    @RequestMapping(method = GET, value = "/predecessors/{id}/{date}")
-    public List<Relative> getPredecessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getPredecessors(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/successors/{id}/{date}")
-    public List<Relative> getSuccessors(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getSuccessors(node.getId());
-    }
-
-    @RequestMapping(method = GET, value = "/parents/{id}/{date}")
-    public List<Relative> getParents(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getParents(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/children/{id}/{date}")
-    public List<Relative> getChildrenOLD(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getChildren(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/children/historyandcurrent/{id}/{date}")
-    public List<Relative> getCurrentAndPastChildren(@PathVariable("id") int uniqueId, @PathVariable("date") String date)  throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getCurrentAndPastChildren(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/parents/historyandcurrent/{id}/{date}")
-    public List<Relative> getCurrentAndPastParents(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getCurrentAndPastParents(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/children/futureandcurrent/{id}/{date}")
-    public List<Relative> getCurrentAndFutureChildren(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getCurrentAndFutureChildren(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/parents/futureandcurrent/{id}/{date}")
-    public List<Relative> getCurrentAndFutureParents(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getCurrentAndFutureParents(node.getId(), date);
-    }
-
-    @RequestMapping(method = GET, value = "/children/all/{id}/{date}")
-    public List<Relative> getAllChildren(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getAllChildren(node.getId(), date);
-    }
-
-
-    @RequestMapping(method = GET, value = "/parents/all/{id}/{date}")
-    public List<Relative> getAllParents(@PathVariable("id") int uniqueId, @PathVariable("date") String date) throws IOException {
-        Node node = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return orgUnitDao.getAllParents(node.getId(), date);
     }
 
     @PutMapping("/parentUnit/properties")
