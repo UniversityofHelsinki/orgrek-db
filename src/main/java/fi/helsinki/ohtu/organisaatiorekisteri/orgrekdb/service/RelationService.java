@@ -13,9 +13,8 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Cessor;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ChildEdgeGroup;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ParentEdgeGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.EdgeGroup;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Names;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ParentEdgeGroup;
 
 @Service
 public class RelationService {

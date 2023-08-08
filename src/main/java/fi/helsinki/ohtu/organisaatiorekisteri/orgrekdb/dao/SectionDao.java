@@ -1,8 +1,12 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionDecoratedAttribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,12 +15,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionDecoratedAttribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 @Repository(value = "sectionDao")
 public class SectionDao extends NamedParameterJdbcDaoSupport {

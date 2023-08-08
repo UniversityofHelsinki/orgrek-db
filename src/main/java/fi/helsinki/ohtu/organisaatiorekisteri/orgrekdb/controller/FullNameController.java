@@ -1,16 +1,18 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FullName;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.List;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FullName;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 
 @RestController
 @RequestMapping("/api/node/fullname/")

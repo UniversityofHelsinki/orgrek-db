@@ -1,15 +1,10 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgePropertiesService;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgeService;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.TreeService.OrgUnit;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
-import org.apache.coyote.Response;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgePropertiesService;
 
 @RestController
 @RequestMapping("/api/edge")
@@ -35,9 +31,6 @@ public class EdgeController {
     private OrgUnitDao orgUnitDao;
     @Autowired
     private EdgePropertiesService edgePropertiesService;
-
-    @Autowired
-    private EdgeService edgeService;
 
     @RequestMapping("/types")
     public List<String> getHierarchyTypes() throws IOException {
@@ -78,7 +71,6 @@ public class EdgeController {
     @PutMapping("/")
     public ResponseEntity<Map<String, List<EdgeWithChildUniqueId>>> modifyEdges(@RequestBody Map<String, List<EdgeWithChildUniqueId>> edges) throws IOException {
         try {
-            List<EdgeWrapper>edgeWrappers = new ArrayList<>();
             edgePropertiesService.addUpdateOrDeleteEdge(edges);
             return new ResponseEntity<>(edges, HttpStatus.OK);
         } catch (IOException e) {

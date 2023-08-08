@@ -1,25 +1,25 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OtherAttribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SingleColumnRowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-import org.springframework.stereotype.Repository;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OtherAttribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 @Repository(value = "hierarchyFilterDao")
 public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {

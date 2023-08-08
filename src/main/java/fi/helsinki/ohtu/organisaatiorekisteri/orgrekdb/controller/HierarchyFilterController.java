@@ -1,19 +1,29 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.HierarchyFilterDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OtherAttribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 
 @RestController
 @RequestMapping("/api/hierarchyfilter")
@@ -21,9 +31,6 @@ public class HierarchyFilterController {
 
     @Autowired
     private HierarchyFilterDao hierarchyFilterDao;
-
-    @Autowired
-    private EdgeDao edgeDao;
 
     @RequestMapping(method = GET, value = "/{date}/{whichtime}")
     public List<HierarchyFilter> getAllHierarchyFilters(@PathVariable("date") String date, @PathVariable("whichtime") String whichtime) {
@@ -63,17 +70,12 @@ public class HierarchyFilterController {
     @RequestMapping(method = POST)
     public List<HierarchyFilter> addHierarchyFilter(@RequestBody List<HierarchyFilter> hierarchyFilters) throws IOException {
         List<HierarchyFilter> beforeSave = hierarchyFilterDao.getHierarchyFilters();
-        int[] results = hierarchyFilterDao.insertHierarchyFilters(hierarchyFilters);
+        hierarchyFilterDao.insertHierarchyFilters(hierarchyFilters);
         return hierarchyFilterDao.getHierarchyFilters().stream().filter(hierarchyFilter ->
                 beforeSave.stream().noneMatch(b -> b.getId() == hierarchyFilter.getId())
         ).collect(Collectors.toList());
     }
 
-    private boolean inputContainsAllHierarchies(List<String> hierarchies) throws IOException {
-        List<String> allHierarchies = edgeDao.getHierarchyTypes();
-        allHierarchies.remove("history");
-        return hierarchies.containsAll(allHierarchies);
-    }
     @RequestMapping(method = GET, value = "/{selectedHierarchies}/{sections}/attributes/keys")
     public List<String> getAttributeKeys(
             @PathVariable("selectedHierarchies") String selectedHierarchies,
