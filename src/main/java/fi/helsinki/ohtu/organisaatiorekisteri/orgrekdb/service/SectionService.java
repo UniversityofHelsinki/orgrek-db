@@ -19,6 +19,11 @@ public class SectionService {
         return sectionAttributeList;
     }
 
+    public List<String> getAllDistinctSectionAttributes() throws IOException {
+        List<String> sectionAttributeList = sectionDao.getAllDistinctSectionAttributes();
+        return sectionAttributeList;
+    }
+
     public int updateSectionAttribute(SectionAttribute sectionAttribute) throws IOException {
         return sectionDao.updateSectionAttribute(sectionAttribute);
     }

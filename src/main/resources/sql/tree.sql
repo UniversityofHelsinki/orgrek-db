@@ -1,50 +1,41 @@
-with traversed(id, child_node_id, parent_node_id, start_date, end_date, hierarchy) as (
-    select
-        ID,
-        CHILD_NODE_ID,
-        PARENT_NODE_ID,
-        START_DATE,
-        END_DATE,
-        HIERARCHY from edge where PARENT_NODE_ID = :start and (hierarchy in (:hierarchies))
-                              and (start_date is null or start_date <= trunc(to_date(:date, 'DD.MM.YYYY')))
-                              and (END_DATE is null or END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-    union all
-    select
-        e.ID id,
-        e.CHILD_NODE_ID child_node_id ,
-        e.PARENT_NODE_ID parent_node_id,
-        e.START_DATE start_date,
-        e.END_DATE end_date,
-        e.HIERARCHY hierarchy
-    from traversed t join EDGE e on t.CHILD_NODE_ID = e.PARENT_NODE_ID and e.hierarchy = t.hierarchy and (e.start_date is null or e.start_date <= trunc(to_date(:date, 'DD.MM.YYYY')))
-        and (e.end_date is null or e.end_date >= trunc(to_date(:date, 'DD.MM.YYYY')))
-), languages(language) as (
-    select 'fi' from dual
-    union
-    select 'sv' from dual
-    union
-    select 'en' from dual
-) select parent_node_id,
-         child_node_id,
-         parent_node.unique_id parent_node_unique_id,
-         child_node.unique_id child_node_unique_id,
-         case when pfn.name is null then parent_node.name else pfn.name end as parent_name,
-         case when cfn.name is null then child_node.name else cfn.name end as child_name,
-         languages.language language,
-         listagg(distinct traversed.hierarchy, ' ') within group (order by parent_node_id, child_node_id) hierarchies
-from traversed
-         cross join languages
-         left join full_name cfn on traversed.child_node_id=cfn.node_id and cfn.LANGUAGE = languages.language
-    and (cfn.start_date is null or cfn.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
-    and (cfn.END_DATE is null or cfn.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         left join full_name pfn on traversed.parent_node_id = pfn.node_id and pfn.LANGUAGE = languages.language
-    and cfn.language = pfn.language
-    and (pfn.START_DATE is null or pfn.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
-    and (pfn.END_DATE is null or pfn.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         join node parent_node on traversed.parent_node_id = parent_node.id
-    and (parent_node.START_DATE is null or parent_node.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
-    and (parent_node.END_DATE is null or parent_node.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-         join node child_node on traversed.child_node_id = child_node.id
-    and (child_node.START_DATE is null or child_node.START_DATE <= trunc(to_date(:date, 'DD.MM.YYYY')))
-    and (child_node.END_DATE is null or child_node.END_DATE >= trunc(to_date(:date, 'DD.MM.YYYY')))
-group by parent_node_id, child_node_id, parent_node.unique_id, child_node.unique_id, pfn.name, cfn.name, parent_node.name, child_node.name, languages.language order by parent_node_id, child_node_id
+WITH ROOT (ID, PARENT_NODE_ID, CHILD_NODE_ID, START_DATE, END_DATE, HIERARCHY) AS (
+	SELECT 
+		ID, 
+		PARENT_NODE_ID,
+		CHILD_NODE_ID,
+		START_DATE,
+		END_DATE, 
+		HIERARCHY 
+	FROM EDGE 
+	WHERE PARENT_NODE_ID IS NULL 
+		AND CHILD_NODE_ID IS NOT NULL
+		AND (START_DATE IS NULL OR START_DATE <= TRUNC(TO_DATE(:date, 'DD.MM.YYYY')))
+		AND (END_DATE IS NULL OR END_DATE >= TRUNC(TO_DATE(:date, 'DD.MM.YYYY')))
+		AND HIERARCHY IN (:hierarchies)
+		UNION ALL 
+	SELECT 
+		EDGE.ID, 
+		EDGE.PARENT_NODE_ID,
+		EDGE.CHILD_NODE_ID, 
+		EDGE.START_DATE, 
+		EDGE.END_DATE, 
+		EDGE.HIERARCHY 
+	FROM ROOT JOIN EDGE ON ROOT.CHILD_NODE_ID = EDGE.PARENT_NODE_ID 
+		AND ROOT.HIERARCHY = EDGE.HIERARCHY 
+		AND (EDGE.START_DATE IS NULL OR EDGE.START_DATE <= TRUNC(TO_DATE(:date, 'DD.MM.YYYY')))
+		AND (EDGE.END_DATE IS NULL OR EDGE.END_DATE >= TRUNC(TO_DATE(:date, 'DD.MM.YYYY')))
+), LANGUAGES(LANGUAGE) AS (
+	SELECT 'fi' FROM dual
+	UNION
+	SELECT 'sv' FROM dual
+	UNION
+	SELECT 'en' FROM dual
+) SELECT PARENT_NODE_ID, CHILD_NODE_ID, CHILD.UNIQUE_ID, HIERARCHY, LANGUAGES.LANGUAGE, COALESCE(FULL_NAME.NAME, CHILD.NAME) AS NODE_NAME FROM ROOT 
+		CROSS JOIN LANGUAGES 
+		JOIN NODE CHILD ON ROOT.CHILD_NODE_ID = CHILD.ID
+			AND (CHILD.START_DATE IS NULL OR CHILD.START_DATE <= TRUNC(TO_DATE(:date, 'DD.MM.YYYY')))
+			AND (CHILD.END_DATE IS NULL OR CHILD.END_DATE >= TRUNC(TO_DATE(:date, 'DD.MM.YYYY')))
+		LEFT JOIN FULL_NAME ON CHILD.ID = FULL_NAME.NODE_ID 
+			AND LANGUAGES.LANGUAGE = FULL_NAME.LANGUAGE 
+			AND (FULL_NAME.START_DATE IS NULL OR FULL_NAME.START_DATE <= TRUNC(TO_DATE(:date, 'DD.MM.YYYY')))
+			AND (FULL_NAME.END_DATE IS NULL OR FULL_NAME.END_DATE >= TRUNC(TO_DATE(:date, 'DD.MM.YYYY')))

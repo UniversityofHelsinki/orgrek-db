@@ -85,6 +85,24 @@ create table SECTION_ATTR
     END_DATE TIMESTAMP(6)
 );
 
+create table HIERARCHY_PUBLICITY
+(
+    ID NUMBER not null
+        constraint "HIERARCHY_PUBLICITY_pk"
+            primary key,
+    HIERARCHY VARCHAR2(255) not null,
+    PUBLICITY NUMBER not null
+);
+
+create table FULL_NAME
+(
+    NODE_ID VARCHAR(32) NOT NULL,
+    NAME VARCHAR(256),
+    START_DATE TIMESTAMP(6),
+    END_DATE TIMESTAMP(6),
+    LANGUAGE VARCHAR(32)
+);
+
 CREATE SEQUENCE NODE_SEQ
     MINVALUE 1
     MAXVALUE 9223372036854775807

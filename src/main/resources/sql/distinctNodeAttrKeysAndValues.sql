@@ -1,0 +1,1 @@
+select distinct key, value from node_attr where key is not null

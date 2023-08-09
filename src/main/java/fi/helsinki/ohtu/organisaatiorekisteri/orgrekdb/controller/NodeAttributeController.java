@@ -5,10 +5,14 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttributeKeyValueDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionDecoratedAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.NodeAttributeService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
+
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,8 +71,7 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeNameAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<SectionAttribute> sectionTypeAttributes = sectionDao.getSectionAttributesBySection(Constants.NAME_SECTION);
-            List<Attribute> nodeNameAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionTypeAttributes);
+            List<Attribute> nodeNameAttributes = attributeDao.getSectionAttributesBySectionAndNodeId(Constants.NAME_SECTION, node.getId());
             return new ResponseEntity<>(nodeNameAttributes, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -90,8 +93,7 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeTypeAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<SectionAttribute> sectionTypeAttributes = sectionDao.getSectionAttributesBySection(Constants.TYPE_SECTION);
-            List<Attribute> nodeTypeAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionTypeAttributes);
+            List<Attribute> nodeTypeAttributes = attributeDao.getSectionAttributesBySectionAndNodeId(Constants.TYPE_SECTION, node.getId());
             return new ResponseEntity<>(nodeTypeAttributes, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -112,8 +114,7 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeCodeAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<SectionAttribute> sectionCodeAttributes = sectionDao.getSectionAttributesBySection(Constants.CODE_SECTION);
-            List<Attribute> nodeCodeAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionCodeAttributes);
+            List<Attribute> nodeCodeAttributes = attributeDao.getSectionAttributesBySectionAndNodeId(Constants.CODE_SECTION, node.getId());
             return new ResponseEntity<>(nodeCodeAttributes, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -134,9 +135,8 @@ public class NodeAttributeController {
     public ResponseEntity<List<Attribute>> getNodeOtherAttributes(@PathVariable("id") int nodeUniqueId) {
         try {
             Node node = orgUnitDao.getNodeByUniqueId(nodeUniqueId);
-            List<SectionAttribute> sectionCodeAttributes = sectionDao.getSectionAttributesBySection(Constants.OTHER_SECTION);
-            List<Attribute> nodeOtherAttributes = attributeDao.getSectionAttributesByNodeId(node.getId(), sectionCodeAttributes);
-            return new ResponseEntity<>(nodeOtherAttributes, HttpStatus.OK);
+            List<Attribute> nodeCodeAttributes = attributeDao.getSectionAttributesBySectionAndNodeId(Constants.OTHER_SECTION, node.getId());
+            return new ResponseEntity<>(nodeCodeAttributes, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -151,4 +151,31 @@ public class NodeAttributeController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/distinctattributes/")
+    public ResponseEntity<List<NodeAttributeKeyValueDTO>> getDistinctNodeAttrs() {
+        try {
+            List<NodeAttributeKeyValueDTO> sectionAttributes = attributeDao.getDistinctNodeAttrs();
+            return new ResponseEntity<>(sectionAttributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{id}/{hierarchies}/{date}/attributes")
+    public ResponseEntity<?> getNodeAttributes(
+        @PathVariable("id") Integer uniqueId,
+        @PathVariable("date") String date,
+        @PathVariable("hierarchies") String commaSeparatedHierarchies) throws IOException {
+        Node target = orgUnitDao.getNodeByUniqueId(uniqueId);
+        if (target == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<String> hierarchies = Arrays.asList(commaSeparatedHierarchies.split(","));
+
+        Map<String, List<Attribute>> attributes = nodeAttributeService.getAttributes(target.getId(), hierarchies, date);
+        return ResponseEntity.ok(attributes);
+    }
+
 }

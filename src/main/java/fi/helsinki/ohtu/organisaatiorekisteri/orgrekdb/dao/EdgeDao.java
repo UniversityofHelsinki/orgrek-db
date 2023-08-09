@@ -1,5 +1,6 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
@@ -145,5 +146,22 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         List<String> hierarchies = jdbcTemplate.queryForList(sql, String.class);
         return hierarchies;
          */
+    }
+
+    public List<EdgeWrapper> getRoots() throws IOException {
+        String sql = ReadSqlFiles.sqlString("roots.sql");
+        List<EdgeWrapper> roots 
+            = getNamedParameterJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(EdgeWrapper.class));
+        return roots;
+    }
+
+    public List<EdgeWithChildUniqueId> getEdgesInHierarchy(String startNodeID, String hierarchy) throws IOException {
+        String sql = ReadSqlFiles.sqlString("edgesStartingFromXInHierarchy.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("hierarchy", hierarchy);
+        params.addValue("id", startNodeID);
+        List<EdgeWithChildUniqueId> edges =
+            getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(EdgeWithChildUniqueId.class));
+        return edges;
     }
 }

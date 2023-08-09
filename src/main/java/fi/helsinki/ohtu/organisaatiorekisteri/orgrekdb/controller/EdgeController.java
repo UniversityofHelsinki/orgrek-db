@@ -1,15 +1,19 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgePropertiesService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.EdgeService;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.TreeService.OrgUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +32,8 @@ public class EdgeController {
     @Autowired
     private EdgeDao edgeDao;
     @Autowired
+    private OrgUnitDao orgUnitDao;
+    @Autowired
     private EdgePropertiesService edgePropertiesService;
 
     @Autowired
@@ -43,10 +49,26 @@ public class EdgeController {
         return edgeDao.getEdgeHierarchies();
     }
 
+    @RequestMapping("/paths/{hierarchy}/{uniqueId}")
+    public List<EdgeWithChildUniqueId> getPathsFrom(@PathVariable("hierarchy") String hierarchy, @PathVariable("uniqueId") Integer uniqueId) throws IOException {
+        Node n = orgUnitDao.getNodeByUniqueId(uniqueId);
+        return edgeDao.getEdgesInHierarchy(n.getId(), hierarchy);
+    }
+
     @PutMapping("/parents")
     public ResponseEntity<Map<String, List<EdgeWrapper>>> updateParents(@RequestBody Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) {
         try {
             edgePropertiesService.updateDeleteOrSaveUpperUnit(edgeWithChildUniqueIdMap);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/children")
+    public ResponseEntity<Map<String, List<EdgeWrapper>>> updateChildren(@RequestBody Map<String, List<EdgeWithChildUniqueId>> edgeWithChildUniqueIdMap) {
+        try {
+            edgePropertiesService.updateDeleteOrSaveChildUnit(edgeWithChildUniqueIdMap);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

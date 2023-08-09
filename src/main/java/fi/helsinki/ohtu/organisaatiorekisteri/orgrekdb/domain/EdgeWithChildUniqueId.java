@@ -11,6 +11,10 @@ public class EdgeWithChildUniqueId {
     private Date endDate;
     private String hierarchy;
 
+    public EdgeWithChildUniqueId() {
+
+    }
+
     public EdgeWithChildUniqueId(Integer id, int parentUniqueId, int childUniqueId, Date startDate, Date endDate, String hierarchy) {
         this.id = id;
         this.parentUniqueId = parentUniqueId;
