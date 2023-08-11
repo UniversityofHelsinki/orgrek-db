@@ -46,6 +46,15 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return getNamedParameterJdbcTemplate().queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
+    public List<Node> getNodes(List<String> nodeIds) throws IOException {
+        String sql = ReadSqlFiles.sqlString("nodes.sql");
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ids", nodeIds);
+        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
+    }
+
+
     public List<Attribute> getAttributeListByDate(String id, Date date) throws IOException {
         Date attrstart = date;
         Date attrend = date;

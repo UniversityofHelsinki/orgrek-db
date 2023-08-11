@@ -6,6 +6,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,10 @@ public class NodeService {
         attribute.setStartDate(newNodeDTO.getStartDate());
         attribute.setEndDate(newNodeDTO.getEndDate());
         return attribute;
+    }
+
+    public List<Node> getNodes(List<String> nodeIds) throws IOException {
+        return orgUnitDao.getNodes(nodeIds);
     }
 
 }

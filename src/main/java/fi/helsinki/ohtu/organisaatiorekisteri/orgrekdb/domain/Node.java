@@ -3,6 +3,8 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Names.Name;
+
 public class Node {
     private String id;
     private String name;
@@ -10,6 +12,16 @@ public class Node {
     private Date endDate;
     private Timestamp timestamp;
     private int uniqueId;
+
+    private Name names;
+
+    public Name getNames() {
+      return names;
+    }
+
+    public void setNames(Name names) {
+      this.names = names;
+    }
 
     public String getId() {
         return id;
