@@ -155,10 +155,17 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         return roots;
     }
 
-    public List<EdgeWithChildUniqueId> getEdgesInHierarchy(String startNodeID, String hierarchy) throws IOException {
+    public List<EdgeWithChildUniqueId> getEdgesInHierarchy(
+        String startNodeID, 
+        String hierarchies,
+        String newEdgeStartDate,
+        String newEdgeEndDate
+    ) throws IOException {
         String sql = ReadSqlFiles.sqlString("edgesStartingFromXInHierarchy.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("hierarchy", hierarchy);
+        params.addValue("newEdgeStartDate", newEdgeStartDate.equals("null") ? null : newEdgeStartDate);
+        params.addValue("newEdgeEndDate", newEdgeEndDate.equals("null") ? null : newEdgeEndDate);
+        //params.addValue("hierarchies", hierarchies);
         params.addValue("id", startNodeID);
         List<EdgeWithChildUniqueId> edges =
             getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(EdgeWithChildUniqueId.class));
