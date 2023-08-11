@@ -4,6 +4,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqu
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -17,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -164,4 +166,39 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
             getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(EdgeWithChildUniqueId.class));
         return edges;
     }
+
+    public List<EdgeWrapper> getByParentAndHierarchies(String parentNodeId, List<String> hierarchies) throws IOException {
+        String sql = ReadSqlFiles.sqlString("edgesByParentAndHierarchies.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", parentNodeId);
+        params.addValue("hierarchies", hierarchies);
+        List<EdgeWrapper> edges = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(EdgeWrapper.class));
+        return edges;
+    }
+
+    public List<EdgeWrapper> getByChildAndHierarchies(String childNodeId, List<String> hierarchies) throws IOException  {
+        String sql = ReadSqlFiles.sqlString("edgesByChildAndHierarchies.sql");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", childNodeId);
+        params.addValue("hierarchies", hierarchies);
+        List<EdgeWrapper> edges = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(EdgeWrapper.class));
+        return edges;
+    }
+
+    public List<EdgeWrapper> getPredecessors(String nodeId) throws IOException {
+        return getByParentAndHierarchies(nodeId, Arrays.asList(new String[] { Constants.HISTORY }));
+    }
+
+    public List<EdgeWrapper> getSuccessors(String nodeId) throws IOException {
+        return getByChildAndHierarchies(nodeId, Arrays.asList(new String[] { Constants.HISTORY }));
+    }
+
+    public List<EdgeWrapper> getChildren(String nodeId, List<String> hierarchies) throws IOException {
+        return getByParentAndHierarchies(nodeId, hierarchies);
+    }
+
+    public List<EdgeWrapper> getParents(String nodeId, List<String> hierarchies) throws IOException {
+        return getByChildAndHierarchies(nodeId , hierarchies);
+    }
+
 }
