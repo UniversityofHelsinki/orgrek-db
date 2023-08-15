@@ -49,10 +49,15 @@ public class EdgeController {
         return edgeDao.getEdgeHierarchies();
     }
 
-    @RequestMapping("/paths/{hierarchy}/{uniqueId}")
-    public List<EdgeWithChildUniqueId> getPathsFrom(@PathVariable("hierarchy") String hierarchy, @PathVariable("uniqueId") Integer uniqueId) throws IOException {
+    @RequestMapping("/paths/{hierarchy}/{uniqueId}/{start}/{end}/")
+    public List<EdgeWithChildUniqueId> getPathsFrom(
+        @PathVariable("hierarchy") String hierarchy,
+        @PathVariable("uniqueId") Integer uniqueId,
+        @PathVariable("start") String startDate,
+        @PathVariable("end") String endDate
+    ) throws IOException {
         Node n = orgUnitDao.getNodeByUniqueId(uniqueId);
-        return edgeDao.getEdgesInHierarchy(n.getId(), hierarchy);
+        return edgeDao.getEdgesInHierarchy(n.getId(), hierarchy, startDate, endDate);
     }
 
     @PutMapping("/parents")
