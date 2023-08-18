@@ -1,8 +1,8 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
 import java.util.Date;
+
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 public class EdgeWrapper {
 

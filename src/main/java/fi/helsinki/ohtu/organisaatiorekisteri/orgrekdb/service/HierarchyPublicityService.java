@@ -1,5 +1,16 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.HierarchyPublicityDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
@@ -8,13 +19,6 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NameLanguageWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewHierarchyPublicityDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.util.*;
 
 @Service
 public class HierarchyPublicityService {
