@@ -1,11 +1,14 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HierarchyFilter;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,18 +17,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 @Repository(value = "edgeDao")
 public class EdgeDao extends NamedParameterJdbcDaoSupport {
-
-    private static SimpleDateFormat yearMonthDay = new SimpleDateFormat("dd.MM.yyyy");
 
     @Autowired
     private DataSource dataSource;
@@ -79,6 +78,8 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
     }
 
     private MapSqlParameterSource getMapSqlParameterSource(EdgeWrapper attribute, MapSqlParameterSource params) {
+
+        SimpleDateFormat yearMonthDay = new SimpleDateFormat("dd.MM.yyyy");
         params.addValue("child_node_id", attribute.getChildNodeId());
         params.addValue("parent_node_id", attribute.getParentNodeId());
         params.addValue("hierarchy", attribute.getHierarchy());

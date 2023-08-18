@@ -1,15 +1,16 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 
 @Service
 public class EdgeService {

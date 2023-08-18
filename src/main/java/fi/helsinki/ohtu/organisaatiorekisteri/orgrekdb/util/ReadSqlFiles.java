@@ -1,11 +1,11 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util;
 
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
+
+import org.springframework.core.io.ClassPathResource;
 
 public class ReadSqlFiles {
     public static String sqlString(String file) throws IOException {

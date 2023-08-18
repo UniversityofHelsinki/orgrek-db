@@ -1,5 +1,21 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
@@ -7,19 +23,9 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttributeKeyValueDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionDecoratedAttribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.NodeAttributeService;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
-
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.*;
 
 @RestController
 @RequestMapping("/api/node")

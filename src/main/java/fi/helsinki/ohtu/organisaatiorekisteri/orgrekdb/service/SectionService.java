@@ -1,12 +1,13 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.List;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.SectionDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
 
 @Service
 public class SectionService {

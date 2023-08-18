@@ -1,7 +1,6 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
 import java.util.List;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 
 /**
  * Cessor = prede_cessor_ or suc_cessor_ :)
