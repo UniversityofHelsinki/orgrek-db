@@ -35,6 +35,41 @@ public class TreeServiceTest {
     )
   );
 
+  private OrgUnit findByID(OrgUnit node, String id) {
+    if (node.getId().equals(id)) {
+      return node;
+    }
+    for (OrgUnit child : node.getChildren()) {
+      OrgUnit hit = findByID(child, id);
+      if (hit != null) {
+        return hit;
+      }
+    }
+    return null;
+  }
+
+  @Test
+  public void nodesDoesNotHaveToBeValidToday() throws IOException {
+    List<OrgUnit> roots = treeService.getTree(hierarchies, today);
+    boolean found = false;
+    for (OrgUnit root : roots) {
+      OrgUnit result = findByID(root, "treeTestExpiredOne");
+      if (result != null) {
+        found = true;
+      }
+    }
+    assertEquals(true, found);
+  }
+
+  @Test
+  public void edgesNotValidTodayAreNotIncluded() throws IOException {
+    List<OrgUnit> roots = treeService.getTree(hierarchies, today);
+    assertNotEquals(0, roots.size());
+    for (OrgUnit root : roots) {
+      assertNotEquals("treeTestChild2", root.getNames().get("fi"));
+    }
+  }
+
   @Test
   public void multipleRoots() throws IOException {
     List<OrgUnit> tree = treeService.getTree(hierarchies, today);
