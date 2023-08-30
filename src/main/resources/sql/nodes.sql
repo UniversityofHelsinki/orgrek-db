@@ -1,0 +1,1 @@
+SELECT * FROM NODE WHERE ID IN (:ids)

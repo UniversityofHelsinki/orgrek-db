@@ -1,32 +1,30 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttributeKeyValueDTO;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Repository;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttributeKeyValueDTO;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SectionAttribute;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 @Repository(value = "attributeDao")
 public class AttributeDao extends NamedParameterJdbcDaoSupport {
-
-    private static SimpleDateFormat yearMonthDay = new SimpleDateFormat("dd.MM.yyyy");
 
     @Autowired
     private DataSource dataSource;
@@ -90,6 +88,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
     public Attribute insertAttribute(Attribute attribute) throws IOException {
 
         String sql = ReadSqlFiles.sqlString("insertAttributes.sql");
+        SimpleDateFormat yearMonthDay = new SimpleDateFormat("dd.MM.yyyy");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         Integer sequence = getJdbcTemplate().queryForObject("SELECT node_seq.nextval FROM dual", Integer.class);
@@ -108,6 +107,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
 
 
     private MapSqlParameterSource getMapSqlParameterSource(Attribute attribute, MapSqlParameterSource params) {
+        SimpleDateFormat yearMonthDay = new SimpleDateFormat("dd.MM.yyyy");
         params.addValue("node_id", attribute.getNodeId());
         params.addValue("key", attribute.getKey());
         params.addValue("value", attribute.getValue());

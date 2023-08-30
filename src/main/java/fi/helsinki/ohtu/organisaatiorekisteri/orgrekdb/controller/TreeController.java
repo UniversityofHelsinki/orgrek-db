@@ -1,7 +1,12 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.TreeService;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.*;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service.TreeService;
 
 @RestController
 @RequestMapping("/api/tree")
