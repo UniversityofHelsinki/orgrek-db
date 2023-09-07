@@ -61,4 +61,19 @@ public class Constants {
     public static final String ABBREVIATION = "lyhenne";
 
     public static final String UPDATE_FULL_NAME_VIEW_PROCEDURE_NAME = "UPDATE_FULL_NAME_TEMP";
+
+    public static final String PUBLIC_API_START_NODE = "a1";
+
+    public static final String PUBLIC_API_HIERARCHY_RESEARCH_GROUP = "tutkimus";
+    public static final String PUBLIC_API_HIERARCHY_FINANCE_UNIT = "talous";
+    public static final String PUBLIC_API_HIERARCHY_EDUCATION_UNIT = "opetus";
+    public static final String PUBLIC_API_HIERARCHY_OFFICIAL_UNIT = "virallinen";
+
+    public static final String PUBLIC_API_CODE_FINANCE_UNIT = "talous_tunnus";
+    public static final String PUBLIC_API_CODE_RESEARCH_GROUP = "tutkimus_tunnus";
+    public static final String PUBLIC_API_CODE_EDUCATION_UNIT = "oppiaine_tunnus";
+    public static final String PUBLIC_API_CODE_OFFICIAL_UNIT = "lyhenne";
+
+    
+
 }
