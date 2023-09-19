@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -266,44 +267,30 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         return queryResults;
     }
 
-    public List<SteeringGroup> getResearchGroups() throws IOException {
-        String sql = ReadSqlFiles.sqlString("researchGroups.sql");
-        List<SteeringGroup> queryResults =
-            getNamedParameterJdbcTemplate().query(
-                sql,
-                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
-            );
-        return queryResults;
-    }
+    /**
+     * Used in public orgrek apis. PO wants nodes that can be reached
+     * from a specific node (usually HY) in a specific hierarchy. 
+     * These nodes must have certain attribute(s) valid. 
+     * Node's start and end date are not taken into account, only edges'.
+     */
+    public List<SteeringGroup> getHierarchyOrgUnits(
+        String startNodeId, 
+        Date date, 
+        String hierarchy, 
+        String hierarchySpecificCode
+      ) throws IOException {
+      String sql = ReadSqlFiles.sqlString("hierarchyOrgUnits.sql");
+      SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+      MapSqlParameterSource params = new MapSqlParameterSource();
+      params.addValue("start", startNodeId);
+      params.addValue("date", df.format(date));
+      params.addValue("hierarchy", hierarchy);
+      params.addValue("key", hierarchySpecificCode);
 
-    public List<SteeringGroup> getFinanceUnits() throws IOException {
-        String sql = ReadSqlFiles.sqlString("financeUnits.sql");
-        List<SteeringGroup> queryResults =
-            getNamedParameterJdbcTemplate().query(
-                sql,
-                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
-            );
-        return queryResults;
-    }
-
-    public List<SteeringGroup> getEducationUnits() throws IOException {
-        String sql = ReadSqlFiles.sqlString("educationUnits.sql");
-        List<SteeringGroup> queryResults =
-            getNamedParameterJdbcTemplate().query(
-                sql,
-                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
-            );
-        return queryResults;
-    }
-
-    public List<SteeringGroup> getOfficialUnits() throws IOException {
-        String sql = ReadSqlFiles.sqlString("officialUnits.sql");
-        List<SteeringGroup> queryResults =
-            getNamedParameterJdbcTemplate().query(
-                sql,
-                BeanPropertyRowMapper.newInstance(SteeringGroup.class)
-            );
-        return queryResults;
+      List<SteeringGroup> results = getNamedParameterJdbcTemplate().query(
+          sql, params, BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+      );
+      return results;
     }
 
     public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
