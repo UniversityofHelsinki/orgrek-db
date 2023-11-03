@@ -301,6 +301,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       );
     }
 
+    public List<SteeringGroup> getConcernGroups() throws IOException {
+      String sql = ReadSqlFiles.sqlString("concernGroups.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+      );
+    }
+
     public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
         String sql = ReadSqlFiles.sqlString("favorableFullNames.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();

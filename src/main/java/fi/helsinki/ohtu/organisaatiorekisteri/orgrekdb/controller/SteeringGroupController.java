@@ -71,11 +71,6 @@ public class SteeringGroupController {
       );
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/educationUnits")
-    public List<EducationUnit> getEducationUnits() throws IOException {
-      return orgUnitDao.getEducationUnits();
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/officialUnits")
     public List<SteeringGroup> getOfficialUnits() throws IOException {
       return orgUnitDao.getHierarchyOrgUnits(
@@ -84,6 +79,16 @@ public class SteeringGroupController {
           Constants.PUBLIC_API_HIERARCHY_OFFICIAL_UNIT, 
           Constants.PUBLIC_API_CODE_OFFICIAL_UNIT
       );
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/educationUnits")
+    public List<EducationUnit> getEducationUnits() throws IOException {
+      return orgUnitDao.getEducationUnits();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/concernGroups")
+    public List<SteeringGroup> getConcernGroups() throws IOException {
+      return orgUnitDao.getConcernGroups();
     }
 
 }
