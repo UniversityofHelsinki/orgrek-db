@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.DegreeProgrammeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FullName;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
@@ -291,6 +292,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
           sql, params, BeanPropertyRowMapper.newInstance(SteeringGroup.class)
       );
       return results;
+    }
+
+    public List<EducationUnit> getEducationUnits() throws IOException {
+      String sql = ReadSqlFiles.sqlString("educationUnits.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(EducationUnit.class)
+      );
     }
 
     public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
