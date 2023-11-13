@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
@@ -70,16 +71,6 @@ public class SteeringGroupController {
       );
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/educationUnits")
-    public List<SteeringGroup> getEducationUnits() throws IOException {
-      return orgUnitDao.getHierarchyOrgUnits(
-          Constants.PUBLIC_API_START_NODE, 
-          new Date(), 
-          Constants.PUBLIC_API_HIERARCHY_EDUCATION_UNIT, 
-          Constants.PUBLIC_API_CODE_EDUCATION_UNIT
-      );
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/officialUnits")
     public List<SteeringGroup> getOfficialUnits() throws IOException {
       return orgUnitDao.getHierarchyOrgUnits(
@@ -88,6 +79,16 @@ public class SteeringGroupController {
           Constants.PUBLIC_API_HIERARCHY_OFFICIAL_UNIT, 
           Constants.PUBLIC_API_CODE_OFFICIAL_UNIT
       );
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/educationUnits")
+    public List<EducationUnit> getEducationUnits() throws IOException {
+      return orgUnitDao.getEducationUnits();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/concernGroups")
+    public List<SteeringGroup> getConcernGroups() throws IOException {
+      return orgUnitDao.getConcernGroups();
     }
 
 }
