@@ -193,11 +193,11 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         return edges;
     }
 
-    public List<EdgeWrapper> getPredecessors(String nodeId) throws IOException {
+    public List<EdgeWrapper> getSuccessors(String nodeId) throws IOException {
         return getByParentAndHierarchies(nodeId, Arrays.asList(new String[] { Constants.HISTORY }));
     }
 
-    public List<EdgeWrapper> getSuccessors(String nodeId) throws IOException {
+    public List<EdgeWrapper> getPredecessors(String nodeId) throws IOException {
         return getByChildAndHierarchies(nodeId, Arrays.asList(new String[] { Constants.HISTORY }));
     }
 
