@@ -29,15 +29,15 @@ public class RelationService {
 
   public List<Cessor> getPredecessors(String nodeId, String date) throws IOException {
     List<EdgeWrapper> edges = edgeDao.getPredecessors(nodeId);
-    List<String> nodeIds = edges.stream().map(e -> e.getChildNodeId()).collect(Collectors.toList());
-    EdgeGroup edgeGroup = new ChildEdgeGroup(edges);
+    List<String> nodeIds = edges.stream().map(e -> e.getParentNodeId()).collect(Collectors.toList());
+    EdgeGroup edgeGroup = new ParentEdgeGroup(edges);
     return getRelatives(edges, nodeIds, edgeGroup, date);
   }
 
   public List<Cessor> getSuccessors(String nodeId, String date) throws IOException {
     List<EdgeWrapper> edges = edgeDao.getSuccessors(nodeId);
-    List<String> nodeIds = edges.stream().map(e -> e.getParentNodeId()).collect(Collectors.toList());
-    EdgeGroup edgeGroup = new ParentEdgeGroup(edges);
+    List<String> nodeIds = edges.stream().map(e -> e.getChildNodeId()).collect(Collectors.toList());
+    EdgeGroup edgeGroup = new ChildEdgeGroup(edges);
     return getRelatives(edges, nodeIds, edgeGroup, date);
   }
 
