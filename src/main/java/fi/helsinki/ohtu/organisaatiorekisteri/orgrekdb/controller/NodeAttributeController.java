@@ -168,6 +168,16 @@ public class NodeAttributeController {
         }
     }
 
+    @GetMapping("/attribute/sortable")
+    public ResponseEntity<Map<String, List<String>>> getSortableByValue() {
+        try {
+            Map<String, List<String>> sortableByValueAttributes = attributeDao.sortableByValueAttributes();
+            return new ResponseEntity<>(sortableByValueAttributes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/{id}/{hierarchies}/{date}/attributes")
     public ResponseEntity<?> getNodeAttributes(
         @PathVariable("id") Integer uniqueId,
