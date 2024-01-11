@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -215,6 +217,16 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
             return nodeAttributeKeyValueDTO;
         });
         return query;
+    }
+
+    public Map<String, List<String>> sortableByValueAttributes() throws IOException {
+      String sql = ReadSqlFiles.sqlString("sortableByValueAttributes.sql");
+      Map<String, List<String>> results = new HashMap<>();
+      getNamedParameterJdbcTemplate().query(sql, (rs) -> {
+        results.putIfAbsent(rs.getString("key"), new ArrayList<>());
+        results.get(rs.getString("key")).add(rs.getString("value"));
+      });
+      return results;
     }
 
     public List<Attribute> getAttributes(String nodeId) throws IOException {
