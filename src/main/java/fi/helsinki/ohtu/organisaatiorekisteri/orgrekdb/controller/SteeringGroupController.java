@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
@@ -62,13 +63,8 @@ public class SteeringGroupController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/financeUnits")
-    public List<SteeringGroup> getFinance() throws IOException {
-      return orgUnitDao.getHierarchyOrgUnits(
-          Constants.PUBLIC_API_START_NODE, 
-          new Date(), 
-          Constants.PUBLIC_API_HIERARCHY_FINANCE_UNIT, 
-          Constants.PUBLIC_API_CODE_FINANCE_UNIT
-      );
+    public List<FinanceUnit> getFinance() throws IOException {
+      return orgUnitDao.getFinanceUnits();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/officialUnits")
