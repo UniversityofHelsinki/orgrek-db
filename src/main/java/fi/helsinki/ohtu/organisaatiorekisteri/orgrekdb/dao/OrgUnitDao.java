@@ -20,6 +20,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.DegreeProgrammeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
@@ -301,6 +303,14 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
           sql, BeanPropertyRowMapper.newInstance(FinanceUnit.class)
       );
     };
+
+    public List<FinanceUnit> getPublicFinanceUnits() throws IOException {
+      String sql = ReadSqlFiles.sqlString("financeUnitsPublic.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(FinanceUnit.class)
+      );
+    }
+
 
     public List<EducationUnit> getEducationUnits() throws IOException {
       String sql = ReadSqlFiles.sqlString("educationUnits.sql");
