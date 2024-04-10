@@ -1,6 +1,15 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit.DefaultView;
+
+@JsonView(DefaultView.class)
 public class FinanceUnit {
+
+    public interface DefaultView {};
+    public interface WithPublicityView extends DefaultView {};
+
     private String uniqueId;
 
     private String code;
@@ -41,6 +50,7 @@ public class FinanceUnit {
         this.type = type;
     }
 
+    @JsonView(WithPublicityView.class)
     public String getPublicity() {
         return publicity;
     }

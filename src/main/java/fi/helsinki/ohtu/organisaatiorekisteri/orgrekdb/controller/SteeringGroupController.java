@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
@@ -63,8 +65,15 @@ public class SteeringGroupController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/financeUnits")
+    @JsonView(FinanceUnit.WithPublicityView.class)
     public List<FinanceUnit> getFinance() throws IOException {
       return orgUnitDao.getFinanceUnits();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/financeUnitsPublic")
+    @JsonView(FinanceUnit.DefaultView.class)
+    public List<FinanceUnit> getPublicFinanceUnits() throws IOException {
+      return orgUnitDao.getPublicFinanceUnits();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/officialUnits")
