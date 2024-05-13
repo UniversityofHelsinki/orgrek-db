@@ -80,18 +80,18 @@ deploy_dev:
     - oc delete secret generic db-dev-password --ignore-not-found
     - oc create secret generic db-dev-password --from-literal=password=$DB_DEV_PASSWORD
     # list environment variables here
-    - oc set env --from=secret/db-dev-password dc/organisaatiorekisteri-db-dev
-    - oc set env dc/organisaatiorekisteri-db-dev URL=$DB_DEV_URL
-    - oc set env dc/organisaatiorekisteri-db-dev PORT=$DB_PORT
-    - oc set env dc/organisaatiorekisteri-db-dev USERNAME=$DB_DEV_USERNAME
-    - oc set env dc/organisaatiorekisteri-db-dev TZ="Europe/Helsinki"
+    - oc set env --from=secret/db-dev-password deployment/organisaatiorekisteri-db-dev
+    - oc set env deployment/organisaatiorekisteri-db-dev URL=$DB_DEV_URL
+    - oc set env deployment/organisaatiorekisteri-db-dev PORT=$DB_PORT
+    - oc set env deployment/organisaatiorekisteri-db-dev USERNAME=$DB_DEV_USERNAME
+    - oc set env deployment/organisaatiorekisteri-db-dev TZ="Europe/Helsinki"
     # Start build process
     - oc start-build organisaatiorekisteri-db-dev --from-dir=. --follow
     # patch openshift buildConfig file
     - oc patch bc/organisaatiorekisteri-db-dev --patch '{"spec":{"successfulBuildsHistoryLimit":1}}'
     - oc patch bc/organisaatiorekisteri-db-dev --patch '{"spec":{"failedBuildsHistoryLimit":1}}'
     # set pod memory quota to 300 MB and limit to 500 MB
-    - oc set resources dc/organisaatiorekisteri-db-dev --limits=memory=500Mi --requests=memory=300Mi
+    - oc set resources deployment/organisaatiorekisteri-db-dev --limits=memory=500Mi --requests=memory=300Mi
 
 deploy_test:
   stage: deploy
