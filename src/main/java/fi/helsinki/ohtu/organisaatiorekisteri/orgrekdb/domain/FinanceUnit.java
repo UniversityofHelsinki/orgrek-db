@@ -9,6 +9,7 @@ public class FinanceUnit {
 
     public interface DefaultView {};
     public interface WithPublicityView extends DefaultView {};
+    public interface WithUniqueCodeView extends WithPublicityView {};
 
     private String uniqueId;
 
@@ -17,6 +18,8 @@ public class FinanceUnit {
     private String type;
 
     private String publicity;
+
+    private String uniqueCode;
 
     private String nameFi;
 
@@ -58,6 +61,16 @@ public class FinanceUnit {
     public void setPublicity(String publicity) {
         this.publicity = publicity;
     }
+
+    @JsonView(WithUniqueCodeView.class)
+    public String getUniqueCode() {
+        return uniqueCode;
+    }
+
+    public void setUniqueCode(String uniqueCode) {
+        this.uniqueCode = uniqueCode;
+    }
+
 
     public String getNameFi() {
         return nameFi;
