@@ -31,6 +31,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FullName;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Relative;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TreeNode;
@@ -297,6 +298,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       return results;
     }
 
+    public List<OfficialUnit> getOfficialUnits() throws IOException {
+      String sql = ReadSqlFiles.sqlString("officialUnits.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(OfficialUnit.class)
+      );
+    };
+
     public List<FinanceUnit> getFinanceUnits() throws IOException {
       String sql = ReadSqlFiles.sqlString("financeUnits.sql");
       return getNamedParameterJdbcTemplate().query(
@@ -311,6 +319,19 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       );
     }
 
+    public List<FinanceUnit> getFinanceUnitsWithUniqueCode() throws IOException {
+      String sql = ReadSqlFiles.sqlString("financeUnitsWithUniqueCode.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(FinanceUnit.class)
+      );
+    }
+
+    public List<FinanceUnit> getFinanceUnitsWithUniqueCodeExclusive() throws IOException {
+      String sql = ReadSqlFiles.sqlString("financeUnitsWithUniqueCodeExclusive.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(FinanceUnit.class)
+      );
+    }
 
     public List<EducationUnit> getEducationUnits() throws IOException {
       String sql = ReadSqlFiles.sqlString("educationUnits.sql");
