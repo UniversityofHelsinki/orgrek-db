@@ -20,8 +20,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.DegreeProgrammeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
@@ -347,28 +345,12 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       );
     }
 
-    public List<FullName> getFavorableNames(int uniqueId, String date) throws IOException {
-        String sql = ReadSqlFiles.sqlString("favorableFullNames.sql");
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("date", date);
-        params.addValue("uniqueId", uniqueId);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(FullName.class));
-    }
-
     public List<FullName> getFullNames(String nodeId, String date)  throws IOException {
         String sql = ReadSqlFiles.sqlString("fullNames.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Constants.NODE_ID_FIELD, nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(FullName.class));
-    }
-
-    public List<FullName> getAllFullNames(String nodeId)  throws IOException {
-        String sql = ReadSqlFiles.sqlString("allFullNames.sql");
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Constants.NODE_ID_FIELD, nodeId);
         return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(FullName.class));
     }
 
