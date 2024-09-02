@@ -17,6 +17,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
@@ -76,14 +77,21 @@ public class SteeringGroupController {
       return orgUnitDao.getPublicFinanceUnits();
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/financeUnitsWithUniqueCode")
+    @JsonView(FinanceUnit.WithUniqueCodeView.class)
+    public List<FinanceUnit> getFinanceUnitsWithUniqueCode() throws IOException {
+      return orgUnitDao.getFinanceUnitsWithUniqueCode();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/financeUnitsWithUniqueCodeExclusive")
+    @JsonView(FinanceUnit.DefaultView.class)
+    public List<FinanceUnit> getFinanceUnitsWithUniqueCodeExclusive() throws IOException {
+      return orgUnitDao.getFinanceUnitsWithUniqueCodeExclusive();
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/officialUnits")
-    public List<SteeringGroup> getOfficialUnits() throws IOException {
-      return orgUnitDao.getHierarchyOrgUnits(
-          Constants.PUBLIC_API_START_NODE, 
-          new Date(), 
-          Constants.PUBLIC_API_HIERARCHY_OFFICIAL_UNIT, 
-          Constants.PUBLIC_API_CODE_OFFICIAL_UNIT
-      );
+    public List<OfficialUnit> getOfficialUnits() throws IOException {
+      return orgUnitDao.getOfficialUnits();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/educationUnits")
