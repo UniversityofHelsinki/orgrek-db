@@ -30,19 +30,15 @@ public class NodeService {
 
     @Transactional
     public NewNodeDTO insertNode(NewNodeDTO newNodeDTO) throws IOException {
-        String parentAbbreviation = attributeDao.getAttributeAbbreviationByNodeId(newNodeDTO.getParentNodeId());
         newNodeDTO = orgUnitDao.insertNode(newNodeDTO);
         List<Attribute> attributeList = new ArrayList<>();
         attributeList.add(addAttribute(newNodeDTO, Constants.NAME_FI_FIELD, newNodeDTO.getNameFi()));
         attributeList.add(addAttribute(newNodeDTO, Constants.NAME_SV_FIELD, newNodeDTO.getNameSv()));
         attributeList.add(addAttribute(newNodeDTO, Constants.NAME_EN_FIELD, newNodeDTO.getNameEn()));
-        if (parentAbbreviation != null && !parentAbbreviation.isEmpty()) {
-            attributeList.add(addAttribute(newNodeDTO, Constants.PARENT_ABBREVIATION, parentAbbreviation));
-        }
+
         attributeDao.addAttributes(attributeList);
         List<EdgeWrapper> edgeWrappers = getEdgeWrappers(newNodeDTO);
         edgeDao.insertEdges(edgeWrappers);
-        orgUnitDao.updateFullNameView();
         return newNodeDTO;
     }
 
