@@ -26,6 +26,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FullName;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
@@ -342,6 +343,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       String sql = ReadSqlFiles.sqlString("concernGroups.sql");
       return getNamedParameterJdbcTemplate().query(
           sql, BeanPropertyRowMapper.newInstance(SteeringGroup.class)
+      );
+    }
+
+    public List<HumanResourceIamGroupPrefix> getHumanResourcesIamGroupPrefix() throws IOException {
+      String sql = ReadSqlFiles.sqlString("humanResourcesIamGroupPrefix.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(HumanResourceIamGroupPrefix.class)
       );
     }
 
