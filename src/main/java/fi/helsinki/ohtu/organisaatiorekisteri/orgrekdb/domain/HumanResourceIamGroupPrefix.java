@@ -9,6 +9,7 @@ public class HumanResourceIamGroupPrefix {
   private String nameEn;
   private String nameSv;
   private String iamGroupPrefix;
+  private String parent;
 
   public String getUniqueId() {
     return uniqueId;
@@ -64,6 +65,14 @@ public class HumanResourceIamGroupPrefix {
 
   public void setIamGroupPrefix(String iamGroupPrefix) {
     this.iamGroupPrefix = iamGroupPrefix;
+  }
+
+  public String getParent() {
+    return parent;
+  }
+
+  public void setParent(String parent) {
+    this.parent = parent;
   }
 
 }
