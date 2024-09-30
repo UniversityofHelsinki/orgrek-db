@@ -14,7 +14,7 @@
 	<name>orkreg-db</name>
 	<description>Organisaatiorekisteri dabase connection</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<sonar.qualitygate.wait>true</sonar.qualitygate.wait>
 	</properties>
 	<dependencies>
