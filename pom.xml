@@ -108,8 +108,8 @@
 									<message>Invalid Maven version. It should, at least, be 3.6</message>
 								</requireMavenVersion>
 								<requireJavaVersion>
-									<version>11</version>
-									<message>Invalid Java version. It should, at least, be 11.0</message>
+									<version>17</version>
+									<message>Invalid Java version. It should, at least, be 17.0</message>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
