@@ -43,7 +43,7 @@ test :
       - target/site/jacoco
     expire_in: 1 week
 sonarqube-check:
-  image: maven:3.6.3-jdk-17
+  image: maven:3.8.5-openjdk-17
   tags:
     - ohtu-build-4
   variables:
