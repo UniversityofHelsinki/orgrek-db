@@ -55,7 +55,6 @@ sonarqube-check:
       - .sonar/cache
   script:
     - mvn verify sonar:sonar -Dsonar.projectKey=orgrek-db
-  allow_failure: true
   only:
     - main
 
