@@ -69,6 +69,7 @@ dependency-check:
       - dependency-check-report.html
 
 sonarqube-check:
+  stage: sonarqube-check
   image: maven:3.8.5-openjdk-17
   tags:
     - ohtu-build-4
