@@ -81,7 +81,7 @@ sonarqube-check:
     paths:
       - .sonar/cache
   script:
-    - mvn verify sonar:sonar -Dsonar.projectKey=orgrek-db -Dsonar.projectName='orgrek-db' -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_TOKEN} -Dsonar.dependencyCheck.jsonReportPath=dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=dependency-check-report.html
+    - mvn verify sonar:sonar -Dsonar.projectKey=orgrek-db -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_TOKEN} -Dsonar.dependencyCheck.jsonReportPath=dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=dependency-check-report.html
   only:
     - main
   needs:
