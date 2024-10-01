@@ -81,7 +81,7 @@ sonarqube-check:
     paths:
       - .sonar/cache
   script:
-    - mvn verify sonar:sonar
+    - mvn verify sonar:sonar -Dproject.settings=sonar-project.properties
   only:
     - main
   needs:
