@@ -14,7 +14,7 @@
 	<name>orkreg-db</name>
 	<description>Organisaatiorekisteri dabase connection</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<sonar.qualitygate.wait>true</sonar.qualitygate.wait>
 	</properties>
 	<dependencies>
@@ -107,8 +107,8 @@
 									<message>Invalid Maven version. It should, at least, be 3.6</message>
 								</requireMavenVersion>
 								<requireJavaVersion>
-									<version>11</version>
-									<message>Invalid Java version. It should, at least, be 11.0</message>
+									<version>17</version>
+									<message>Invalid Java version. It should, at least, be 17.0</message>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
@@ -117,25 +117,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>owasp-dependency-check</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.owasp</groupId>
-						<artifactId>dependency-check-maven</artifactId>
-						<version>6.5.0</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
