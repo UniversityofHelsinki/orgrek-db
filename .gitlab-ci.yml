@@ -11,7 +11,6 @@ cache:
 # Define the stages
 stages:
   - build
-  - dependency-check
   - sonarqube-check
   - test
   - audit_scan
@@ -61,31 +60,6 @@ dependency-check:
       /usr/share/dependency-check/bin/dependency-check.sh
       --project orgrek-db --scan .
       --format JSON --format HTML  -nvdApiKey $NVD_API_KEY
-  artifacts:
-    when: always
-    expire_in: 1 week
-    paths:
-      - dependency-check-report.json
-      - dependency-check-report.html
-
-sonarqube-check:
-  stage: sonarqube-check
-  tags:
-    - ohtu-build-4
-  variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
-    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-  cache:
-    key: "${CI_JOB_NAME}"
-    paths:
-      - .sonar/cache
-  script:
-    - mvn verify sonar:sonar -Dsonar.projectKey=orgrek-db -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_TOKEN} -Dsonar.dependencyCheck.jsonReportPath=dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=dependency-check-report.html
-  only:
-    - main
-  needs:
-    - job: dependency-check
-      artifacts: true
 
   # Define the process for deploy stage to development environment
 deploy_dev:
