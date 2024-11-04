@@ -21,7 +21,7 @@ stages:
 # Define the process for each stage
 
 clean-cache:
-  stage: clean_cache
+  stage: clean-cache
   script:
     - echo "Clearing Maven repository cache."
     - rm -rf $CI_PROJECT_DIR/.m2/repository
