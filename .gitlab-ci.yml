@@ -22,6 +22,8 @@ stages:
 
 clean-cache:
   stage: clean-cache
+  tags:
+    - ohtu-build-4
   script:
     - echo "Clearing Maven repository cache."
     - rm -rf $CI_PROJECT_DIR/.m2/repository
