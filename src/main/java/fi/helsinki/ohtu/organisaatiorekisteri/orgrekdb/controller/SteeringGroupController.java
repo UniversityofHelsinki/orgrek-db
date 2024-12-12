@@ -19,6 +19,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchResource;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
@@ -56,14 +57,9 @@ public class SteeringGroupController {
         return orgUnitDao.getHumanResources();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/researchGroups")
-    public List<SteeringGroup> getResearchGroups() throws IOException {
-      return orgUnitDao.getHierarchyOrgUnits(
-          Constants.PUBLIC_API_START_NODE, 
-          new Date(), 
-          Constants.PUBLIC_API_HIERARCHY_RESEARCH_GROUP, 
-          Constants.PUBLIC_API_CODE_RESEARCH_GROUP
-      );
+    @RequestMapping(method = RequestMethod.GET, value = "/researchResources")
+    public List<ResearchResource> getResearchResources() throws IOException {
+        return orgUnitDao.getResearchResources();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/financeUnits")
