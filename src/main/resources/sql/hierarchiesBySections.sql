@@ -1,3 +1,3 @@
 SELECT  ATTR, value FROM HIERARCHY_FILTER
-    JOIN SECTION_ATTR ON ATTR=KEY AND ATTR IN (:attributes) AND HIERARCHY IN (:hierarchies) AND key != 'type'
+    JOIN SECTION_ATTR ON ATTR="KEY" AND ATTR IN (:attributes) AND HIERARCHY IN (:hierarchies) AND key != 'type'
 WHERE SECTION IN (:sections)

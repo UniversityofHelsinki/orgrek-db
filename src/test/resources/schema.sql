@@ -19,23 +19,23 @@ create table NODE
         unique
 );
 
-create table NODE_ATTR
+CREATE TABLE NODE_ATTR
 (
-    ID         NUMBER not null
-        primary key,
-    NODE_ID    VARCHAR2(255 char)
-        references NODE,
-    KEY        VARCHAR2(255 char),
-    VALUE      VARCHAR2(255 char),
+    ID         INTEGER NOT NULL
+        PRIMARY KEY,
+    NODE_ID    VARCHAR2(255 CHAR)
+        REFERENCES NODE,
+    "KEY"        VARCHAR2(255 char),
+    "VALUE"      VARCHAR2(255 char),
     START_DATE TIMESTAMP(6),
     END_DATE   TIMESTAMP(6)
 );
 
 create table TEXT
 (
-    KEY       VARCHAR2(255 char),
+    "KEY"       VARCHAR2(255 char),
     LANGUAGE  VARCHAR2(3 char),
-    VALUE     VARCHAR2(255 char),
+    "VALUE"     VARCHAR2(255 char),
     USER_NAME VARCHAR2(20 char),
     TIMESTAMP TIMESTAMP(6)
 );
@@ -58,8 +58,8 @@ create table HIERARCHY_FILTER
     ID         NUMBER not null
         primary key,
     HIERARCHY VARCHAR2(255 char),
-    KEY VARCHAR2(255 char),
-    VALUE VARCHAR2(255 char),
+    "KEY" VARCHAR2(255 char),
+    "VALUE" VARCHAR2(255 char),
     START_DATE TIMESTAMP(6),
     END_DATE   TIMESTAMP(6)
 );
@@ -74,7 +74,7 @@ where HIERARCHY='history';
 
 create view NODE_TYPE as
 select "ID","NODE_ID","KEY","VALUE","START_DATE","END_DATE" from NODE_ATTR
-where KEY='type';
+where "KEY"='type';
 
 create table SECTION_ATTR
 (
@@ -105,8 +105,8 @@ create table FULL_NAME
 
 create table ATTRIBUTE_ORDER
 (
-    KEY VARCHAR(255) NOT NULL,
-    VALUE VARCHAR(255) NOT NULL,
+    "KEY" VARCHAR(255) NOT NULL,
+    "VALUE" VARCHAR(255) NOT NULL,
     "ORDER" NUMBER NOT NULL
 );
 
