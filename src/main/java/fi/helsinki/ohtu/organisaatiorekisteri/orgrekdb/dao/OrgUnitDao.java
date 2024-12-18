@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
@@ -62,7 +63,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("nodeByUniqueId.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
+        params.addValue("id", id + "");
         return getNamedParameterJdbcTemplate().queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
@@ -76,14 +77,15 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
 
     public List<Attribute> getAttributeListByDate(String id, Date date) throws IOException {
-        Date attrstart = date;
-        Date attrend = date;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String attrstart = df.format(date);
+        String attrend = df.format(date);
         String sql = ReadSqlFiles.sqlString("attributeListByDate.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        params.addValue("attrend", attrend);
-        params.addValue("attrstart", attrstart);
+        params.addValue("attrend", attrend, Types.DATE);
+        params.addValue("attrstart", attrstart, Types.DATE);
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
     }
