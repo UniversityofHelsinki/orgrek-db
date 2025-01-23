@@ -99,13 +99,27 @@ public class SteeringGroupController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/officialUnits")
+    @JsonView(OfficialUnit.DefaultView.class)
     public List<OfficialUnit> getOfficialUnits() throws IOException {
       return orgUnitDao.getOfficialUnits();
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/officialUnitsWithEducationQualifier")
+    @JsonView(OfficialUnit.WithEducationQualifierView.class)
+    public List<OfficialUnit> getOfficialUnitsWithEducationQualifier() throws IOException {
+      return orgUnitDao.getOfficialUnitsWithEducationQualifier();
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/educationUnits")
+    @JsonView(EducationUnit.DefaultView.class)
     public List<EducationUnit> getEducationUnits() throws IOException {
       return orgUnitDao.getEducationUnits();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/educationUnitsWithEducationQualifier")
+    @JsonView(EducationUnit.WithEducationQualifierView.class)
+    public List<EducationUnit> getEducationUnitsWithEducationQualifier() throws IOException {
+      return orgUnitDao.getEducationUnitsWithEducationQualifier();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/concernGroups")

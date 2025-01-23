@@ -315,6 +315,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       );
     };
 
+    public List<OfficialUnit> getOfficialUnitsWithEducationQualifier() throws IOException {
+      String sql = ReadSqlFiles.sqlString("officialUnitsWithEducationQualifier.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(OfficialUnit.class)
+      );
+    };
+
     public List<FinanceUnit> getFinanceUnits() throws IOException {
       String sql = ReadSqlFiles.sqlString("financeUnits.sql");
       return getNamedParameterJdbcTemplate().query(
@@ -345,6 +352,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
     public List<EducationUnit> getEducationUnits() throws IOException {
       String sql = ReadSqlFiles.sqlString("educationUnits.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(EducationUnit.class)
+      );
+    }
+
+    public List<EducationUnit> getEducationUnitsWithEducationQualifier() throws IOException {
+      String sql = ReadSqlFiles.sqlString("educationUnitsWithEducationQualifier.sql");
       return getNamedParameterJdbcTemplate().query(
           sql, BeanPropertyRowMapper.newInstance(EducationUnit.class)
       );
