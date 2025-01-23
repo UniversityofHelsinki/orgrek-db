@@ -42,6 +42,13 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         return hierarchies;
     }
 
+    public List<String> getPublicHierarchyTypes() throws IOException {
+      String sql = ReadSqlFiles.sqlString("publicHierarchyTypes.sql");
+      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+      List<String> hierarchies = jdbcTemplate.queryForList(sql, String.class);
+      return hierarchies;
+    }
+
     public int[] updateParentUnitProperties(List<EdgeWrapper> parentUnitProperties) throws IOException {
         String sql = ReadSqlFiles.sqlString("updateParentUnitProperties.sql");
         SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(parentUnitProperties.toArray());

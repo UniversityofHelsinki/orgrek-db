@@ -1,6 +1,13 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit.DefaultView;
+
+@JsonView(DefaultView.class)
 public class OfficialUnit {
+
+  public interface DefaultView {};
+  public interface WithEducationQualifierView extends DefaultView {};
 
   private String uniqueId;
   private String type;
@@ -8,6 +15,7 @@ public class OfficialUnit {
   private String nameEn;
   private String nameSv;
   private String abbreviation;
+  private String educationQualifier;
   private String parent;
 
   public String getUniqueId() {
@@ -64,6 +72,15 @@ public class OfficialUnit {
 
   public void setParent(String parent) {
     this.parent = parent;
+  }
+
+  @JsonView(WithEducationQualifierView.class)
+  public String getEducationQualifier() {
+    return educationQualifier;
+  }
+
+  public void setEducationQualifier(String educationQualifier) {
+    this.educationQualifier = educationQualifier;
   }
 
 }

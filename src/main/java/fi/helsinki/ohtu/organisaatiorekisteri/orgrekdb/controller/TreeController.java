@@ -46,5 +46,4 @@ public class TreeController {
         return copy.size() > 0;
     }
 
-
 }
