@@ -8,6 +8,7 @@ public class OfficialUnit {
   private String nameEn;
   private String nameSv;
   private String abbreviation;
+  private String educationQualifier;
   private String parent;
 
   public String getUniqueId() {
@@ -64,6 +65,14 @@ public class OfficialUnit {
 
   public void setParent(String parent) {
     this.parent = parent;
+  }
+
+  public String getEducationQualifier() {
+    return educationQualifier;
+  }
+
+  public void setEducationQualifier(String educationQualifier) {
+    this.educationQualifier = educationQualifier;
   }
 
 }

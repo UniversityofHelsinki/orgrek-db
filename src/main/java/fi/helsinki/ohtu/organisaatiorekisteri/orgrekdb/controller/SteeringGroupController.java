@@ -1,17 +1,25 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
@@ -22,10 +30,11 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchResource;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.Constants;
 
 /*
 Public API to get Steering Groups from database among other units.
+
+See https://workgroups.helsinki.fi/pages/viewpage.action?pageId=338205803
  */
 @RestController
 @RequestMapping("/api/public")
@@ -36,6 +45,9 @@ public class SteeringGroupController {
 
     @Autowired
     private TextsDao textsDao;
+
+    @Autowired
+    private EdgeDao edgeDao;
 
     @RequestMapping(method = RequestMethod.GET, value="/steeringGroups")
     public List<SteeringGroup> getSteeringGroups() throws IOException {
@@ -104,6 +116,26 @@ public class SteeringGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/humanResourcesIamGroupPrefix")
     public List<HumanResourceIamGroupPrefix> getHumanResourcesIamGroupPrefix() throws IOException {
       return orgUnitDao.getHumanResourcesIamGroupPrefix();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/NodesInMultipleHierarchies")
+    public ResponseEntity<?> getPublicHierarchyNodes(@RequestParam("hierarchy") String rawHierarchies) throws IOException {
+      List<String> parsedHierarchies = Arrays.asList(rawHierarchies.split(","));
+      Set<String> hierarchies = new HashSet<>(parsedHierarchies);
+      if (!containsOnlyPublicHierarchies(hierarchies)) {
+          return ResponseEntity.status(HttpStatus.FORBIDDEN).body(String.format(
+                "Request parameter 'hierarchy' can only contain public hierarchies."
+          ));
+      }
+
+      return ResponseEntity.ok(orgUnitDao.getPublicHierarchyNodes(parsedHierarchies));
+    }
+
+    private boolean containsOnlyPublicHierarchies(Set<String> hierarchies) throws IOException {
+      Set<String> copy = new HashSet<>(hierarchies);
+      List<String> publicHierarchies = edgeDao.getPublicHierarchyTypes();
+      copy.removeAll(publicHierarchies);
+      return copy.isEmpty();
     }
 
 }
