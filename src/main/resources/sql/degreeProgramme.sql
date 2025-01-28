@@ -7,6 +7,6 @@ WHERE NODE.ID IN
                                   AND hierarchy = 'toiminnanohjaus')
        START WITH PARENT_NODE_ID = :nodeId
        CONNECT BY PRIOR CHILD_NODE_ID = PARENT_NODE_ID)
-    AND NODE_TYPE.VALUE IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')
+    AND NODE_TYPE."VALUE" IN ('kandiohjelma', 'maisteriohjelma', 'tohtoriohjelma')
     AND NODE_TYPE.END_DATE IS NULL OR NODE_TYPE.END_DATE > trunc(:today)
     AND (NODE_TYPE.START_DATE IS NULL OR NODE_TYPE.START_DATE <= trunc(:today))

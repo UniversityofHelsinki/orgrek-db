@@ -1,1 +1,1 @@
-INSERT INTO ATTRIBUTE_ORDER (KEY, VALUE, "ORDER") VALUES (:key, :value, :order)
+INSERT INTO ATTRIBUTE_ORDER ("KEY", "VALUE", "ORDER") VALUES (:key, :value, :order)

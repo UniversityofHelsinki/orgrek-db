@@ -1,7 +1,10 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
+import java.sql.Types;
+
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -33,32 +36,35 @@ public class HierarchyFilterDao extends NamedParameterJdbcDaoSupport {
     }
 
     public List<HierarchyFilter> getCurrentHierarchyFilter(Date date) {
-        Date attrstart = date;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String attrstart = df.format(date);
         String sql = "SELECT * FROM HIERARCHY_FILTER WHERE" +
-                " (END_DATE IS NULL OR END_DATE > trunc(:attrstart)) AND (START_DATE IS NULL OR START_DATE <= trunc(:attrstart))";
+                " (END_DATE IS NULL OR END_DATE > :attrstart) AND (START_DATE IS NULL OR START_DATE <= :attrstart)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("attrstart", attrstart);
+        params.addValue("attrstart", attrstart, Types.DATE);
         List<HierarchyFilter> hierarchyFilters = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(HierarchyFilter.class));
         return hierarchyFilters;
     }
     public List<HierarchyFilter> getHistoryAndCurrentHierarchyFilter(Date date) {
-        Date attrstart = date;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String attrstart = df.format(date);
         String sql = "SELECT * FROM HIERARCHY_FILTER WHERE" +
-                " (START_DATE IS NULL OR START_DATE <= trunc(:attrstart))";
+                " (START_DATE IS NULL OR START_DATE <= :attrstart)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("attrstart", attrstart);
+        params.addValue("attrstart", attrstart, Types.DATE);
         List<HierarchyFilter> hierarchyFilters = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(HierarchyFilter.class));
         return hierarchyFilters;
     }
     public List<HierarchyFilter> getFutureAndCurrentHierarchyFilter(Date date) {
-        Date attrstart = date;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String attrstart = df.format(date);
         String sql = "SELECT * FROM HIERARCHY_FILTER WHERE" +
-                " (END_DATE IS NULL OR END_DATE > trunc(:attrstart))";
+                " (END_DATE IS NULL OR END_DATE > :attrstart)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("attrstart", attrstart);
+        params.addValue("attrstart", attrstart, Types.DATE);
         List<HierarchyFilter> hierarchyFilters = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(HierarchyFilter.class));
         return hierarchyFilters;
     }

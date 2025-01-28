@@ -2,6 +2,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
@@ -31,6 +32,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PublicHierarchyNode;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Relative;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchResource;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
@@ -62,7 +64,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("nodeByUniqueId.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
+        params.addValue("id", id + "");
         return getNamedParameterJdbcTemplate().queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Node.class));
     }
 
@@ -76,14 +78,15 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
 
     public List<Attribute> getAttributeListByDate(String id, Date date) throws IOException {
-        Date attrstart = date;
-        Date attrend = date;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String attrstart = df.format(date);
+        String attrend = df.format(date);
         String sql = ReadSqlFiles.sqlString("attributeListByDate.sql");
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        params.addValue("attrend", attrend);
-        params.addValue("attrstart", attrstart);
+        params.addValue("attrend", attrend, Types.DATE);
+        params.addValue("attrstart", attrstart, Types.DATE);
         List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
         return attributes;
     }
@@ -312,6 +315,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       );
     };
 
+    public List<OfficialUnit> getOfficialUnitsWithEducationQualifier() throws IOException {
+      String sql = ReadSqlFiles.sqlString("officialUnitsWithEducationQualifier.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(OfficialUnit.class)
+      );
+    };
+
     public List<FinanceUnit> getFinanceUnits() throws IOException {
       String sql = ReadSqlFiles.sqlString("financeUnits.sql");
       return getNamedParameterJdbcTemplate().query(
@@ -347,6 +357,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       );
     }
 
+    public List<EducationUnit> getEducationUnitsWithEducationQualifier() throws IOException {
+      String sql = ReadSqlFiles.sqlString("educationUnitsWithEducationQualifier.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(EducationUnit.class)
+      );
+    }
+
     public List<SteeringGroup> getConcernGroups() throws IOException {
       String sql = ReadSqlFiles.sqlString("concernGroups.sql");
       return getNamedParameterJdbcTemplate().query(
@@ -358,6 +375,17 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       String sql = ReadSqlFiles.sqlString("humanResourcesIamGroupPrefix.sql");
       return getNamedParameterJdbcTemplate().query(
           sql, BeanPropertyRowMapper.newInstance(HumanResourceIamGroupPrefix.class)
+      );
+    }
+
+    public List<PublicHierarchyNode> getPublicHierarchyNodes(List<String> hierarchies) throws IOException {
+      String sql = ReadSqlFiles.sqlString("publicHierarchyNodes.sql");
+      MapSqlParameterSource params = new MapSqlParameterSource();
+      params.addValue("hierarchies", hierarchies);
+      return getNamedParameterJdbcTemplate().query(
+          sql, 
+          params,
+          BeanPropertyRowMapper.newInstance(PublicHierarchyNode.class)
       );
     }
 
