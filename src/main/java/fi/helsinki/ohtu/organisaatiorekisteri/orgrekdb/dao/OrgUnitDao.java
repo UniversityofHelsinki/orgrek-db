@@ -25,6 +25,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.DegreeProgrammeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceAndOldResearch;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FullName;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
@@ -386,6 +387,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
           sql, 
           params,
           BeanPropertyRowMapper.newInstance(PublicHierarchyNode.class)
+      );
+    }
+
+    public List<FinanceAndOldResearch> getFinanceAndOldResearchUnits() throws IOException {
+      String sql = ReadSqlFiles.sqlString("financeAndOldResearch.sql");
+      return getNamedParameterJdbcTemplate().query(
+          sql, BeanPropertyRowMapper.newInstance(FinanceAndOldResearch.class)
       );
     }
 
