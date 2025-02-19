@@ -16,6 +16,7 @@ public class FinanceAndOldResearch {
   private String type;
   private String code;
   private String uniqueCode;
+  private String abbreviation;
 
   public Date getUnitStartDate() {
     return unitStartDate;
@@ -96,5 +97,14 @@ public class FinanceAndOldResearch {
   public void setUniqueCode(String uniqueCode) {
     this.uniqueCode = uniqueCode;
   }
+
+  public String getAbbreviation() {
+    return abbreviation;
+  }
+
+  public void setAbbreviation(String abbreviation) {
+    this.abbreviation = abbreviation;
+  }
+
 
 }
