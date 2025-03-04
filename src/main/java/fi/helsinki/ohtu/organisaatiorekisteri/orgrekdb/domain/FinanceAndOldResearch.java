@@ -14,6 +14,7 @@ public class FinanceAndOldResearch {
 
   private String publicity;
   private String type;
+  private String educationCode;
   private String code;
   private String uniqueCode;
   private String abbreviation;
@@ -82,6 +83,14 @@ public class FinanceAndOldResearch {
     this.type = type;
   }
 
+  public String getEducationCode() {
+    return educationCode;
+  }
+
+  public void setEducationCode(String educationCode) {
+    this.educationCode = educationCode;
+  }
+
   public String getCode() {
     return code;
   }
@@ -105,6 +114,5 @@ public class FinanceAndOldResearch {
   public void setAbbreviation(String abbreviation) {
     this.abbreviation = abbreviation;
   }
-
 
 }
