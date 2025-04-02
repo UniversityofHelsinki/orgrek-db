@@ -68,7 +68,7 @@ submit-sbom:
   before_script:
     - apk add --no-cache curl
   script:
-    - "curl -X POST ${DTRACK_TEST_API_URL} -H 'Content-Type: multipart/form-data' -H 'X-Api-Key: '${DTRACK_TEST_API_KEY} -F 'projectName='${PROJECT_NAME} -F 'autoCreate=true' -F 'projectVersion='${PROJECT_VERSION} -F 'bom=@target/bom.xml'"
+    - "curl -X POST ${DTRACK_API_URL} -H 'Content-Type: multipart/form-data' -H 'X-Api-Key: '${DTRACK_API_KEY} -F 'projectName='${PROJECT_NAME} -F 'autoCreate=true' -F 'projectVersion='${PROJECT_VERSION} -F 'bom=@target/bom.xml'"
 
 test :
   stage: test
