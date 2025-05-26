@@ -33,6 +33,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PersonnelUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PublicHierarchyNode;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Relative;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchResource;
@@ -394,6 +395,14 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       String sql = ReadSqlFiles.sqlString("financeAndOldResearch.sql");
       return getNamedParameterJdbcTemplate().query(
           sql, BeanPropertyRowMapper.newInstance(FinanceAndOldResearch.class)
+      );
+    }
+
+    public List<PersonnelUnitMap> getPersonnelUnitMaps() throws IOException {
+      String sql = ReadSqlFiles.sqlString("personnelUnitMaps.sql");
+      return getNamedParameterJdbcTemplate().query(
+        sql,
+        BeanPropertyRowMapper.newInstance(PersonnelUnitMap.class)
       );
     }
 
