@@ -28,6 +28,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PersonnelUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchResource;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
@@ -149,6 +150,11 @@ public class SteeringGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/FinanceAndOldResearch")
     public List<FinanceAndOldResearch> getFinanceAndOldResearchUnits() throws IOException {
       return orgUnitDao.getFinanceAndOldResearchUnits();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/PersonnelUnitMap")
+    public List<PersonnelUnitMap> getPersonnelUnitMaps() throws IOException {
+      return orgUnitDao.getPersonnelUnitMaps();
     }
 
     private boolean containsOnlyPublicHierarchies(Set<String> hierarchies) throws IOException {
