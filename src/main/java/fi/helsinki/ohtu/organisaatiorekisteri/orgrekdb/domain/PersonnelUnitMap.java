@@ -3,7 +3,7 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 public class PersonnelUnitMap {
   private String subUnitCode;
   private String unitCode;
-  private String unitName;
+  private String unitNameFi;
 
   public String getSubUnitCode() {
     return subUnitCode;
@@ -17,10 +17,11 @@ public class PersonnelUnitMap {
   public void setUnitCode(String unitCode) {
     this.unitCode = unitCode;
   }
-  public String getUnitName() {
-    return unitName;
+  public String getUnitNameFi() {
+    return unitNameFi;
   }
-  public void setUnitName(String unitName) {
-    this.unitName = unitName;
+  public void setUnitNameFi(String unitNameFi) {
+    this.unitNameFi = unitNameFi;
   }
+
 }
