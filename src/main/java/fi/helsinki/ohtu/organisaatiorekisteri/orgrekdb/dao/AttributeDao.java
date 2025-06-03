@@ -109,20 +109,11 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
 
 
     private MapSqlParameterSource getMapSqlParameterSource(Attribute attribute, MapSqlParameterSource params) {
-        SimpleDateFormat yearMonthDay = new SimpleDateFormat("dd.MM.yyyy");
         params.addValue("node_id", attribute.getNodeId());
         params.addValue("key", attribute.getKey());
         params.addValue("value", attribute.getValue());
-        String start = null;
-        String end = null;
-        if (attribute.getStartDate() != null) {
-            start = yearMonthDay.format(attribute.getStartDate());
-        }
-        if (attribute.getEndDate() != null) {
-            end = yearMonthDay.format(attribute.getEndDate());
-        }
-        params.addValue("start_date", start);
-        params.addValue("end_date", end);
+        params.addValue("start_date", attribute.getStartDate());
+        params.addValue("end_date", attribute.getEndDate());
         params.addValue("id", attribute.getId());
         return params;
     }
@@ -135,6 +126,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
             MapSqlParameterSource params = new MapSqlParameterSource();
             return getMapSqlParameterSource(attribute, params);
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
+        
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
     }
 
