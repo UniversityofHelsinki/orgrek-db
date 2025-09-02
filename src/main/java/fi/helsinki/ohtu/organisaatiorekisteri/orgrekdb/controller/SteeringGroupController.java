@@ -22,12 +22,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.EdgeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.OrgUnitDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.TextsDao;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgePublic;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceAndOldResearch;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.KonserniUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttrPublic;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PersonnelUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchResource;
@@ -161,6 +163,16 @@ public class SteeringGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/KonserniUnitMap")
     public List<KonserniUnitMap> getKonserniUnitMaps() throws IOException {
       return orgUnitDao.getKonserniUnitMaps();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/AllNodeAttributes")
+    public List<NodeAttrPublic> getAllNodeAttributes() throws IOException {
+      return orgUnitDao.getAllNodeAttributes();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/AllSuccessorsAndPredecessors")
+    public List<EdgePublic> getAllSuccessorsAndPredecessors() throws IOException {
+      return orgUnitDao.getAllEdgePublics();
     }
 
     private boolean containsOnlyPublicHierarchies(Set<String> hierarchies) throws IOException {
