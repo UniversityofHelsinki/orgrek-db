@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.DegreeProgrammeDTO;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgePublic;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceAndOldResearch;
@@ -32,6 +33,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGr
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.KonserniUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttrPublic;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PersonnelUnitMap;
@@ -412,6 +414,22 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       return getNamedParameterJdbcTemplate().query(
         sql, 
         BeanPropertyRowMapper.newInstance(KonserniUnitMap.class)
+      );
+    }
+
+    public List<NodeAttrPublic> getAllNodeAttributes() throws IOException {
+      String sql = ReadSqlFiles.sqlString("allNodeAttributes.sql");
+      return getNamedParameterJdbcTemplate().query(
+        sql, 
+        BeanPropertyRowMapper.newInstance(NodeAttrPublic.class)
+      );
+    }
+
+    public List<EdgePublic> getAllEdgePublics() throws IOException {
+      String sql = ReadSqlFiles.sqlString("allSuccessorsAndPredecessors.sql");
+      return getNamedParameterJdbcTemplate().query(
+        sql, 
+        BeanPropertyRowMapper.newInstance(EdgePublic.class)
       );
     }
 
