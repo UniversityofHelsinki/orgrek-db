@@ -1,6 +1,5 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 public class HierarchyFilter {
