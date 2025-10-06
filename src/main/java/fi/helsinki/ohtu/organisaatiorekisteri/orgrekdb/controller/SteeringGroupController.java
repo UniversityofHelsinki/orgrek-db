@@ -27,6 +27,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceAndOldResearch;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourcesWithLevel;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.KonserniUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttrPublic;
@@ -135,6 +136,11 @@ public class SteeringGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/humanResourcesIamGroupPrefix")
     public List<HumanResourceIamGroupPrefix> getHumanResourcesIamGroupPrefix() throws IOException {
       return orgUnitDao.getHumanResourcesIamGroupPrefix();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/humanResourcesWithLevel")
+    public List<HumanResourcesWithLevel> getHumanResourcesWithLevel(@RequestParam("level") Integer level) throws IOException {
+      return orgUnitDao.getHumanResourcesWithLevels(level == null || level < 0 ? Integer.MAX_VALUE : level);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/NodesInMultipleHierarchies")
