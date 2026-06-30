@@ -27,6 +27,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceAndOldResearch;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourcesAndResearchGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourcesWithLevel;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.KonserniUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
@@ -84,6 +85,11 @@ public class SteeringGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/researchGroups")
     public List<ResearchGroup> getResearchGroups() throws IOException {
         return orgUnitDao.getResearchGroups();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/humanResourcesAndResearchGroups")
+    public List<HumanResourcesAndResearchGroup> getHumanResourcesAndResearchGroups() throws IOException {
+        return orgUnitDao.getHumanResourcesAndResearchGroups();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/financeUnits")
