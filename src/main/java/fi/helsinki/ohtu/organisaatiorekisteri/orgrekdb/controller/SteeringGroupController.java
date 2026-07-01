@@ -27,12 +27,14 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EducationUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceAndOldResearch;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourcesAndResearchGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourcesWithLevel;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.KonserniUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttrPublic;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PersonnelUnitMap;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchResource;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TextDTO;
@@ -78,6 +80,16 @@ public class SteeringGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/researchResources")
     public List<ResearchResource> getResearchResources() throws IOException {
         return orgUnitDao.getResearchResources();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/researchGroups")
+    public List<ResearchGroup> getResearchGroups() throws IOException {
+        return orgUnitDao.getResearchGroups();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/humanResourcesAndResearchGroups")
+    public List<HumanResourcesAndResearchGroup> getHumanResourcesAndResearchGroups() throws IOException {
+        return orgUnitDao.getHumanResourcesAndResearchGroups();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/financeUnits")

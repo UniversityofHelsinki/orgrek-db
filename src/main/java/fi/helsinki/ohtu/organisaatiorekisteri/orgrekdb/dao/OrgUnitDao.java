@@ -30,6 +30,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceAndOldResea
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FinanceUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.FullName;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourceIamGroupPrefix;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourcesAndResearchGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourcesWithLevel;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.KonserniUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
@@ -40,6 +41,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PersonnelUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PublicHierarchyNode;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Relative;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchResource;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.SteeringGroup;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.TreeNode;
@@ -311,6 +313,22 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
       String sql = ReadSqlFiles.sqlString("researchResources.sql");
       return getNamedParameterJdbcTemplate().query(
           sql, BeanPropertyRowMapper.newInstance(ResearchResource.class)
+      );
+    }
+
+    public List<ResearchGroup> getResearchGroups() throws IOException {
+      String sql = ReadSqlFiles.sqlString("researchGroups.sql");
+      return getNamedParameterJdbcTemplate().query(
+        sql, 
+        BeanPropertyRowMapper.newInstance(ResearchGroup.class)
+      );
+    }
+
+    public List<HumanResourcesAndResearchGroup> getHumanResourcesAndResearchGroups() throws IOException {
+      String sql = ReadSqlFiles.sqlString("humanResourcesAndResearchGroups.sql");
+      return getNamedParameterJdbcTemplate().query(
+        sql, 
+        BeanPropertyRowMapper.newInstance(HumanResourcesAndResearchGroup.class)
       );
     }
 
