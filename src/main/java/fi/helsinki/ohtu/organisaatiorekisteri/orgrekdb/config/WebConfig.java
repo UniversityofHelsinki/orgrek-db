@@ -1,7 +1,5 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.config;
 
-import java.text.SimpleDateFormat;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverters;
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
@@ -19,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
         JsonMapper jsonMapper = JsonMapper.builder()
                 .findAndAddModules()
                 .enable(SerializationFeature.INDENT_OUTPUT)
-                .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd"))
+                .defaultDateFormat(new HelsinkiDateFormat())
                 .build();
         builder.disableDefaults().withJsonConverter(new JacksonJsonHttpMessageConverter(jsonMapper));
     }
