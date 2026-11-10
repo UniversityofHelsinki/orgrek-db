@@ -1,8 +1,12 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +19,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -27,6 +31,9 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 @Repository(value = "attributeDao")
 public class AttributeDao extends NamedParameterJdbcDaoSupport {
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ROOT);
+    private static final RowMapper<Attribute> ATTRIBUTE_ROW_MAPPER = AttributeDao::mapAttribute;
 
     @Autowired
     private DataSource dataSource;
@@ -42,8 +49,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         if (attributeList != null) {
             params.addValue("attributes", attributeList);
         }
-        List<Attribute> attributes = getNamedParameterJdbcTemplate()
-                .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, ATTRIBUTE_ROW_MAPPER);
         return attributes;
     }
 
@@ -53,7 +59,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         params.addValue("node_id", nodeId);
         try {
             Attribute abbreviationAttribute = getNamedParameterJdbcTemplate()
-                    .queryForObject(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+                    .queryForObject(sql, params, ATTRIBUTE_ROW_MAPPER);
             return abbreviationAttribute.getValue();
         } catch (EmptyResultDataAccessException notFoundException) {
             return null;
@@ -76,7 +82,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         params.addValue("nodeId", nodeId);
         params.addValue("section", section);
         List<Attribute> attributes = getNamedParameterJdbcTemplate()
-                .query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+                .query(sql, params, ATTRIBUTE_ROW_MAPPER);
         return attributes;
     }
 
@@ -90,18 +96,14 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
     public Attribute insertAttribute(Attribute attribute) throws IOException {
 
         String sql = ReadSqlFiles.sqlString("insertAttributes.sql");
-        SimpleDateFormat yearMonthDay = new SimpleDateFormat("dd.MM.yyyy");
-
         MapSqlParameterSource params = new MapSqlParameterSource();
         Integer sequence = getJdbcTemplate().queryForObject("SELECT node_seq.nextval FROM dual", Integer.class);
         params.addValue("id", sequence);
-        params.addValue("nodeId", attribute.getNodeId());
+        params.addValue("node_id", attribute.getNodeId());
         params.addValue("key", attribute.getKey());
         params.addValue("value", attribute.getValue());
-        String startDate = yearMonthDay.format(attribute.getStartDate());
-        params.addValue("start_date", startDate);
-        String endDate = yearMonthDay.format(attribute.getEndDate());
-        params.addValue("end_date", endDate);
+        addDateParameter(params, "start_date", attribute.getStartDate());
+        addDateParameter(params, "end_date", attribute.getEndDate());
         getNamedParameterJdbcTemplate().update(sql, params);
         attribute.setId(sequence);
         return attribute;
@@ -112,8 +114,8 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         params.addValue("node_id", attribute.getNodeId());
         params.addValue("key", attribute.getKey());
         params.addValue("value", attribute.getValue());
-        params.addValue("start_date", attribute.getStartDate());
-        params.addValue("end_date", attribute.getEndDate());
+        addDateParameter(params, "start_date", attribute.getStartDate());
+        addDateParameter(params, "end_date", attribute.getEndDate());
         params.addValue("id", attribute.getId());
         return params;
     }
@@ -157,7 +159,7 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         params.addValue("nodeId", attribute.getNodeId());
         params.addValue("value", attribute.getValue());
         fixDates(attribute, params);
-        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, ATTRIBUTE_ROW_MAPPER);
         return (attributes.isEmpty() ? null :  attributes.get(0));
 
     }
@@ -187,16 +189,41 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         params.addValue("nodeId", attribute.getNodeId());
         params.addValue("value", attribute.getValue());
         fixDates(attribute, params);
-        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        List<Attribute> attributes = getNamedParameterJdbcTemplate().query(sql, params, ATTRIBUTE_ROW_MAPPER);
         return (attributes.isEmpty() ? null : checkIfEditingExistingAttribute(attributes, attribute));
     }
 
     private static void fixDates(Attribute attribute, MapSqlParameterSource params) {
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("fi"));
-        if(attribute.getStartDate()==null) params.addValue("startDate", "1.1.0001");
-        else params.addValue("startDate", df.format(attribute.getStartDate()));
-        if(attribute.getEndDate()==null) params.addValue("endDate", "12.12.9999");
-        else params.addValue("endDate", df.format(attribute.getEndDate()));
+        if (attribute.getStartDate() == null) params.addValue("startDate", "1.1.0001");
+        else params.addValue("startDate", attribute.getStartDate().format(DATE_FORMATTER));
+        if (attribute.getEndDate() == null) params.addValue("endDate", "12.12.9999");
+        else params.addValue("endDate", attribute.getEndDate().format(DATE_FORMATTER));
+    }
+
+    static void addDateParameter(MapSqlParameterSource params, String name, LocalDate date) {
+        params.addValue(name, toTimestamp(date), Types.TIMESTAMP);
+    }
+
+    static LocalDateTime toTimestamp(LocalDate date) {
+        return date == null ? null : date.atStartOfDay();
+    }
+
+    static LocalDate toLocalDate(LocalDateTime timestamp) {
+        return timestamp == null ? null : timestamp.toLocalDate();
+    }
+
+    private static Attribute mapAttribute(ResultSet resultSet, int rowNumber) throws SQLException {
+        Attribute attribute = new Attribute();
+        attribute.setId(resultSet.getInt("id"));
+        if (resultSet.wasNull()) {
+            attribute.setId(null);
+        }
+        attribute.setNodeId(resultSet.getString("node_id"));
+        attribute.setKey(resultSet.getString("key"));
+        attribute.setValue(resultSet.getString("value"));
+        attribute.setStartDate(toLocalDate(resultSet.getObject("start_date", LocalDateTime.class)));
+        attribute.setEndDate(toLocalDate(resultSet.getObject("end_date", LocalDateTime.class)));
+        return attribute;
     }
 
     public List<NodeAttributeKeyValueDTO> getDistinctNodeAttrs() throws IOException {
@@ -225,6 +252,6 @@ public class AttributeDao extends NamedParameterJdbcDaoSupport {
         String sql = ReadSqlFiles.sqlString("nodeAttributes.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", nodeId);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Attribute.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, ATTRIBUTE_ROW_MAPPER);
     }
 }

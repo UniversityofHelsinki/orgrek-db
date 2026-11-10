@@ -1,6 +1,8 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,9 +64,13 @@ public class NodeService {
         attribute.setNodeId(newNodeDTO.getChildNodeId());
         attribute.setValue(value);
         attribute.setKey(key);
-        attribute.setStartDate(newNodeDTO.getStartDate());
-        attribute.setEndDate(newNodeDTO.getEndDate());
+        attribute.setStartDate(toLocalDate(newNodeDTO.getStartDate()));
+        attribute.setEndDate(toLocalDate(newNodeDTO.getEndDate()));
         return attribute;
+    }
+
+    private static LocalDate toLocalDate(java.util.Date date) {
+        return date == null ? null : date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     public List<Node> getNodes(List<String> nodeIds) throws IOException {

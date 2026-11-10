@@ -1,6 +1,6 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,8 +10,8 @@ public class Attribute {
 
     private String key;
     private String value;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String nodeId;
     private Integer id;
     private boolean isNew;
@@ -27,11 +27,11 @@ public class Attribute {
         this(null, key, value, null, null);
     }
 
-    public Attribute(Integer id, String key, String value, Date startDate, Date endDate) {
+    public Attribute(Integer id, String key, String value, LocalDate startDate, LocalDate endDate) {
         this(null, id, key, value, startDate, endDate);
     }
 
-    public Attribute(String nodeId, Integer id, String key, String value, Date startDate, Date endDate) {
+    public Attribute(String nodeId, Integer id, String key, String value, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.key = key;
         this.value = value;
@@ -75,19 +75,19 @@ public class Attribute {
         this.value = value;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
