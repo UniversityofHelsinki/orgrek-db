@@ -1,17 +1,17 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Relative {
     private String id;
     private Integer uniqueId;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String hierarchy;
 
     private Integer edgeId;
-    private Date edgeStartDate;
-    private Date edgeEndDate;
+    private LocalDate edgeStartDate;
+    private LocalDate edgeEndDate;
     private String fullName;
     private String language;
 
@@ -31,19 +31,19 @@ public class Relative {
         this.uniqueId = uniqueId;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -63,19 +63,19 @@ public class Relative {
         this.edgeId = edgeId;
     }
 
-    public Date getEdgeStartDate() {
+    public LocalDate getEdgeStartDate() {
         return edgeStartDate;
     }
 
-    public void setEdgeStartDate(Date edgeStartDate) {
+    public void setEdgeStartDate(LocalDate edgeStartDate) {
         this.edgeStartDate = edgeStartDate;
     }
 
-    public Date getEdgeEndDate() {
+    public LocalDate getEdgeEndDate() {
         return edgeEndDate;
     }
 
-    public void setEdgeEndDate(Date edgeEndDate) {
+    public void setEdgeEndDate(LocalDate edgeEndDate) {
         this.edgeEndDate = edgeEndDate;
     }
 
