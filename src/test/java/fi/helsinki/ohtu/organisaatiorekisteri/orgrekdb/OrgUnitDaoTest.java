@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -300,15 +301,9 @@ public class OrgUnitDaoTest {
 
     @Test
     public void testAddingNewOrganisationUnitShouldInsertItToNodeTable() throws IOException {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.MONTH, 1);
-        c.set(Calendar.DATE, 15);
-        c.set(Calendar.YEAR, 2022);
-        Date startDate = c.getTime();
-
         NewNodeDTO newNodeDTO = new NewNodeDTO();
         newNodeDTO.setParentNodeId("a1");
-        newNodeDTO.setStartDate(startDate);
+        newNodeDTO.setStartDate(LocalDate.of(2022, 2, 15));
         newNodeDTO.setEndDate(null);
         newNodeDTO.setNameFi("uusi yksikko");
 
