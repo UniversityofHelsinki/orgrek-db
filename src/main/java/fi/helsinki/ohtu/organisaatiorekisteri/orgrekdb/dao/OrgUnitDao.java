@@ -1,10 +1,14 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +19,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -51,6 +56,8 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 @Repository(value = "orgUnitDao")
 public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
+
+    private static final RowMapper<Relative> RELATIVE_ROW_MAPPER = OrgUnitDao::mapRelative;
 
     @Autowired
     private DataSource dataSource;
@@ -496,7 +503,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
     public List<Relative> getParents(String nodeId, String date) throws IOException {
@@ -505,7 +512,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
     public List<Relative> getCurrentAndFutureParents(String nodeId, String date) throws IOException {
@@ -514,7 +521,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
     public List<Relative> getCurrentAndFutureChildren(String nodeId, String date) throws IOException {
@@ -523,7 +530,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
     public List<Relative> getCurrentAndPastParents(String nodeId, String date) throws IOException {
@@ -532,7 +539,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
     public List<Relative> getCurrentAndPastChildren(String nodeId, String date) throws IOException {
@@ -541,7 +548,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
     public List<Relative> getAllChildren(String nodeId, String date) throws IOException {
@@ -550,7 +557,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
     public List<Relative> getAllParents(String nodeId, String date) throws IOException {
@@ -559,7 +566,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
 
@@ -569,7 +576,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
         params.addValue("date", date);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
     }
 
     public List<Relative> getSuccessors(String nodeId)  throws IOException {
@@ -577,7 +584,44 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("nodeId", nodeId);
-        return getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(Relative.class));
+        return getNamedParameterJdbcTemplate().query(sql, params, RELATIVE_ROW_MAPPER);
+    }
+
+    private static Relative mapRelative(ResultSet resultSet, int rowNumber) throws SQLException {
+        Relative relative = new Relative();
+        relative.setId(resultSet.getString("id"));
+        relative.setUniqueId(getNullableInteger(resultSet, "unique_id"));
+        relative.setStartDate(getLocalDate(resultSet, "start_date"));
+        relative.setEndDate(getLocalDate(resultSet, "end_date"));
+        relative.setHierarchy(hasColumn(resultSet, "hierarchy") ? resultSet.getString("hierarchy") : null);
+        relative.setEdgeId(hasColumn(resultSet, "edge_id") ? getNullableInteger(resultSet, "edge_id") : null);
+        relative.setEdgeStartDate(getLocalDate(resultSet, "edge_start_date"));
+        relative.setEdgeEndDate(getLocalDate(resultSet, "edge_end_date"));
+        relative.setFullName(resultSet.getString("full_name"));
+        relative.setLanguage(resultSet.getString("language"));
+        return relative;
+    }
+
+    private static LocalDate getLocalDate(ResultSet resultSet, String columnName) throws SQLException {
+        if (!hasColumn(resultSet, columnName)) {
+            return null;
+        }
+        LocalDateTime value = resultSet.getObject(columnName, LocalDateTime.class);
+        return value == null ? null : value.toLocalDate();
+    }
+
+    private static Integer getNullableInteger(ResultSet resultSet, String columnName) throws SQLException {
+        int value = resultSet.getInt(columnName);
+        return resultSet.wasNull() ? null : value;
+    }
+
+    private static boolean hasColumn(ResultSet resultSet, String columnName) throws SQLException {
+        for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+            if (columnName.equalsIgnoreCase(resultSet.getMetaData().getColumnLabel(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<TreeNode> getTreeNodes(Set<String> hierarchies, String date) throws IOException {
@@ -594,7 +638,7 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         String sqlSequence = "select node_seq.nextval from dual";
         int sequence = getJdbcTemplate().queryForObject(sqlSequence, Integer.class);
         edgeWrapper.setId(sequence);
-        getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(edgeWrapper));
+        getNamedParameterJdbcTemplate().update(sql, EdgeWrapper.asSqlMapping(edgeWrapper));
         return edgeWrapper;
     }
 

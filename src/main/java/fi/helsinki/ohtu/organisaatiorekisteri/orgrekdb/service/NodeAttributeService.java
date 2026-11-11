@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -90,9 +90,9 @@ public class NodeAttributeService {
         return attributeOrder;
     }
 
-    private static class DateComparator implements Comparator<Date> {
+    private static class DateComparator implements Comparator<LocalDate> {
         @Override
-        public int compare(Date o1, Date o2) {
+        public int compare(LocalDate o1, LocalDate o2) {
             if (o1 != null && o2 != null) {
                 return o2.compareTo(o1);
             } else if (o1 != null) {

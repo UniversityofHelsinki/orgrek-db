@@ -1,7 +1,11 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,12 +14,10 @@ import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.EdgeWithChildUniqueId;
@@ -25,6 +27,9 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.ReadSqlFiles;
 
 @Repository(value = "edgeDao")
 public class EdgeDao extends NamedParameterJdbcDaoSupport {
+
+    private static final RowMapper<EdgeWrapper> EDGE_ROW_MAPPER = EdgeDao::mapEdge;
+    private static final RowMapper<EdgeWithChildUniqueId> EDGE_WITH_CHILD_UNIQUE_ID_ROW_MAPPER = EdgeDao::mapEdgeWithChildUniqueId;
 
     @Autowired
     private DataSource dataSource;
@@ -51,7 +56,9 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
 
     public int[] updateParentUnitProperties(List<EdgeWrapper> parentUnitProperties) throws IOException {
         String sql = ReadSqlFiles.sqlString("updateParentUnitProperties.sql");
-        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(parentUnitProperties.toArray());
+        MapSqlParameterSource[] batch = parentUnitProperties.stream()
+                .map(EdgeWrapper::asSqlMapping)
+                .toArray(MapSqlParameterSource[]::new);
         return getNamedParameterJdbcTemplate().batchUpdate(sql, batch);
     }
 
@@ -60,8 +67,7 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource[] paramMaps = parentUnits.stream().map(attribute -> {
             Integer sequence = getJdbcTemplate().queryForObject("SELECT NODE_SEQ.nextval FROM dual", Integer.class);
             attribute.setId(sequence);
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            return getMapSqlParameterSource(attribute, params);
+            return EdgeWrapper.asSqlMapping(attribute);
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
     }
@@ -69,8 +75,7 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
     public int[] updateUpperUnits(List<EdgeWrapper> parentUnits) throws IOException {
         String sql = ReadSqlFiles.sqlString("updateParentUnitProperties.sql");
         MapSqlParameterSource[] paramMaps = parentUnits.stream().map(attribute -> {
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            return getMapSqlParameterSource(attribute, params);
+            return EdgeWrapper.asSqlMapping(attribute);
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
     }
@@ -78,31 +83,11 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
     public int[] deleteUpperUnits(List<EdgeWrapper> parentUnits) throws IOException {
         String sql = ReadSqlFiles.sqlString("deleteUpperUnit.sql");
         MapSqlParameterSource[] paramMaps = parentUnits.stream().map(attribute -> {
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            return getMapSqlParameterSource(attribute, params);
+            return EdgeWrapper.asSqlMapping(attribute);
         }).collect(Collectors.toList()).toArray(new MapSqlParameterSource[]{});
         return getNamedParameterJdbcTemplate().batchUpdate(sql, paramMaps);
     }
 
-    private MapSqlParameterSource getMapSqlParameterSource(EdgeWrapper attribute, MapSqlParameterSource params) {
-
-        SimpleDateFormat yearMonthDay = new SimpleDateFormat("dd.MM.yyyy");
-        params.addValue("child_node_id", attribute.getChildNodeId());
-        params.addValue("parent_node_id", attribute.getParentNodeId());
-        params.addValue("hierarchy", attribute.getHierarchy());
-        String start = null;
-        String end = null;
-        if (attribute.getStartDate() != null) {
-            start = yearMonthDay.format(attribute.getStartDate());
-        }
-        if (attribute.getEndDate() != null) {
-            end = yearMonthDay.format(attribute.getEndDate());
-        }
-        params.addValue("start_date", start);
-        params.addValue("end_date", end);
-        params.addValue("id", attribute.getId());
-        return params;
-    }
 
     public int[] insertEdges(List<EdgeWrapper> edges) throws IOException {
         String sql = ReadSqlFiles.sqlString("insertEdges.sql");
@@ -161,7 +146,7 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
     public List<EdgeWrapper> getRoots() throws IOException {
         String sql = ReadSqlFiles.sqlString("roots.sql");
         List<EdgeWrapper> roots 
-            = getNamedParameterJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(EdgeWrapper.class));
+            = getNamedParameterJdbcTemplate().query(sql, EDGE_ROW_MAPPER);
         return roots;
     }
 
@@ -173,13 +158,21 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
     ) throws IOException {
         String sql = ReadSqlFiles.sqlString("edgesStartingFromXInHierarchy.sql");
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("newEdgeStartDate", newEdgeStartDate.equals("null") ? null : newEdgeStartDate);
-        params.addValue("newEdgeEndDate", newEdgeEndDate.equals("null") ? null : newEdgeEndDate);
+        addDateParameter(params, "newEdgeStartDate", newEdgeStartDate);
+        addDateParameter(params, "newEdgeEndDate", newEdgeEndDate);
         //params.addValue("hierarchies", hierarchies);
         params.addValue("id", startNodeID);
         List<EdgeWithChildUniqueId> edges =
-            getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(EdgeWithChildUniqueId.class));
+            getNamedParameterJdbcTemplate().query(sql, params, EDGE_WITH_CHILD_UNIQUE_ID_ROW_MAPPER);
         return edges;
+    }
+
+    static String dateParameterOrNull(String date) {
+        return "null".equals(date) ? null : date;
+    }
+
+    static void addDateParameter(MapSqlParameterSource params, String name, String date) {
+        params.addValue(name, dateParameterOrNull(date), Types.VARCHAR);
     }
 
     public List<EdgeWrapper> getByParentAndHierarchies(String parentNodeId, List<String> hierarchies) throws IOException {
@@ -187,7 +180,7 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", parentNodeId);
         params.addValue("hierarchies", hierarchies);
-        List<EdgeWrapper> edges = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(EdgeWrapper.class));
+        List<EdgeWrapper> edges = getNamedParameterJdbcTemplate().query(sql, params, EDGE_ROW_MAPPER);
         return edges;
     }
 
@@ -196,7 +189,7 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", childNodeId);
         params.addValue("hierarchies", hierarchies);
-        List<EdgeWrapper> edges = getNamedParameterJdbcTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(EdgeWrapper.class));
+        List<EdgeWrapper> edges = getNamedParameterJdbcTemplate().query(sql, params, EDGE_ROW_MAPPER);
         return edges;
     }
 
@@ -214,6 +207,33 @@ public class EdgeDao extends NamedParameterJdbcDaoSupport {
 
     public List<EdgeWrapper> getParents(String nodeId, List<String> hierarchies) throws IOException {
         return getByChildAndHierarchies(nodeId , hierarchies);
+    }
+
+    private static EdgeWrapper mapEdge(ResultSet resultSet, int rowNumber) throws SQLException {
+        EdgeWrapper edge = new EdgeWrapper();
+        edge.setId(resultSet.getInt("id"));
+        edge.setParentNodeId(resultSet.getString("parent_node_id"));
+        edge.setChildNodeId(resultSet.getString("child_node_id"));
+        edge.setStartDate(toLocalDate(resultSet, "start_date"));
+        edge.setEndDate(toLocalDate(resultSet, "end_date"));
+        edge.setHierarchy(resultSet.getString("hierarchy"));
+        return edge;
+    }
+
+    private static EdgeWithChildUniqueId mapEdgeWithChildUniqueId(ResultSet resultSet, int rowNumber) throws SQLException {
+        EdgeWithChildUniqueId edge = new EdgeWithChildUniqueId();
+        edge.setId(resultSet.getInt("id"));
+        edge.setParentUniqueId(resultSet.getInt("parent_unique_id"));
+        edge.setChildUniqueId(resultSet.getInt("child_unique_id"));
+        edge.setStartDate(toLocalDate(resultSet, "start_date"));
+        edge.setEndDate(toLocalDate(resultSet, "end_date"));
+        edge.setHierarchy(resultSet.getString("hierarchy"));
+        return edge;
+    }
+
+    private static LocalDate toLocalDate(ResultSet resultSet, String columnName) throws SQLException {
+        LocalDateTime dateTime = resultSet.getObject(columnName, LocalDateTime.class);
+        return dateTime == null ? null : dateTime.toLocalDate();
     }
 
 }

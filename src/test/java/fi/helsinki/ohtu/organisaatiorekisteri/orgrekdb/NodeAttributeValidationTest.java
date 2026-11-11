@@ -2,13 +2,14 @@ package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb;
 
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.dao.AttributeDao;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Attribute;
-import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.util.DateUtil;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -29,30 +30,34 @@ public class NodeAttributeValidationTest {
 
     @BeforeAll
     private void createAttributes() {
-        attr0 = new Attribute("5283", null, "koira", "koira", DateUtil.parseDate("06.01.2018"), DateUtil.parseDate("07.01.2018"));
+        attr0 = new Attribute("5283", null, "koira", "koira", parseDate("06.01.2018"), parseDate("07.01.2018"));
 
-        attr1 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("02.01.2022"), DateUtil.parseDate("12.01.2022"));
-        attr2 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("15.01.2022"), DateUtil.parseDate("07.02.2022"));
-        attr3 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("07.01.2022"));
-        attr4 = new Attribute("5283", null, "kissa", "nimi", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("17.12.2021"));
-        attr5 = new Attribute("5283", null, "kissa", "nimi", DateUtil.parseDate("15.02.2022"), DateUtil.parseDate("17.02.2022"));
-        attr6 = new Attribute("5283", null, "meduusa", "meduusa", null, DateUtil.parseDate("15.01.2022"));
-        attr7 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("17.01.2022"), null);
+        attr1 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("02.01.2022"), parseDate("12.01.2022"));
+        attr2 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("15.01.2022"), parseDate("07.02.2022"));
+        attr3 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("15.12.2021"), parseDate("07.01.2022"));
+        attr4 = new Attribute("5283", null, "kissa", "nimi", parseDate("15.12.2021"), parseDate("17.12.2021"));
+        attr5 = new Attribute("5283", null, "kissa", "nimi", parseDate("15.02.2022"), parseDate("17.02.2022"));
+        attr6 = new Attribute("5283", null, "meduusa", "meduusa", null, parseDate("15.01.2022"));
+        attr7 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("17.01.2022"), null);
 
-        attr8 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("02.01.2022"), DateUtil.parseDate("12.01.2022"));
-        attr9 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("15.01.2022"), DateUtil.parseDate("07.02.2022"));
-        attr10 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("07.01.2022"));
-        attr11 = new Attribute("5283", null, "kani", "nimi", DateUtil.parseDate("15.02.2022"), DateUtil.parseDate("17.02.2022"));
-        attr12 = new Attribute("5283", null, "meduusa", "meduusa", null, DateUtil.parseDate("15.01.2022"));
-        attr13 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("17.01.2022"), null);
+        attr8 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("02.01.2022"), parseDate("12.01.2022"));
+        attr9 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("15.01.2022"), parseDate("07.02.2022"));
+        attr10 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("15.12.2021"), parseDate("07.01.2022"));
+        attr11 = new Attribute("5283", null, "kani", "nimi", parseDate("15.02.2022"), parseDate("17.02.2022"));
+        attr12 = new Attribute("5283", null, "meduusa", "meduusa", null, parseDate("15.01.2022"));
+        attr13 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("17.01.2022"), null);
 
-        attr14 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("02.01.2022"), DateUtil.parseDate("12.01.2022"));
-        attr15 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("15.01.2022"), DateUtil.parseDate("07.02.2022"));
-        attr16 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("07.01.2022"));
-        attr17 = new Attribute("5283", null, "meduusa", "nimi", DateUtil.parseDate("15.12.2021"), DateUtil.parseDate("17.12.2021"));
-        attr18 = new Attribute("5283", null, "meduusa", "meduusa", null, DateUtil.parseDate("15.01.2022"));
-        attr19 = new Attribute("5283", null, "meduusa", "meduusa", DateUtil.parseDate("17.01.2022"), null);
+        attr14 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("02.01.2022"), parseDate("12.01.2022"));
+        attr15 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("15.01.2022"), parseDate("07.02.2022"));
+        attr16 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("15.12.2021"), parseDate("07.01.2022"));
+        attr17 = new Attribute("5283", null, "meduusa", "nimi", parseDate("15.12.2021"), parseDate("17.12.2021"));
+        attr18 = new Attribute("5283", null, "meduusa", "meduusa", null, parseDate("15.01.2022"));
+        attr19 = new Attribute("5283", null, "meduusa", "meduusa", parseDate("17.01.2022"), null);
      }
+
+    private static LocalDate parseDate(String date) {
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
 
     @Nested
     @DisplayName("When existing attribute has no start date or end date")

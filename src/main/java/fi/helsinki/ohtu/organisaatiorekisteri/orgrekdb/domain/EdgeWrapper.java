@@ -1,6 +1,8 @@
 package fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain;
 
-import java.util.Date;
+import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -11,16 +13,16 @@ public class EdgeWrapper {
         mapping.addValue("id", edge.getId());
         mapping.addValue("child_node_id", edge.getChildNodeId());
         mapping.addValue("parent_node_id", edge.getParentNodeId());
-        mapping.addValue("start_date", edge.getStartDate());
-        mapping.addValue("end_date", edge.getEndDate());
+        mapping.addValue("start_date", toTimestamp(edge.getStartDate()), Types.TIMESTAMP);
+        mapping.addValue("end_date", toTimestamp(edge.getEndDate()), Types.TIMESTAMP);
         mapping.addValue("hierarchy", edge.getHierarchy());
         return mapping;
     }
     private Integer id;
     private String parentNodeId;
     private String childNodeId;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String hierarchy;
 
     public EdgeWrapper() {
@@ -56,19 +58,19 @@ public class EdgeWrapper {
         this.childNodeId = childNodeId;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -78,6 +80,10 @@ public class EdgeWrapper {
 
     public void setHierarchy(String hierarchy) {
         this.hierarchy = hierarchy;
+    }
+
+    private static LocalDateTime toTimestamp(LocalDate date) {
+        return date == null ? null : date.atStartOfDay();
     }
 
 }
