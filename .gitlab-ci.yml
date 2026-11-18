@@ -112,7 +112,7 @@ deploy_dev:
     - oc set env deploy/organisaatiorekisteri-db-dev TZ="Europe/Helsinki"
     # Start build process
     - oc start-build organisaatiorekisteri-db-dev --from-dir=. --follow
-    - oc patch bc organisaatiorekisteri-db-dev -n organisaatiorekisteri --type=json -p='[{"op":"remove","path":"/spec/strategy/dockerStrategy/from"}]'
+    - oc patch bc/organisaatiorekisteri-db-dev --type=merge --patch '{"spec":{"strategy":{"dockerStrategy":{"from":null}}}}'
     # patch openshift buildConfig file
     - oc patch bc/organisaatiorekisteri-db-dev --patch '{"spec":{"successfulBuildsHistoryLimit":1}}'
     - oc patch bc/organisaatiorekisteri-db-dev --patch '{"spec":{"failedBuildsHistoryLimit":1}}'
