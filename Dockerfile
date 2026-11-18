@@ -1,5 +1,5 @@
 FROM amazoncorretto:17
-RUN dnf upgrade -y && dnf install -y tzdata && dnf clean all
+RUN dnf install -y tzdata && dnf clean all
 RUN groupadd --system spring && useradd --system --gid spring spring
 USER spring:spring
 ARG JAR_FILE=target/*.jar
