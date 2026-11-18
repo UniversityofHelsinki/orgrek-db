@@ -1,8 +1,6 @@
-FROM alpine
-RUN apk update && apk upgrade --no-cache
-RUN apk --no-cache add openjdk17 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
-RUN apk add tzdata
-RUN addgroup -S spring && adduser -S spring -G spring
+FROM amazoncorretto:17
+RUN dnf upgrade -y && dnf install -y tzdata && dnf clean all
+RUN groupadd --system spring && useradd --system --gid spring spring
 USER spring:spring
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
