@@ -32,6 +32,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.HumanResourcesWith
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.KonserniUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttrPublic;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OrganizationalChart;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PersonnelUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.ResearchGroup;
@@ -75,6 +76,11 @@ public class SteeringGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/humanResources")
     public List<SteeringGroup> getHumanResources() throws IOException {
         return orgUnitDao.getHumanResources();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/organizationalChart")
+    public List<OrganizationalChart> getOrganizationalChart() throws IOException {
+        return orgUnitDao.getOrganizationalChart();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/researchResources")

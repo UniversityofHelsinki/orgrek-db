@@ -42,6 +42,7 @@ import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NewNodeDTO;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.Node;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeAttrPublic;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.NodeWrapper;
+import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OrganizationalChart;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.OfficialUnit;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PersonnelUnitMap;
 import fi.helsinki.ohtu.organisaatiorekisteri.orgrekdb.domain.PublicHierarchyNode;
@@ -288,6 +289,13 @@ public class OrgUnitDao extends NamedParameterJdbcDaoSupport {
         );
 
         return queryResults;
+    }
+
+    public List<OrganizationalChart> getOrganizationalChart() throws IOException {
+        String sql = ReadSqlFiles.sqlString("organizationalChart.sql");
+        return getNamedParameterJdbcTemplate().query(
+                sql, BeanPropertyRowMapper.newInstance(OrganizationalChart.class)
+        );
     }
 
     /**
